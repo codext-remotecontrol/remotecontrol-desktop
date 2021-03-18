@@ -96,7 +96,7 @@ upload = args.some((val) => val === '--upload');
 hidden = args.some((val) => val === '--hidden');
 
 function createWindow() {
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdates();
 
   let autoLaunch = new AutoLaunch({
     name: 'Remotecontrol',
