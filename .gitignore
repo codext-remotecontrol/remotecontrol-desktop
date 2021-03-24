@@ -25,7 +25,7 @@ src/**/*.js
 
 # IDE - VSCode
 .vscode/*
-!.vscode/settings.json
+.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -38,7 +38,6 @@ src/**/*.js
 npm-debug.log
 testem.log
 /typings
-package-lock.json
 
 # e2e
 /e2e/*.js

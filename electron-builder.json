@@ -1,54 +1,43 @@
 {
-  "productName": "Remotecontrol",
-  "appId": "de.codext.codext-remotecontrol",
+  "productName": "angular-electron",
   "directories": {
     "output": "release/"
   },
-  "publish": [
-    {
-      "provider": "generic",
-      "url": "https://ftp.codext.de/codext-remotecontrol/released/"
-    }
-  ],
   "files": [
     "**/*",
-    "!build/",
-    "!stuff/",
     "!**/*.ts",
-    "!*.code-workspace",
-    "!LICENSE.md",
+    "!.github",
+    "!.vscode",
+    "!.code-workspace",
+    "!.npmrc",
+    "!*.md",
     "!package.json",
     "!package-lock.json",
     "!src/",
     "!e2e/",
     "!hooks/",
-    "!angular.json",
     "!_config.yml",
-    "!**/*.yml",
+    "!angular.json",
+    "!tsconfig*.json",
+    "!tslint.json",
+    "!.eslintrc.json",
     "!karma.conf.js",
-    "!tsconfig.json",
-    "!tslint.json"
+    "!angular.webpack.js",
+    "!*.map"
   ],
   "win": {
-    "icon": "dist",
-    "target": ["nsis"]
+    "icon": "dist/assets/icons",
+    "target": ["portable"]
   },
-  "nsis": {
-    "allowElevation": true,
-    "deleteAppDataOnUninstall": true,
-    "oneClick": true,
-    "perMachine": true,
-    "allowToChangeInstallationDirectory": false,
-    "runAfterFinish": true,
-    "createStartMenuShortcut": true,
-    "createDesktopShortcut": true
+  "portable": {
+    "splashImage": "dist/assets/icons/electron.bmp"
   },
   "mac": {
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "target": ["dmg"]
   },
   "linux": {
-    "icon": "dist",
+    "icon": "dist/assets/icons",
     "target": ["AppImage"]
   }
 }
