@@ -22,7 +22,7 @@ jobs:
         node-version: [14.x]
 
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
@@ -49,4 +49,8 @@ jobs:
       - name: Check lint
         run: npm run lint
       - name: Build the app
-        run: npm run electron:build
+        run: npm run electron:windows
+      - uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: release/remotecontrol-desktop 9.0.6.exe
