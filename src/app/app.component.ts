@@ -11,7 +11,7 @@ import { AppConfig } from "../environments/environment";
 export class AppComponent {
   public version: string = "1";
 
-  public appPages = [{ title: "Inbox", url: "/folder/Inbox", icon: "mail" }];
+  public appPages = [{ title: "Home", url: "/home", icon: "code-working" }];
 
   constructor(
     public electronService: ElectronService,
