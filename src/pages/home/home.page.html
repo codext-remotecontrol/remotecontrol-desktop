@@ -7,4 +7,52 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding"> </ion-content>
+<ion-content>
+  <video id="remote-video" autoplay></video>
+  <div class="flex items-center justify-center">
+    <div class="flex flex-col shadow-xl mt-5 rounded-xl mb-5">
+      <div
+        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
+      >
+        <h2 class="text-white text-xs">
+          Teilen Sie diese ID Ihrem Partner mit
+        </h2>
+        <h4 class="text-white text-center font-bold text-xl mt-2">Meine ID</h4>
+      </div>
+      <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
+        <input
+          type="text"
+          readonly
+          [(ngModel)]="myId"
+          placeholder="Meine ID"
+          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:outline-none focus:ring-5 focus:ring-gray-300 focus:border-transparent"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-center">
+    <div class="flex flex-col shadow-xl mt-5 rounded-xl">
+      <div
+        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
+      >
+        <h2 class="text-white text-xs">Geben Sie die ID Ihres Partners ein</h2>
+        <h4 class="text-white text-center font-bold text-xl mt-2">
+          Partner ID
+        </h4>
+      </div>
+      <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
+        <input
+          type="number"
+          placeholder="555 555 555"
+          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:outline-none focus:ring-5 focus:ring-gray-300 focus:border-transparent"
+        />
+        <button
+          class="w-full py-3 bg-gray-900 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent shadow-lg"
+        >
+          Verbinden
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-content>
