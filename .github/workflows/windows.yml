@@ -22,7 +22,7 @@ jobs:
         node-version: [14.x]
 
     # The type of runner that the job will run on
-    runs-on: windows-2016
+    runs-on: ["self-hosted", "self-windows"]
 
     steps:
       - uses: actions/checkout@v2
