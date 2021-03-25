@@ -1,3 +1,16 @@
+ion-item,
+ion-list {
+  --background: transparent;
+}
+ion-content,
+ion-footer {
+  --background: #252a33;
+
+  ion-icon {
+    color: #687384;
+  }
+}
+
 .version {
   text-align: center;
   padding: 10px 0;
@@ -69,13 +82,6 @@
 
 .split-pane {
   top: 30px; // for header
-}
-ion-content {
-  --background: #252a33;
-
-  ion-icon {
-    color: #687384;
-  }
 }
 
 ion-footer {

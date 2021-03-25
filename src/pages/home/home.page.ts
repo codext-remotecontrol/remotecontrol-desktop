@@ -19,7 +19,7 @@ export class HomePage implements OnInit {
       .then(async (sources) => {
         console.log("sources", sources);
         for (const source of sources) {
-          if (source.name === "Screen 1") {
+          if (source.name === "Entire Screen") {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
                 {
