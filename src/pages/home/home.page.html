@@ -3,19 +3,13 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title> Dashboard </ion-title>
+    <ion-title> </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="w-full flex items-center justify-center flex-col">
-    <div
-      class="w-10/12 flex flex-col shadow-xl mt-5 rounded-xl mb-5 overflow-hidden"
-    >
-      <video class="object-contain" autoplay></video>
-    </div>
-
-    <div class="w-10/12 flex flex-col shadow-xl mt-5 rounded-xl mb-5">
+<ion-content class="ion-padding">
+  <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+    <div class="flex flex-col shadow-xl mt-5 rounded-xl mb-5 bg-white">
       <div
         class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
       >
@@ -30,11 +24,11 @@
           readonly
           [(ngModel)]="myId"
           placeholder="Meine ID"
-          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:outline-none focus:ring-5 focus:ring-gray-300 focus:border-transparent"
+          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:ring-5 focus:ring-gray-300 focus:border-transparent"
         />
       </div>
     </div>
-    <div class="w-10/12 flex flex-col shadow-xl mt-5 rounded-xl mb-5">
+    <div class="flex flex-col shadow-xl mt-5 rounded-xl mb-5 bg-white">
       <div
         class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
       >
@@ -47,7 +41,7 @@
         <input
           type="number"
           placeholder="555 555 555"
-          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:outline-none focus:ring-5 focus:ring-gray-300 focus:border-transparent"
+          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:ring-5 focus:ring-gray-300 focus:border-transparent"
         />
         <button
           class="w-full py-3 bg-gray-900 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent shadow-lg"

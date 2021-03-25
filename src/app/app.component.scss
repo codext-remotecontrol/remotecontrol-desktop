@@ -11,6 +11,100 @@ ion-footer {
   }
 }
 
+ion-menu.main-menu {
+  ion-content {
+    --background: #252a33;
+
+    ion-icon {
+      color: #687384;
+    }
+  }
+
+  ion-footer {
+    ion-list {
+      ion-item {
+        --padding-top: 5px;
+        --padding-bottom: 5px;
+      }
+    }
+  }
+
+  ion-list {
+    margin-bottom: 0;
+    background: transparent;
+    border: none !important;
+
+    ion-item {
+      cursor: pointer;
+      --padding-top: 10px;
+      --padding-bottom: 10px;
+      --background: transparent;
+      position: relative;
+      --inner-border-width: 0px 0px 0 0px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+        color: #398bf7;
+
+        ion-icon,
+        ion-label {
+          color: #398bf7;
+        }
+      }
+
+      &.active {
+        position: relative;
+
+        ion-label {
+          h2 {
+            font-weight: 600;
+          }
+        }
+
+        ion-icon {
+          color: #398bf7;
+        }
+
+        color: #398bf7;
+        font-weight: 600;
+
+        p {
+          font-weight: 400;
+        }
+
+        &:after {
+          position: absolute;
+          left: 0;
+          content: "";
+          width: 2px;
+          background: #398bf7;
+          height: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
+      &.activated {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      ion-label {
+        h2 {
+          font-weight: 600;
+          font-size: unset;
+          text-align: left;
+        }
+
+        p {
+          color: #656e82;
+        }
+      }
+
+      color: #687384;
+    }
+  }
+}
+
 .version {
   text-align: center;
   padding: 10px 0;

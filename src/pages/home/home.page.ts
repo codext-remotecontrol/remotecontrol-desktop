@@ -2,6 +2,8 @@ import { ElectronService } from "./../../app/core/services/electron/electron.ser
 
 import { Component, OnInit } from "@angular/core";
 import "webrtc-adapter";
+import { ModalController } from "@ionic/angular";
+import { ScreenSelectComponent } from "../../app/shared/components/screen-select/screen-select.component";
 
 @Component({
   selector: "app-home",
@@ -11,39 +13,12 @@ import "webrtc-adapter";
 export class HomePage implements OnInit {
   myId = "133 331 123";
 
-  constructor(private electronService: ElectronService) {}
+  constructor(private modalCtrl: ModalController) {}
 
   async ngOnInit() {
-    await this.electronService.desktopCapturer
-      .getSources({ types: ["window", "screen"] })
-      .then(async (sources) => {
-        console.log("sources", sources);
-        for (const source of sources) {
-          if (source.name === "Entire Screen") {
-            try {
-              const stream = await (navigator as any).mediaDevices.getUserMedia(
-                {
-                  audio: false,
-                  video: {
-                    mandatory: {
-                      chromeMediaSource: "desktop",
-                      chromeMediaSourceId: source.id,
-                    },
-                  },
-                }
-              );
-
-              this.handleStream(stream);
-            } catch (e) {}
-            return;
-          }
-        }
-      });
-  }
-
-  handleStream(stream) {
-    const video = document.querySelector("video");
-    video.srcObject = stream;
-    video.onloadedmetadata = (e) => video.play();
+    const modal = await this.modalCtrl.create({
+      component: ScreenSelectComponent,
+    });
+    return await modal.present();
   }
 }
