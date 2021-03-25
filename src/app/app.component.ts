@@ -11,7 +11,10 @@ import { AppConfig } from "../environments/environment";
 export class AppComponent {
   public version: string = "1";
 
-  public appPages = [{ title: "Home", url: "/home", icon: "code-working" }];
+  public appPages = [
+    { title: "Home", url: "/home", icon: "code-working" },
+    { title: "Einstellungen", url: "/settings", icon: "cog" },
+  ];
 
   constructor(
     public electronService: ElectronService,

@@ -1,3 +1,4 @@
+import { SettingsPageModule } from "../pages/settings/settings.module";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { HomePageModule } from "../pages/home/home.module";
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: "home",
     loadChildren: () => HomePageModule,
+  },
+  {
+    path: "settings",
+    loadChildren: () => SettingsPageModule,
   },
   {
     path: "**",
