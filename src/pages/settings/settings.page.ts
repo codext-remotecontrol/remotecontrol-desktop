@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
+import { SocketService } from '../../app/core/services/socket.service';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -9,7 +10,9 @@ import 'webrtc-adapter';
 export class SettingsPage implements OnInit {
   signalData = '';
   peer2;
-  constructor() {}
+  userId = 'browser';
+
+  constructor(private socketService: SocketService) {}
 
   ngOnInit() {
     this.peer2 = new SimplePeer({
@@ -33,8 +36,7 @@ export class SettingsPage implements OnInit {
     });
 
     this.peer2.on('signal', (data) => {
-      console.log('signal', JSON.stringify(data));
-      // peer1.signal(data);
+      this.socketService.sendMessage(data);
     });
 
     this.peer2.on('stream', (stream) => {
@@ -43,9 +45,9 @@ export class SettingsPage implements OnInit {
       video.srcObject = stream;
       video.play();
     });
-  }
 
-  test() {
-    this.peer2.signal(JSON.parse(this.signalData));
+    this.socketService.onNewMessage().subscribe((data: any) => {
+      this.peer2.signal(data.msg);
+    });
   }
 }

@@ -1,3 +1,4 @@
+import { SocketService } from './../../app/core/services/socket.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -5,6 +6,8 @@ import 'webrtc-adapter';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import SimplePeer from 'simple-peer';
+import { io, Socket } from 'socket.io-client';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -15,17 +18,22 @@ export class HomePage implements OnInit {
 
   signalData = '';
   peer1;
+  socket: any;
+
+  userId = 'daniel';
 
   constructor(
     private modalCtrl: ModalController,
     private cdr: ChangeDetectorRef,
     private loadingCtrl: LoadingController,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private socketService: SocketService
   ) {}
 
   async ngOnInit() {
     this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
     this.cdr.detectChanges();
+
     console.log(' this.myId', this.myId);
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
@@ -64,14 +72,12 @@ export class HomePage implements OnInit {
     });
 
     this.peer1.on('signal', (data) => {
-      console.log('signal', JSON.stringify(data));
-      //  peer2.signal(data);
+      this.socketService.sendMessage(data);
     });
-  }
 
-  tester() {
-    console.log('JSON.parse(this.signalData)', JSON.parse(this.signalData));
-    this.peer1.signal(JSON.parse(this.signalData));
+    this.socketService.onNewMessage().subscribe((data: any) => {
+      this.peer1.signal(data.msg);
+    });
   }
 
   test() {
