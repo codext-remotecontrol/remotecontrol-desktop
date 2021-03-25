@@ -1,11 +1,11 @@
-import { LoadingController, ModalController } from "@ionic/angular";
-import { Component, OnInit } from "@angular/core";
-import { ElectronService } from "../../../core/services/electron/electron.service";
+import { LoadingController, ModalController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { ElectronService } from '../../../core/services/electron/electron.service';
 
 @Component({
-  selector: "app-screen-select",
-  templateUrl: "./screen-select.component.html",
-  styleUrls: ["./screen-select.component.scss"],
+  selector: 'app-screen-select',
+  templateUrl: './screen-select.component.html',
+  styleUrls: ['./screen-select.component.scss'],
 })
 export class ScreenSelectComponent implements OnInit {
   sources = [];
@@ -21,9 +21,9 @@ export class ScreenSelectComponent implements OnInit {
 
     try {
       await this.electronService.desktopCapturer
-        .getSources({ types: ["window", "screen"] })
+        .getSources({ types: ['window', 'screen'] })
         .then(async (sources) => {
-          console.log("sources", sources);
+          console.log('sources', sources);
           for (const source of sources) {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
@@ -31,8 +31,9 @@ export class ScreenSelectComponent implements OnInit {
                   audio: false,
                   video: {
                     mandatory: {
-                      chromeMediaSource: "desktop",
+                      chromeMediaSource: 'desktop',
                       chromeMediaSourceId: source.id,
+                      maxFrameRate: 25,
                     },
                   },
                 }
@@ -43,7 +44,7 @@ export class ScreenSelectComponent implements OnInit {
 
               // this.handleStream(stream);
             } catch (e) {
-              console.log("e", e);
+              console.log('e', e);
             }
           }
         });
@@ -54,7 +55,7 @@ export class ScreenSelectComponent implements OnInit {
   }
 
   handleStream(stream) {
-    const video = document.querySelector("video");
+    const video = document.querySelector('video');
     video.srcObject = stream;
     video.onloadedmetadata = (e) => video.play();
   }
