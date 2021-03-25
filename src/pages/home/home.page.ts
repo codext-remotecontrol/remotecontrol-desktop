@@ -13,6 +13,9 @@ import SimplePeer from 'simple-peer';
 export class HomePage implements OnInit {
   myId = '';
 
+  signalData = '';
+  peer1;
+
   constructor(
     private modalCtrl: ModalController,
     private cdr: ChangeDetectorRef,
@@ -38,22 +41,37 @@ export class HomePage implements OnInit {
 
   videoConnector(source) {
     const stream = source.stream;
-    const peer1 = new SimplePeer({ initiator: true, stream: stream });
-    const peer2 = new SimplePeer();
-
-    peer1.on('signal', (data) => {
-      peer2.signal(data);
+    this.peer1 = new SimplePeer({
+      initiator: true,
+      stream: stream,
+      channelName: 'danieltester123',
+      config: {
+        iceServers: [
+          {
+            urls: ['stun:turn.codext.de', 'stun:stun.nextcloud.com:443'],
+          },
+          {
+            username: 'Z1VCyC6DDDrwtgeipeplGmJ0',
+            credential: '8a630ce342e1ec3fb2b8dbc8eaa395f837038ddcc5',
+            urls: [
+              'turn:turn.codext.de:80?transport=udp',
+              'turn:turn.codext.de:80?transport=tcp',
+              'turns:turn.codext.de:443?transport=tcp',
+            ],
+          },
+        ],
+      },
     });
 
-    peer2.on('signal', (data) => {
-      peer1.signal(data);
+    this.peer1.on('signal', (data) => {
+      console.log('signal', JSON.stringify(data));
+      //  peer2.signal(data);
     });
+  }
 
-    peer2.on('stream', (stream) => {
-      const video = document.querySelector('video');
-      video.srcObject = stream;
-      video.play();
-    });
+  tester() {
+    console.log('JSON.parse(this.signalData)', JSON.parse(this.signalData));
+    this.peer1.signal(JSON.parse(this.signalData));
   }
 
   test() {
