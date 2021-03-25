@@ -28,6 +28,7 @@ export class ElectronService {
     if (this.isElectron) {
       this.ipcRenderer = window.require("electron").ipcRenderer;
       this.webFrame = window.require("electron").webFrame;
+      this.remote = window.require("electron").remote;
       this.window = window.require("electron").remote.getCurrentWindow();
       this.desktopCapturer = window.require("electron").desktopCapturer;
 
