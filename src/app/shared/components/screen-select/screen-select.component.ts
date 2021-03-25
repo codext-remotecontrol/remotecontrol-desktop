@@ -54,6 +54,10 @@ export class ScreenSelectComponent implements OnInit {
     }
   }
 
+  selectStream(video) {
+    this.modalCtrl.dismiss(video);
+  }
+
   handleStream(stream) {
     const video = document.querySelector('video');
     video.srcObject = stream;

@@ -57,7 +57,8 @@
         "@typescript-eslint/explicit-function-return-type": 0,
         "@typescript-eslint/semi": "error",
         "@angular-eslint/use-injectable-provided-in": "error",
-        "@angular-eslint/no-attribute-decorator": "error"
+        "@angular-eslint/no-attribute-decorator": "error",
+        "@typescript-eslint/explicit-module-boundary-types": "off"
       }
     },
     {
