@@ -34,6 +34,10 @@ export class ScreenSelectComponent implements OnInit {
                       chromeMediaSource: 'desktop',
                       chromeMediaSourceId: source.id,
                       maxFrameRate: 25,
+                      minWidth: 1280,
+                      maxWidth: 1280,
+                      minHeight: 720,
+                      maxHeight: 720,
                     },
                   },
                 }
