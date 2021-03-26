@@ -9,7 +9,6 @@ import {
 } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-// const x = require('hide-cursor');
 
 // Initialize remote module
 require('@electron/remote/main').initialize();

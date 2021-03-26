@@ -19,7 +19,7 @@ export class HomePage implements OnInit {
   signalData = '';
   peer1;
   socket: any;
-  // robot: any;
+  robot: any;
 
   userId = 'daniel';
 
@@ -32,8 +32,8 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // this.robot = this.electronService.remote.require('robotjs');
-    // this.robot.setMouseDelay(5);
+    this.robot = this.electronService.remote.require('robotjs');
+    this.robot.setMouseDelay(5);
 
     this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
     this.cdr.detectChanges();
@@ -52,7 +52,14 @@ export class HomePage implements OnInit {
   }
 
   videoConnector(source) {
+    console.log('source', source);
+
     const stream = source.stream;
+    const height = stream.getVideoTracks()[0].getSettings().height;
+    const width = stream.getVideoTracks()[0].getSettings().width;
+
+    console.log(width, height);
+
     this.peer1 = new SimplePeer({
       initiator: true,
       stream: stream,
@@ -78,75 +85,62 @@ export class HomePage implements OnInit {
     this.peer1.on('signal', (data) => {
       this.socketService.sendMessage(data);
     });
-    this.peer1.on('error', () => {
-      // hideCursor.show();
-    });
+    this.peer1.on('error', () => {});
 
     this.socketService.onNewMessage().subscribe((data: any) => {
       this.peer1.signal(data);
-      // hideCursor.hide();
     });
 
     this.peer1.on('data', (data) => {
-      console.log('data', data);
       try {
-        const text = new TextDecoder('utf-8').decode(data);
-        // console.log('data', parsed);
-        const parsed = parse(text);
-        this.handleRemoteData(parsed);
+        let text = new TextDecoder('utf-8').decode(data);
+        if (text.startsWith('{')) {
+          text = JSON.parse(text);
+          this.handleKey(text);
+        } else {
+          this.handleMouse(text);
+        }
       } catch (error) {
         console.log('error', error);
       }
     });
 
     this.socketService.onNewMessage('remoteData').subscribe((data: any) => {
-      console.log('remoteData', data);
-      this.handleRemoteData(data);
+      // this.handleRemoteData(data);
     });
   }
 
-  handleRemoteData(data) {
-    // console.log('Data', data);
-    let x, y;
-    if (data.t == 'md' || data.t == 'mu' || data.t == 'mm') {
-      x = this.scale(data.x, 0, data.w, 0, screen.width);
-      y = this.scale(data.y, 0, data.h, 0, screen.height);
-    }
+  handleMouse(text) {
+    const textArray = text.split(',');
+    const data = {
+      t: textArray[0],
+      x: textArray[1],
+      y: textArray[2],
+      b: textArray[3] || 0,
+    };
+
     switch (data.t) {
-      case 'k': {
-        try {
-          this.handleKey(data);
-        } catch (err) {
-          console.log(err);
-        }
-        break;
-      }
       case 'dc': {
-        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
         break;
       }
       case 'md': {
-        // this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
         break;
       }
       case 'mu': {
-        // this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
+        this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
         break;
       }
       case 'mm': {
-        // this.robot.dragMouse(x, y);
+        this.robot.dragMouse(data.x, data.y);
         break;
       }
     }
   }
 
-  scale(x, fromLow, fromHigh, toLow, toHigh) {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    return ((x - fromLow) * (toHigh - toLow)) / (fromHigh - fromLow) + toLow;
-  }
-
   handleKey(data) {
-    /*const robot = this.robot;
+    const robot = this.robot;
     let k = vkey[data.keyCode].toLowerCase();
     if (k === '<space>') k = ' ';
     const modifiers = [];
@@ -170,7 +164,7 @@ export class HomePage implements OnInit {
       else if (k === '<page-up>') robot.keyTap('pageup');
       else if (k === '<page-down>') robot.keyTap('pagedown');
       else console.log('did not type ', k);
-    }*/
+    }
   }
 
   threeDigit() {

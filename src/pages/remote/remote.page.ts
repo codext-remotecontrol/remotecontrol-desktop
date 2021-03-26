@@ -21,6 +21,7 @@ export class RemotePage implements OnInit, OnDestroy {
   userId = 'browser';
   video: HTMLVideoElement;
   videoSize;
+  hostScreenSize;
 
   @HostListener('contextmenu', ['$event'])
   oncontextmenu(event) {
@@ -81,12 +82,21 @@ export class RemotePage implements OnInit, OnDestroy {
       video.addEventListener('mouseup', this.mouseListener.bind(this));
       video.addEventListener('dblclick', this.mouseListener.bind(this));
 
-      video.addEventListener('mousemove', this.mousemoveListener.bind(this));
+      video.addEventListener('mousemove', this.mouseMoveListener.bind(this));
 
       video.addEventListener(
         'loadeddata',
         () => {
+          console.log(this.video);
           this.videoSize = video.getBoundingClientRect();
+          const height = stream.getVideoTracks()[0].getSettings().height;
+          const width = stream.getVideoTracks()[0].getSettings().width;
+          this.hostScreenSize = {
+            height,
+            width,
+          };
+
+          console.log(height, width);
         },
         false
       );
@@ -115,14 +125,12 @@ export class RemotePage implements OnInit, OnDestroy {
     this.video?.removeEventListener('dblclick', this.mouseListener.bind(this));
     this.video?.removeEventListener(
       'mousemove',
-      this.mousemoveListener.bind(this)
+      this.mouseMoveListener.bind(this)
     );
   }
 
   mouseListener(event: MouseEvent) {
-    // event.preventDefault();
-    console.log(event);
-    let type;
+    let type: string;
     if (event.type == 'mouseup') {
       type = 'mu';
     } else if (event.type == 'mousedown') {
@@ -130,35 +138,53 @@ export class RemotePage implements OnInit, OnDestroy {
     } else if (event.type == 'dblclick') {
       type = 'dc';
     }
+    const x = this.scale(
+      event.offsetX,
+      0,
+      this.videoSize.width,
+      0,
+      this.hostScreenSize.width
+    );
+
+    const y = this.scale(
+      event.offsetY,
+      0,
+      this.videoSize.height,
+      0,
+      this.hostScreenSize.height
+    );
 
     const data = {
       t: type,
-      x: event.offsetX,
-      y: event.offsetY,
-      w: this.videoSize.width,
-      h: this.videoSize.height,
+      x,
+      y,
       b: event.button,
     };
+    const stringData = `${type},${x},${y},${event.button}`;
     // this.socketService.sendMessage(data, 'remoteData');
-    const jsonString = stringify(data);
-    this.peer2.send(jsonString);
+    // const jsonString = stringify(data);
+    this.peer2.send(stringData);
   }
 
-  mousemoveListener(event) {
-    // console.log('mousemoveListener', event);
-    const data = {
-      t: 'mm',
-      x: event.offsetX,
-      y: event.offsetY,
-      w: this.videoSize.width,
-      h: this.videoSize.height,
-    };
-
-    const jsonString = stringify(data);
-    console.log('jsonString', jsonString);
+  mouseMoveListener(event) {
+    const x = this.scale(
+      event?.offsetX,
+      0,
+      this.videoSize?.width,
+      0,
+      this.hostScreenSize.width
+    );
+    const y = this.scale(
+      event?.offsetY,
+      0,
+      this.videoSize?.height,
+      0,
+      this.hostScreenSize.height
+    );
+    const stringData = `mm,${x},${y}`;
+    this.peer2.send(stringData);
   }
   keydownListener(event: KeyboardEvent) {
-    // console.log(event);
     const data = {
       t: 'k',
       code: event.code,
@@ -170,8 +196,8 @@ export class RemotePage implements OnInit, OnDestroy {
       meta: event.metaKey,
     };
     // this.socketService.sendMessage(data, 'remoteData');
-    const jsonString = stringify(data);
-    this.peer2.send(jsonString);
+    // const jsonString = stringify(data);
+    this.peer2.send(JSON.stringify(data));
   }
 
   scrollListener(event: any) {
@@ -179,5 +205,12 @@ export class RemotePage implements OnInit, OnDestroy {
       type: 'scroll',
     };
     this.socketService.sendMessage(data, 'remoteData');
+  }
+
+  scale(x, fromLow, fromHigh, toLow, toHigh) {
+    return Math.trunc(
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      ((x - fromLow) * (toHigh - toLow)) / (fromHigh - fromLow) + toLow
+    );
   }
 }
