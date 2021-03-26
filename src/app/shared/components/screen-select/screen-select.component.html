@@ -17,7 +17,7 @@
       class="transition-all hover:shadow-xl cursor-pointer rounded-xl bg-white video-container overflow-hidden"
     >
       <div class="title">{{ video.source.name }}</div>
-      <video autoplay [srcObject]="video.stream"></video>
+      <video muted autoplay [srcObject]="video.stream"></video>
     </div>
   </div>
 </ion-content>
