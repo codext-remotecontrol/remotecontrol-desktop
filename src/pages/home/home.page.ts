@@ -19,7 +19,7 @@ export class HomePage implements OnInit {
   signalData = '';
   peer1;
   socket: any;
-  robot: any;
+  // robot: any;
 
   userId = 'daniel';
 
@@ -32,8 +32,8 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.robot = this.electronService.remote.require('robotjs');
-    this.robot.setMouseDelay(5);
+    // this.robot = this.electronService.remote.require('robotjs');
+    // this.robot.setMouseDelay(5);
 
     this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
     this.cdr.detectChanges();
@@ -122,19 +122,19 @@ export class HomePage implements OnInit {
         break;
       }
       case 'dc': {
-        this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
         break;
       }
       case 'md': {
-        this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
         break;
       }
       case 'mu': {
-        this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
         break;
       }
       case 'mm': {
-        this.robot.dragMouse(x, y);
+        // this.robot.dragMouse(x, y);
         break;
       }
     }
@@ -146,7 +146,7 @@ export class HomePage implements OnInit {
   }
 
   handleKey(data) {
-    const robot = this.robot;
+    /*const robot = this.robot;
     let k = vkey[data.keyCode].toLowerCase();
     if (k === '<space>') k = ' ';
     const modifiers = [];
@@ -170,7 +170,7 @@ export class HomePage implements OnInit {
       else if (k === '<page-up>') robot.keyTap('pageup');
       else if (k === '<page-down>') robot.keyTap('pagedown');
       else console.log('did not type ', k);
-    }
+    }*/
   }
 
   threeDigit() {

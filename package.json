@@ -40,7 +40,7 @@
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
-    "rebuild": "npm rebuild --runtime=electron --target=12.0.1 --disturl=https://atom.io/download/atom-shell --abi=83"
+    "rebuild": "electron-rebuild"
   },
   "dependencies": {
     "@electron/remote": "1.0.4",
@@ -48,7 +48,6 @@
     "@ionic/core": "^5.6.3",
     "@ionic/storage": "^3.0.2",
     "@types/simple-peer": "9.6.2",
-    "robotjs": "0.6.0",
     "simple-peer": "9.10.0",
     "socket.io-client": "4.0.0",
     "vkey": "1.0.1",
@@ -93,6 +92,7 @@
     "cross-env": "7.0.3",
     "electron": "12.0.1",
     "electron-builder": "22.10.5",
+    "electron-rebuild": "2.3.5",
     "electron-reload": "1.5.0",
     "eslint": "7.22.0",
     "eslint-plugin-import": "2.22.1",
