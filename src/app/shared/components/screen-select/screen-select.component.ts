@@ -39,9 +39,9 @@ export class ScreenSelectComponent implements OnInit {
                       chromeMediaSourceId: source.id,
                       maxFrameRate: 25,
                       minWidth: 1280,
-                      maxWidth: 1280,
+                      maxWidth: 1920,
                       minHeight: 720,
-                      maxHeight: 720,
+                      maxHeight: 1080,
                     },
                   },
                 }
@@ -56,6 +56,8 @@ export class ScreenSelectComponent implements OnInit {
         });
     } catch (error) {
     } finally {
+      this.electronService.window.show();
+      this.electronService.window.focus();
       setTimeout(() => {
         this.electronService.window.show();
         this.electronService.window.focus();

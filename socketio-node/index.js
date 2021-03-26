@@ -16,16 +16,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on('ping', (data) => {
-    console.log(data.msg);
-    io.emit('pong', {
-      msg: data.msg,
-    });
+    console.log(data);
+    io.emit('pong', data);
   });
 
   socket.on('call', (data) => {
-    socket.broadcast.to('game').emit('message', {
-      msg: data.msg,
-    });
+    socket.broadcast.to('game').emit('message', data);
+  });
+
+  socket.on('remoteData', (data) => {
+    socket.broadcast.to('game').emit('remoteData', data);
   });
 });
 

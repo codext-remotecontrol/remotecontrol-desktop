@@ -15,7 +15,12 @@
 </div>
 <ion-app class="main-area">
   <ion-split-pane contentId="main-content">
-    <ion-menu class="main-menu" contentId="main-content" type="overlay">
+    <ion-menu
+      *ngIf="appService.sideMenu"
+      class="main-menu"
+      contentId="main-content"
+      type="overlay"
+    >
       <ion-content>
         <ion-list>
           <ion-menu-toggle

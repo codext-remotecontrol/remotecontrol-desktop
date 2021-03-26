@@ -14,13 +14,13 @@ export class SocketService {
   }
 
   // EMITTER
-  sendMessage(msg: string) {
-    this.socket.emit('call', { msg: msg });
+  sendMessage(msg: any, type: 'call' | 'remoteData' = 'call') {
+    this.socket.emit(type, msg);
   }
 
-  onNewMessage() {
+  onNewMessage(type: 'message' | 'remoteData' = 'message') {
     return new Observable((observer) => {
-      this.socket.on('message', (msg) => {
+      this.socket.on(type, (msg) => {
         observer.next(msg);
       });
     });

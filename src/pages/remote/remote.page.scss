@@ -1,0 +1,9 @@
+video {
+  position: relative;
+  // height: calc(100vh - 30px);
+  max-height: calc(100vh - 30px);
+  margin: 0 auto;
+}
+ion-content {
+  --background: black;
+}
