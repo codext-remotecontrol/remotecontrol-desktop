@@ -9,7 +9,7 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://192.168.2.104:3000');
+    this.socket = io('http://192.168.178.169:3000');
     // this.socket.join('game');
   }
 

@@ -47,7 +47,7 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnInit() {
     this.appService.sideMenu = false;
     this.peer2 = new SimplePeer({
-      channelName: 'danieltester123',
+      channelName: 'danieltester1235',
       config: {
         iceServers: [
           {
@@ -121,7 +121,7 @@ export class RemotePage implements OnInit, OnDestroy {
 
   mouseListener(event: MouseEvent) {
     // event.preventDefault();
-    // console.log(event);
+    console.log(event);
     let type;
     if (event.type == 'mouseup') {
       type = 'mu';
@@ -153,9 +153,9 @@ export class RemotePage implements OnInit, OnDestroy {
       w: this.videoSize.width,
       h: this.videoSize.height,
     };
+
     const jsonString = stringify(data);
-    // console.log(jsonString);
-    this.peer2.send(jsonString);
+    console.log('jsonString', jsonString);
   }
   keydownListener(event: KeyboardEvent) {
     // console.log(event);
@@ -175,7 +175,6 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   scrollListener(event: any) {
-    // console.log(event);
     const data = {
       type: 'scroll',
     };

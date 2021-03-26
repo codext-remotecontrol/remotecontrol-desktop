@@ -56,7 +56,7 @@ export class HomePage implements OnInit {
     this.peer1 = new SimplePeer({
       initiator: true,
       stream: stream,
-      channelName: 'danieltester123',
+      channelName: 'danieltester1235',
       config: {
         iceServers: [
           {
@@ -88,7 +88,7 @@ export class HomePage implements OnInit {
     });
 
     this.peer1.on('data', (data) => {
-      // console.log('data', data);
+      console.log('data', data);
       try {
         const text = new TextDecoder('utf-8').decode(data);
         // console.log('data', parsed);
