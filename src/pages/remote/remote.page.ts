@@ -26,6 +26,18 @@ export class RemotePage implements OnInit, OnDestroy {
     this.keydownListener(event);
   }
 
+  @HostListener('document:mousemove', ['$event'])
+  mousemove(event) {
+    // console.log(event);
+    // this.mouseupListener(event);
+  }
+
+  @HostListener('document:scroll', ['$event'])
+  onScroll(event) {
+    console.log(event);
+    this.scrollListener(event);
+  }
+
   constructor(
     private socketService: SocketService,
     private elementRef: ElementRef,
@@ -114,6 +126,14 @@ export class RemotePage implements OnInit, OnDestroy {
       control: event.ctrlKey,
       alt: event.altKey,
       meta: event.metaKey,
+    };
+    this.socketService.sendMessage(data, 'remoteData');
+  }
+
+  scrollListener(event: any) {
+    console.log(event);
+    const data = {
+      type: 'scroll',
     };
     this.socketService.sendMessage(data, 'remoteData');
   }
