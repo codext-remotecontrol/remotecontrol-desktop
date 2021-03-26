@@ -1,14 +1,13 @@
-import { SocketService } from './../../app/core/services/socket.service';
-import { ElectronService } from './../../app/core/services/electron/electron.service';
-
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import 'webrtc-adapter';
 import { LoadingController, ModalController } from '@ionic/angular';
-import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import SimplePeer from 'simple-peer';
-import { io, Socket } from 'socket.io-client';
 import * as vkey from 'vkey';
-import { stringify, parse } from 'zipson';
+import 'webrtc-adapter';
+import { parse } from 'zipson';
+import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
+import { ElectronService } from './../../app/core/services/electron/electron.service';
+import { SocketService } from './../../app/core/services/socket.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -35,10 +34,11 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.robot = this.electronService.remote.require('robotjs');
     this.robot.setMouseDelay(5);
+
     this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
     this.cdr.detectChanges();
 
-    console.log(' this.myId', this.myId);
+    console.log('this.myId', this.myId);
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
       backdropDismiss: false,
@@ -78,9 +78,13 @@ export class HomePage implements OnInit {
     this.peer1.on('signal', (data) => {
       this.socketService.sendMessage(data);
     });
+    this.peer1.on('error', () => {
+      // hideCursor.show();
+    });
 
     this.socketService.onNewMessage().subscribe((data: any) => {
       this.peer1.signal(data);
+      // hideCursor.hide();
     });
 
     this.peer1.on('data', (data) => {
@@ -102,7 +106,7 @@ export class HomePage implements OnInit {
   }
 
   handleRemoteData(data) {
-    console.log('Data', data);
+    // console.log('Data', data);
     let x, y;
     if (data.t == 'md' || data.t == 'mu' || data.t == 'mm') {
       x = this.scale(data.x, 0, data.w, 0, screen.width);
@@ -118,39 +122,18 @@ export class HomePage implements OnInit {
         break;
       }
       case 'dc': {
-        // console.log(x, y);
-        // const pos = this.robot.getMousePos(); // hosts current x/y
-        // this.robot.moveMouse(x, y); // move to remotes pos
-        // this.robot.mouseToggle('up', 'left');
         this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
-        // this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
-        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
-        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
         break;
       }
       case 'md': {
-        // console.log(x, y);
-        // const pos = this.robot.getMousePos(); // hosts current x/y
-        // this.robot.moveMouse(x, y); // move to remotes pos
-        // this.robot.mouseToggle('up', 'left');
-
         this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
-        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
-        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
         break;
       }
       case 'mu': {
-        // console.log(x, y);
-        // const pos = this.robot.getMousePos(); // hosts current x/y
-        // this.robot.moveMouse(x, y); // move to remotes pos
-        // this.robot.mouseToggle('up', 'left');
         this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
-        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
-        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
         break;
       }
       case 'mm': {
-        // console.log(x, y);
         this.robot.dragMouse(x, y);
         break;
       }
@@ -198,22 +181,6 @@ export class HomePage implements OnInit {
     const loading = await this.loadingCtrl.create();
     loading.present();
     setTimeout(() => {
-      /*const remote = this.electronService.remote;
-      const BrowserWindow = remote.BrowserWindow;
-      const win = new BrowserWindow({
-        width: 400,
-        height: 400,
-        frame: false,
-        center: true,
-        webPreferences: {
-          nodeIntegration: true,
-          allowRunningInsecureContent: true,
-          contextIsolation: false,
-          enableRemoteModule: true,
-        },
-      });
-
-      win.loadURL("http://google.de");*/
       loading.dismiss();
     }, 1000);
   }

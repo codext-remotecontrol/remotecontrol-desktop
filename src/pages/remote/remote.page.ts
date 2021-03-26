@@ -1,4 +1,3 @@
-import { AppService } from './../../app/core/services/app.service';
 import {
   Component,
   ElementRef,
@@ -7,9 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import SimplePeer from 'simple-peer';
-import { SocketService } from '../../app/core/services/socket.service';
 import 'webrtc-adapter';
 import { stringify } from 'zipson';
+import { SocketService } from '../../app/core/services/socket.service';
+import { AppService } from './../../app/core/services/app.service';
 @Component({
   selector: 'app-remote',
   templateUrl: './remote.page.html',
@@ -33,15 +33,8 @@ export class RemotePage implements OnInit, OnDestroy {
     this.keydownListener(event);
   }
 
-  @HostListener('document:mousemove', ['$event'])
-  mousemove(event) {
-    // console.log(event);
-    // this.mouseupListener(event);
-  }
-
   @HostListener('document:scroll', ['$event'])
   onScroll(event) {
-    console.log(event);
     this.scrollListener(event);
   }
 
@@ -117,13 +110,18 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   removeEventListeners() {
+    this.video?.removeEventListener('mousedown', this.mouseListener.bind(this));
     this.video?.removeEventListener('mouseup', this.mouseListener.bind(this));
-    this.video?.removeEventListener('mousemove', this.mouseListener.bind(this));
+    this.video?.removeEventListener('dblclick', this.mouseListener.bind(this));
+    this.video?.removeEventListener(
+      'mousemove',
+      this.mousemoveListener.bind(this)
+    );
   }
 
   mouseListener(event: MouseEvent) {
     // event.preventDefault();
-    console.log(event);
+    // console.log(event);
     let type;
     if (event.type == 'mouseup') {
       type = 'mu';
@@ -160,7 +158,7 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2.send(jsonString);
   }
   keydownListener(event: KeyboardEvent) {
-    console.log(event);
+    // console.log(event);
     const data = {
       t: 'k',
       code: event.code,
@@ -177,7 +175,7 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   scrollListener(event: any) {
-    console.log(event);
+    // console.log(event);
     const data = {
       type: 'scroll',
     };
