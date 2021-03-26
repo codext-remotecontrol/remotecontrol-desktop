@@ -9,7 +9,7 @@ import {
 import SimplePeer from 'simple-peer';
 import { SocketService } from '../../app/core/services/socket.service';
 import 'webrtc-adapter';
-
+import { stringify } from 'zipson';
 @Component({
   selector: 'app-remote',
   templateUrl: './remote.page.html',
@@ -20,6 +20,13 @@ export class RemotePage implements OnInit, OnDestroy {
   peer2;
   userId = 'browser';
   video: HTMLVideoElement;
+  videoSize;
+
+  @HostListener('contextmenu', ['$event'])
+  oncontextmenu(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -77,7 +84,19 @@ export class RemotePage implements OnInit, OnDestroy {
       this.video = video;
       video.srcObject = stream;
       video.play();
-      video.addEventListener('mouseup', this.mouseupListener.bind(this));
+      video.addEventListener('mousedown', this.mouseListener.bind(this));
+      video.addEventListener('mouseup', this.mouseListener.bind(this));
+      video.addEventListener('dblclick', this.mouseListener.bind(this));
+
+      video.addEventListener('mousemove', this.mousemoveListener.bind(this));
+
+      video.addEventListener(
+        'loadeddata',
+        () => {
+          this.videoSize = video.getBoundingClientRect();
+        },
+        false
+      );
     });
 
     this.peer2.on('close', () => {
@@ -98,36 +117,63 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   removeEventListeners() {
-    this.video?.removeEventListener('mouseup', this.mouseupListener.bind(this));
+    this.video?.removeEventListener('mouseup', this.mouseListener.bind(this));
+    this.video?.removeEventListener('mousemove', this.mouseListener.bind(this));
   }
 
-  mouseupListener(event: MouseEvent) {
+  mouseListener(event: MouseEvent) {
+    // event.preventDefault();
     console.log(event);
-    const videoSize = this.video.getBoundingClientRect();
+    let type;
+    if (event.type == 'mouseup') {
+      type = 'mu';
+    } else if (event.type == 'mousedown') {
+      type = 'md';
+    } else if (event.type == 'dblclick') {
+      type = 'dc';
+    }
 
     const data = {
-      type: 'mouse',
-      clientX: event.offsetX,
-      clientY: event.offsetY,
-      canvasWidth: videoSize.width,
-      canvasHeight: videoSize.height,
+      t: type,
+      x: event.offsetX,
+      y: event.offsetY,
+      w: this.videoSize.width,
+      h: this.videoSize.height,
+      b: event.button,
     };
-    this.socketService.sendMessage(data, 'remoteData');
+    // this.socketService.sendMessage(data, 'remoteData');
+    const jsonString = stringify(data);
+    this.peer2.send(jsonString);
+  }
+
+  mousemoveListener(event) {
+    // console.log('mousemoveListener', event);
+    const data = {
+      t: 'mm',
+      x: event.offsetX,
+      y: event.offsetY,
+      w: this.videoSize.width,
+      h: this.videoSize.height,
+    };
+    const jsonString = stringify(data);
+    // console.log(jsonString);
+    this.peer2.send(jsonString);
   }
   keydownListener(event: KeyboardEvent) {
     console.log(event);
     const data = {
-      type: 'key',
+      t: 'k',
       code: event.code,
       keyCode: event.keyCode,
-      key: event.key,
-
+      // key: event.key,
       shift: event.shiftKey,
       control: event.ctrlKey,
       alt: event.altKey,
       meta: event.metaKey,
     };
-    this.socketService.sendMessage(data, 'remoteData');
+    // this.socketService.sendMessage(data, 'remoteData');
+    const jsonString = stringify(data);
+    this.peer2.send(jsonString);
   }
 
   scrollListener(event: any) {

@@ -3,6 +3,8 @@ video {
   // height: calc(100vh - 30px);
   max-height: calc(100vh - 30px);
   margin: 0 auto;
+  object-fit: cover;
+  width: 100%;
 }
 ion-content {
   --background: black;

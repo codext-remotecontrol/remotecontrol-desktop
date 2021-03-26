@@ -8,6 +8,7 @@ import { ScreenSelectComponent } from '../../app/shared/components/screen-select
 import SimplePeer from 'simple-peer';
 import { io, Socket } from 'socket.io-client';
 import * as vkey from 'vkey';
+import { stringify, parse } from 'zipson';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -33,6 +34,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.robot = this.electronService.remote.require('robotjs');
+    this.robot.setMouseDelay(5);
     this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
     this.cdr.detectChanges();
 
@@ -81,67 +83,78 @@ export class HomePage implements OnInit {
       this.peer1.signal(data);
     });
 
-    this.socketService.onNewMessage('remoteData').subscribe((data: any) => {
-      console.log('remoteData', data);
-      switch (data.type) {
-        case 'key': {
-          try {
-            /*if (data.key.includes('Backspace')) {
-              this.robot.keyTap('backspace');
-            } else if (data.key.includes('ArrowUp')) {
-              this.robot.keyTap('up');
-            } else if (data.key.includes('Enter')) {
-              this.robot.keyTap('enter');
-            } else if (data.key.includes('ArrowDown')) {
-              this.robot.keyTap('down');
-            } else if (data.key.includes('ArrowLeft')) {
-              this.robot.keyTap('left');
-            } else if (data.key.includes('ArrowRight')) {
-              this.robot.keyTap('right');
-            } else if (data.key.includes('Delete')) {
-              this.robot.keyTap('delete');
-            } else if (data.key.includes('Meta')) {
-              this.robot.keyTap('home');
-            } else if (data.key.includes('End')) {
-              this.robot.keyTap('end');
-            } else if (data.key.includes('PageUp')) {
-              this.robot.keyTap('pageup');
-            } else if (data.key.includes('PageDown')) {
-              this.robot.keyTap('pagedown');
-            } else {
-              this.robot.keyTap(data.key);
-            }*/
-            this.handleKey(data);
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        }
-        case 'mouse': {
-          const x = this.scale(
-            data.clientX,
-            0,
-            data.canvasWidth,
-            0,
-            screen.width
-          );
-          const y = this.scale(
-            data.clientY,
-            0,
-            data.canvasHeight,
-            0,
-            screen.height
-          );
-          console.log(x, y);
-          // const pos = this.robot.getMousePos(); // hosts current x/y
-          this.robot.moveMouse(x, y); // move to remotes pos
-          this.robot.mouseToggle('up', 'left'); // set mouse position to up
-          this.robot.mouseClick(); // click on remote click spot
-          // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
-          break;
-        }
+    this.peer1.on('data', (data) => {
+      // console.log('data', data);
+      try {
+        const text = new TextDecoder('utf-8').decode(data);
+        // console.log('data', parsed);
+        const parsed = parse(text);
+        this.handleRemoteData(parsed);
+      } catch (error) {
+        console.log('error', error);
       }
     });
+
+    this.socketService.onNewMessage('remoteData').subscribe((data: any) => {
+      console.log('remoteData', data);
+      this.handleRemoteData(data);
+    });
+  }
+
+  handleRemoteData(data) {
+    console.log('Data', data);
+    let x, y;
+    if (data.t == 'md' || data.t == 'mu' || data.t == 'mm') {
+      x = this.scale(data.x, 0, data.w, 0, screen.width);
+      y = this.scale(data.y, 0, data.h, 0, screen.height);
+    }
+    switch (data.t) {
+      case 'k': {
+        try {
+          this.handleKey(data);
+        } catch (err) {
+          console.log(err);
+        }
+        break;
+      }
+      case 'dc': {
+        // console.log(x, y);
+        // const pos = this.robot.getMousePos(); // hosts current x/y
+        // this.robot.moveMouse(x, y); // move to remotes pos
+        // this.robot.mouseToggle('up', 'left');
+        this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        // this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
+        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
+        break;
+      }
+      case 'md': {
+        // console.log(x, y);
+        // const pos = this.robot.getMousePos(); // hosts current x/y
+        // this.robot.moveMouse(x, y); // move to remotes pos
+        // this.robot.mouseToggle('up', 'left');
+
+        this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
+        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
+        break;
+      }
+      case 'mu': {
+        // console.log(x, y);
+        // const pos = this.robot.getMousePos(); // hosts current x/y
+        // this.robot.moveMouse(x, y); // move to remotes pos
+        // this.robot.mouseToggle('up', 'left');
+        this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left');
+        // this.robot.moveMouse(pos.x, pos.y); // go back to hosts position
+        break;
+      }
+      case 'mm': {
+        // console.log(x, y);
+        this.robot.dragMouse(x, y);
+        break;
+      }
+    }
   }
 
   scale(x, fromLow, fromHigh, toLow, toHigh) {

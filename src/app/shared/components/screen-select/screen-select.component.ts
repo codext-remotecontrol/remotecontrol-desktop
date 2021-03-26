@@ -21,27 +21,23 @@ export class ScreenSelectComponent implements OnInit {
 
     try {
       await this.electronService.desktopCapturer
-        .getSources({ types: ['window', 'screen', 'audio'] })
+        .getSources({ types: ['window', 'screen'] })
         .then(async (sources) => {
           console.log('sources', sources);
           for (const source of sources) {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
                 {
-                  audio: {
-                    mandatory: {
-                      chromeMediaSource: 'desktop',
-                    },
-                  },
+                  audio: false,
                   video: {
                     mandatory: {
                       chromeMediaSource: 'desktop',
                       chromeMediaSourceId: source.id,
                       maxFrameRate: 25,
-                      minWidth: 1280,
+                      /*minWidth: 1280,
                       maxWidth: 1920,
                       minHeight: 720,
-                      maxHeight: 1080,
+                      maxHeight: 1080,*/
                     },
                   },
                 }
@@ -73,7 +69,7 @@ export class ScreenSelectComponent implements OnInit {
   handleStream(stream) {
     const video = document.querySelector('video');
     video.srcObject = stream;
-    video.onloadedmetadata = (e) => video.play();
+    video.onloadedmetadata = () => video.play();
   }
 
   close() {
