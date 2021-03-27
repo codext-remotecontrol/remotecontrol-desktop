@@ -6,6 +6,7 @@
   "files": [
     "**/*",
     "!**/*.ts",
+    "!old/",
     "!.github",
     "!.vscode",
     "!.code-workspace",

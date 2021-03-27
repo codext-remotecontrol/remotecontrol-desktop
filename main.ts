@@ -23,8 +23,9 @@ function createWindow(): BrowserWindow {
     height: size.height / 1.5,
     icon: path.join(__dirname, 'data/icon-white.png'),
     show: !hidden,
-    frame: false,
+    frame: true,
     center: true,
+    backgroundColor: '#2e2c29',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: serve ? true : false,
@@ -64,6 +65,7 @@ function createWindow(): BrowserWindow {
     });
     win.loadURL('http://localhost:4200/#/home');
   } else {
+    win.webContents.openDevTools();
     win.loadURL(
       url.format({
         pathname: path.join(__dirname, 'dist/index.html'),

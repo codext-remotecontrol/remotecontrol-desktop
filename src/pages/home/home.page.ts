@@ -1,14 +1,13 @@
-import { AppConfig } from './../../environments/environment';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import SimplePeer from 'simple-peer';
+import * as url from 'url';
 import * as vkey from 'vkey';
 import 'webrtc-adapter';
-import { parse } from 'zipson';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
-import * as url from 'url';
+import { AppConfig } from './../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -229,7 +228,6 @@ export class HomePage implements OnInit {
       win.show();
     } catch (error) {
       console.log('error', error);
-    } finally {
     }
   }
 }
