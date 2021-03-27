@@ -6,19 +6,26 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class SocketService {
-  private socket: Socket;
+  public socket: Socket;
 
   constructor() {
-    this.socket = io('http://192.168.178.169:3000');
+    this.socket = io('https://node.remote-control.codext.de');
     // this.socket.join('game');
   }
 
-  // EMITTER
-  sendMessage(msg: any, type: 'call' | 'remoteData' = 'call') {
-    this.socket.emit(type, msg);
+  joinRoom(id: string) {
+    console.log('join', id);
+    this.socket.emit('join', id);
   }
 
-  onNewMessage(type: 'message' | 'remoteData' = 'message') {
+  sendMessage(
+    msg: any,
+    type: 'message' | 'call' | 'remoteData' = 'remoteData'
+  ) {
+    this.socket.emit(type, { room: 1234, data: msg });
+  }
+
+  onNewMessage(type: 'message' | 'remoteData' | 'signaling' = 'remoteData') {
     return new Observable((observer) => {
       this.socket.on(type, (msg) => {
         observer.next(msg);

@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
 import { stringify } from 'zipson';
@@ -42,13 +43,22 @@ export class RemotePage implements OnInit, OnDestroy {
   constructor(
     private socketService: SocketService,
     private elementRef: ElementRef,
-    private appService: AppService
+    private appService: AppService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    const id = this.route.snapshot.queryParams.id;
+    console.log('id', id);
+    this.socketService.joinRoom(id);
+    this.socketService.onNewMessage().subscribe((data: any) => {
+      // console.log('tester');
+      this.peer2.signal(data);
+    });
+
     this.appService.sideMenu = false;
     this.peer2 = new SimplePeer({
-      channelName: 'danieltester1235',
+      channelName: id,
       config: {
         iceServers: [
           {
@@ -78,10 +88,10 @@ export class RemotePage implements OnInit, OnDestroy {
       this.video = video;
       video.srcObject = stream;
       video.play();
+
       video.addEventListener('mousedown', this.mouseListener.bind(this));
       video.addEventListener('mouseup', this.mouseListener.bind(this));
       video.addEventListener('dblclick', this.mouseListener.bind(this));
-
       video.addEventListener('mousemove', this.mouseMoveListener.bind(this));
 
       video.addEventListener(
@@ -107,10 +117,6 @@ export class RemotePage implements OnInit, OnDestroy {
     });
     this.peer2.on('error', () => {
       this.removeEventListeners();
-    });
-
-    this.socketService.onNewMessage().subscribe((data: any) => {
-      this.peer2.signal(data);
     });
   }
 
@@ -161,8 +167,6 @@ export class RemotePage implements OnInit, OnDestroy {
       b: event.button,
     };
     const stringData = `${type},${x},${y},${event.button}`;
-    // this.socketService.sendMessage(data, 'remoteData');
-    // const jsonString = stringify(data);
     this.peer2.send(stringData);
   }
 
@@ -195,8 +199,6 @@ export class RemotePage implements OnInit, OnDestroy {
       alt: event.altKey,
       meta: event.metaKey,
     };
-    // this.socketService.sendMessage(data, 'remoteData');
-    // const jsonString = stringify(data);
     this.peer2.send(JSON.stringify(data));
   }
 

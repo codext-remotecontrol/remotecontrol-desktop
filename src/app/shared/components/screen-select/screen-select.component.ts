@@ -51,6 +51,7 @@ export class ScreenSelectComponent implements OnInit {
           }
         });
     } catch (error) {
+      console.log('error', error);
     } finally {
       this.electronService.window.show();
       this.electronService.window.focus();

@@ -10,9 +10,9 @@ import { AppConfig } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  public version: string = '1';
+  version = '1';
 
-  public appPages = [
+  appPages = [
     { title: 'Home', url: '/home', icon: 'code-working' },
     { title: 'Einstellungen', url: '/settings', icon: 'cog' },
   ];
@@ -24,14 +24,5 @@ export class AppComponent {
   ) {
     this.translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
-
-    if (electronService.isElectron) {
-      console.log(process.env);
-      console.log('Run in electron');
-      console.log('Electron ipcRenderer', this.electronService.ipcRenderer);
-      console.log('NodeJS childProcess', this.electronService.childProcess);
-    } else {
-      console.log('Run in browser');
-    }
   }
 }

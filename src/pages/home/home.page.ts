@@ -14,7 +14,8 @@ import { SocketService } from './../../app/core/services/socket.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  myId = '';
+  id = '';
+  remoteId = '';
 
   signalData = '';
   peer1;
@@ -22,6 +23,10 @@ export class HomePage implements OnInit {
   robot: any;
 
   userId = 'daniel';
+
+  videoSource;
+
+  dbl = false;
 
   constructor(
     private modalCtrl: ModalController,
@@ -32,38 +37,41 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.robot = this.electronService.remote.require('robotjs');
+    this.robot = this.electronService.remote?.require('robotjs');
     this.robot.setMouseDelay(5);
 
-    this.myId = `${this.threeDigit()} ${this.threeDigit()} ${this.threeDigit()}`;
-    this.cdr.detectChanges();
+    this.id = '1234'; // `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
 
-    console.log('this.myId', this.myId);
+    console.log('this.myId', this.id);
+
+    this.socketService.joinRoom(this.id);
+    this.socketService.onNewMessage().subscribe((data: any) => {
+      this.peer1.signal(data);
+    });
+
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
       backdropDismiss: false,
     });
     modal.onDidDismiss().then((data) => {
       if (data?.data) {
-        this.videoConnector(data.data);
+        this.videoSource = data.data;
       }
     });
-    return await modal.present();
+    await modal.present();
+  }
+
+  start() {
+    this.videoConnector(this.videoSource);
   }
 
   videoConnector(source) {
-    console.log('source', source);
-
+    console.log('videoConnector', source);
     const stream = source.stream;
-    const height = stream.getVideoTracks()[0].getSettings().height;
-    const width = stream.getVideoTracks()[0].getSettings().width;
-
-    console.log(width, height);
-
     this.peer1 = new SimplePeer({
       initiator: true,
       stream: stream,
-      channelName: 'danieltester1235',
+      channelName: this.id,
       config: {
         iceServers: [
           {
@@ -87,10 +95,6 @@ export class HomePage implements OnInit {
     });
     this.peer1.on('error', () => {});
 
-    this.socketService.onNewMessage().subscribe((data: any) => {
-      this.peer1.signal(data);
-    });
-
     this.peer1.on('data', (data) => {
       try {
         let text = new TextDecoder('utf-8').decode(data);
@@ -103,10 +107,6 @@ export class HomePage implements OnInit {
       } catch (error) {
         console.log('error', error);
       }
-    });
-
-    this.socketService.onNewMessage('remoteData').subscribe((data: any) => {
-      // this.handleRemoteData(data);
     });
   }
 
@@ -121,7 +121,7 @@ export class HomePage implements OnInit {
 
     switch (data.t) {
       case 'dc': {
-        this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
         break;
       }
       case 'md': {
