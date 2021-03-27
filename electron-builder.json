@@ -29,9 +29,7 @@
     "icon": "dist/assets/icons",
     "target": ["portable"]
   },
-  "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
-  },
+  "portable": {},
   "mac": {
     "icon": "dist/assets/icons",
     "target": ["dmg"]

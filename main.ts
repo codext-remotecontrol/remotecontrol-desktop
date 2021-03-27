@@ -1,12 +1,4 @@
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  nativeImage,
-  screen,
-  Tray,
-  globalShortcut,
-} from 'electron';
+import { app, BrowserWindow, Menu, nativeImage, screen, Tray } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -36,8 +28,8 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: serve ? true : false,
-      contextIsolation: false, // false if you want to run 2e2 test with Spectron
-      enableRemoteModule: true, // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
@@ -57,7 +49,7 @@ function createWindow(): BrowserWindow {
       },
     },
   ]);
-  tray.setToolTip('Remotecontrol');
+  tray.setToolTip('RemoteControl');
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {
@@ -70,7 +62,7 @@ function createWindow(): BrowserWindow {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
     });
-    win.loadURL('http://localhost:4200');
+    win.loadURL('http://localhost:4200/#/home');
   } else {
     win.loadURL(
       url.format({

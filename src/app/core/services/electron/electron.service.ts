@@ -11,6 +11,7 @@ import {
 import * as remote from '@electron/remote';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class ElectronService {
   remote: typeof remote;
   childProcess: typeof childProcess;
   fs: typeof fs;
+  path: typeof path;
   window: any;
 
   get isElectron(): boolean {
@@ -39,6 +41,7 @@ export class ElectronService {
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
+      this.path = window.require('path');
 
       this.remote.globalShortcut.register('CommandOrControl+I', () => {
         console.log('CommandOrControl+I');

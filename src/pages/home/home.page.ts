@@ -1,3 +1,4 @@
+import { AppConfig } from './../../environments/environment';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import SimplePeer from 'simple-peer';
@@ -7,6 +8,7 @@ import { parse } from 'zipson';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
+import * as url from 'url';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +17,8 @@ import { SocketService } from './../../app/core/services/socket.service';
 })
 export class HomePage implements OnInit {
   id = '';
+  idArray = [];
+  remoteIdArray = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
   remoteId = '';
 
   signalData = '';
@@ -30,7 +34,6 @@ export class HomePage implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private cdr: ChangeDetectorRef,
     private loadingCtrl: LoadingController,
     private electronService: ElectronService,
     private socketService: SocketService
@@ -40,9 +43,8 @@ export class HomePage implements OnInit {
     this.robot = this.electronService.remote?.require('robotjs');
     this.robot.setMouseDelay(5);
 
-    this.id = '1234'; // `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
-
-    console.log('this.myId', this.id);
+    this.id = `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
+    this.idArray = ('' + this.id).split('');
 
     this.socketService.joinRoom(this.id);
     this.socketService.onNewMessage().subscribe((data: any) => {
@@ -59,6 +61,18 @@ export class HomePage implements OnInit {
       }
     });
     await modal.present();
+  }
+
+  onDigitInput(event) {
+    let element;
+    if (event.code !== 'Backspace')
+      element = event.srcElement.nextElementSibling;
+
+    if (event.code === 'Backspace')
+      element = event.srcElement.previousElementSibling;
+
+    if (element == null) return;
+    else element.focus();
   }
 
   start() {
@@ -172,10 +186,50 @@ export class HomePage implements OnInit {
   }
 
   async connect() {
-    const loading = await this.loadingCtrl.create();
-    loading.present();
-    setTimeout(() => {
-      loading.dismiss();
-    }, 1000);
+    const ids = this.remoteIdArray.map((item) => {
+      return item['number'];
+    });
+    const id = ids.join('');
+    if (id.length != 9) {
+      return;
+    }
+
+    try {
+      const BrowserWindow = this.electronService.remote.BrowserWindow;
+      const win = new BrowserWindow({
+        height: 600,
+        width: 800,
+        frame: false,
+        center: true,
+        show: false,
+        webPreferences: {
+          nodeIntegration: true,
+          allowRunningInsecureContent: true,
+          contextIsolation: false,
+          enableRemoteModule: true,
+        },
+      });
+
+      if (AppConfig.production) {
+        win.loadURL(
+          url.format({
+            pathname: this.electronService.path.join(
+              __dirname,
+              'dist/index.html/#/remote?id=' + id
+            ),
+            protocol: 'file:',
+            slashes: true,
+          })
+        );
+      } else {
+        win.loadURL('http://localhost:4200/#/remote?id=' + id);
+      }
+
+      win.maximize();
+      win.show();
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+    }
   }
 }
