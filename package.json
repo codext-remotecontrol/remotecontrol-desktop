@@ -35,6 +35,7 @@
     "@ionic/core": "^5.6.3",
     "@ionic/storage": "^3.0.2",
     "@types/simple-peer": "9.6.2",
+    "fsevents": "2.3.2",
     "robotjs": "0.6.0",
     "simple-peer": "9.10.0",
     "socket.io-client": "4.0.0",
@@ -75,6 +76,7 @@
     "@typescript-eslint/eslint-plugin-tslint": "4.19.0",
     "@typescript-eslint/parser": "4.19.0",
     "chai": "4.3.4",
+    "chokidar": "3.5.1",
     "conventional-changelog-cli": "2.1.1",
     "core-js": "3.9.1",
     "cross-env": "7.0.3",
@@ -111,5 +113,8 @@
   },
   "browserslist": [
     "chrome 83"
-  ]
+  ],
+  "optionalDependencies": {
+    "fsevents": "2.3.2"
+  }
 }
