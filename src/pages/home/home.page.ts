@@ -10,6 +10,7 @@ import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
 import Swal from 'sweetalert2';
 import { ElectronService as NgxService } from 'ngx-electron';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
