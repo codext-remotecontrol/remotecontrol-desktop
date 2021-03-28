@@ -35,7 +35,9 @@ jobs:
         run: |
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-      - run: npm install --global windows-build-tools@4.0.0
+      # - run: npm install --global windows-build-tools@4.0.0
+      - run: npm i electron-rebuild
+      - run: npm run rebuild
       - name: Install Dependencies
         run: npm install
       - name: Check lint
