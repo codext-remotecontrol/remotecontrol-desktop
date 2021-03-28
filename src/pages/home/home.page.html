@@ -8,11 +8,14 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-button (click)="start()">Starten</ion-button>
+  <!--<ion-button (click)="start()">Starten</ion-button>-->
   <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
-    <div class="flex flex-col shadow-xl mt-5 rounded-xl mb-5 bg-white">
+    <div
+      *ngIf="electronService.isElectron"
+      class="box flex flex-col shadow-xl mt-5 rounded-xl overflow-hidden mb-5 bg-white"
+    >
       <div
-        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
+        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11"
       >
         <h2 class="text-white text-xs">
           Teilen Sie diese ID Ihrem Partner mit
@@ -37,9 +40,11 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col shadow-xl mt-5 rounded-xl mb-5 bg-white">
+    <div
+      class="box flex flex-col shadow-xl mt-5 rounded-xl overflow-hidden mb-5 bg-white"
+    >
       <div
-        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 rounded-2xl text-center -mb-5 pb-11"
+        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11"
       >
         <h2 class="text-white text-xs">Geben Sie die ID Ihres Partners ein</h2>
         <h4 class="text-white text-center font-bold text-xl mt-2">

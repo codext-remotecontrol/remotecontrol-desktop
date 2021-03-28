@@ -35,33 +35,43 @@ export class HomePage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private socketService: SocketService,
     private ngxService: NgxService
   ) {}
 
   async ngOnInit() {
+    if (this.electronService.isElectron) {
+      const modal = await this.modalCtrl.create({
+        component: ScreenSelectComponent,
+        backdropDismiss: false,
+      });
+      modal.onDidDismiss().then((data) => {
+        if (data?.data) {
+          this.videoSource = data.data;
+          this.init();
+        }
+      });
+      await modal.present();
+    }
+  }
+
+  init() {
     this.robot = this.ngxService.remote?.require('robotjs');
-    this.robot.setMouseDelay(5);
+    this.robot?.setMouseDelay(5);
 
     this.id = `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
     this.idArray = ('' + this.id).split('');
 
     this.socketService.joinRoom(this.id);
     this.socketService.onNewMessage().subscribe((data: any) => {
-      this.peer1.signal(data);
-    });
-
-    const modal = await this.modalCtrl.create({
-      component: ScreenSelectComponent,
-      backdropDismiss: false,
-    });
-    modal.onDidDismiss().then((data) => {
-      if (data?.data) {
-        this.videoSource = data.data;
+      console.log('onNewMessage', data);
+      if (data == 'hi') {
+        this.videoConnector(this.videoSource);
+      } else {
+        this.peer1.signal(data);
       }
     });
-    await modal.present();
   }
 
   onDigitInput(event) {
@@ -106,11 +116,16 @@ export class HomePage implements OnInit {
     });
 
     this.peer1.on('signal', (data) => {
+      console.log('signal');
       this.socketService.sendMessage(data);
     });
     this.peer1.on('error', () => {});
+    this.peer1.on('connect', () => {
+      console.log('connect');
+    });
 
     this.peer1.on('data', (data) => {
+      console.log('signal');
       try {
         let text = new TextDecoder('utf-8').decode(data);
         if (text.startsWith('{')) {
@@ -201,41 +216,45 @@ export class HomePage implements OnInit {
       return;
     }
 
-    try {
-      const BrowserWindow = this.electronService.remote.BrowserWindow;
-      const win = new BrowserWindow({
-        height: 600,
-        width: 800,
-        titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
-        frame: process.platform === 'darwin' ? true : true,
-        center: true,
-        show: false,
-        backgroundColor: '#252a33',
-        webPreferences: {
-          nodeIntegration: true,
-          allowRunningInsecureContent: true,
-          contextIsolation: false,
-          enableRemoteModule: true,
-        },
-      });
+    if (this.electronService.isElectron) {
+      try {
+        const BrowserWindow = this.electronService.remote.BrowserWindow;
+        const win = new BrowserWindow({
+          height: 600,
+          width: 800,
+          titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
+          frame: process.platform === 'darwin' ? true : false,
+          center: true,
+          show: false,
+          backgroundColor: '#252a33',
+          webPreferences: {
+            nodeIntegration: true,
+            allowRunningInsecureContent: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+          },
+        });
 
-      if (AppConfig.production) {
-        win.loadURL(
-          url.format({
-            pathname: this.electronService.path.join(__dirname, 'index.html'),
-            hash: '/remote?id=' + id,
-            protocol: 'file:',
-            slashes: true,
-          })
-        );
-      } else {
-        win.loadURL('http://localhost:4200/#/remote?id=' + id);
+        if (AppConfig.production) {
+          win.loadURL(
+            url.format({
+              pathname: this.electronService.path.join(__dirname, 'index.html'),
+              hash: '/remote?id=' + id,
+              protocol: 'file:',
+              slashes: true,
+            })
+          );
+        } else {
+          win.loadURL('http://localhost:4200/#/remote?id=' + id);
+        }
+
+        win.maximize();
+        win.show();
+      } catch (error) {
+        console.log('error', error);
       }
-
-      win.maximize();
-      win.show();
-    } catch (error) {
-      console.log('error', error);
+    } else {
+      window.open('http://192.168.1.30:4200/#/remote?id=' + id, '_blank');
     }
   }
 }

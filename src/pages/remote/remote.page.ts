@@ -21,6 +21,7 @@ export class RemotePage implements OnInit, OnDestroy {
   peer2;
   userId = 'browser';
   video: HTMLVideoElement;
+  stream: any;
   videoSize;
   hostScreenSize;
 
@@ -35,9 +36,18 @@ export class RemotePage implements OnInit, OnDestroy {
     this.keydownListener(event);
   }
 
+  /**
+   *
+   * change to wheel
+   */
   @HostListener('document:scroll', ['$event'])
   onScroll(event) {
     this.scrollListener(event);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.calcVideoSize();
   }
 
   constructor(
@@ -51,6 +61,7 @@ export class RemotePage implements OnInit, OnDestroy {
     const id = this.route.snapshot.queryParams.id;
     console.log('id', id);
     this.socketService.joinRoom(id);
+    this.socketService.sendMessage('hi', 'remoteData');
     this.socketService.onNewMessage().subscribe((data: any) => {
       // console.log('tester');
       this.peer2.signal(data);
@@ -86,6 +97,7 @@ export class RemotePage implements OnInit, OnDestroy {
         'video'
       );
       this.video = video;
+      this.stream = stream;
       video.srcObject = stream;
       video.play();
 
@@ -93,20 +105,25 @@ export class RemotePage implements OnInit, OnDestroy {
       video.addEventListener('mouseup', this.mouseListener.bind(this));
       video.addEventListener('dblclick', this.mouseListener.bind(this));
       video.addEventListener('mousemove', this.mouseMoveListener.bind(this));
+      video.addEventListener(
+        'resize',
+        (ev) => {
+          const w = video.videoWidth;
+          const h = video.videoHeight;
+
+          if (w && h) {
+            video.style.width = w.toString();
+            video.style.height = h.toString();
+          }
+          console.log(w, h);
+        },
+        false
+      );
 
       video.addEventListener(
         'loadeddata',
         () => {
-          console.log(this.video);
-          this.videoSize = video.getBoundingClientRect();
-          const height = stream.getVideoTracks()[0].getSettings().height;
-          const width = stream.getVideoTracks()[0].getSettings().width;
-          this.hostScreenSize = {
-            height,
-            width,
-          };
-
-          console.log(height, width);
+          this.calcVideoSize();
         },
         false
       );
@@ -118,6 +135,17 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2.on('error', () => {
       this.removeEventListeners();
     });
+  }
+
+  calcVideoSize() {
+    this.videoSize = this.video?.getBoundingClientRect();
+    const height = this.stream?.getVideoTracks()[0].getSettings().height;
+    const width = this.stream?.getVideoTracks()[0].getSettings().width;
+    this.hostScreenSize = {
+      height,
+      width,
+    };
+    console.log('this.hostScreenSize', this.hostScreenSize);
   }
 
   ngOnDestroy() {
@@ -147,17 +175,17 @@ export class RemotePage implements OnInit, OnDestroy {
     const x = this.scale(
       event.offsetX,
       0,
-      this.videoSize.width,
+      this.videoSize?.width,
       0,
-      this.hostScreenSize.width
+      this.hostScreenSize?.width
     );
 
     const y = this.scale(
       event.offsetY,
       0,
-      this.videoSize.height,
+      this.videoSize?.height,
       0,
-      this.hostScreenSize.height
+      this.hostScreenSize?.height
     );
 
     const data = {
@@ -176,14 +204,14 @@ export class RemotePage implements OnInit, OnDestroy {
       0,
       this.videoSize?.width,
       0,
-      this.hostScreenSize.width
+      this.hostScreenSize?.width
     );
     const y = this.scale(
       event?.offsetY,
       0,
       this.videoSize?.height,
       0,
-      this.hostScreenSize.height
+      this.hostScreenSize?.height
     );
     const stringData = `mm,${x},${y}`;
     this.peer2.send(stringData);

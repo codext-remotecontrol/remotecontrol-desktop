@@ -14,6 +14,7 @@ const args = process.argv.slice(1),
 
 function createWindow(): BrowserWindow {
   const size = screen.getPrimaryDisplay().workAreaSize;
+  console.log('process.platform', process.platform);
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -22,7 +23,7 @@ function createWindow(): BrowserWindow {
     icon: path.join(__dirname, 'data/icon-white.png'),
     show: !hidden,
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
-    frame: process.platform === 'darwin' ? true : true,
+    frame: process.platform === 'darwin' ? true : false,
     center: true,
     backgroundColor: '#252a33',
     webPreferences: {
