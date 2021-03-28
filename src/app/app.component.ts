@@ -10,6 +10,7 @@ import { AppConfig } from '../environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  platform = process.platform;
   version = '1';
 
   appPages = [

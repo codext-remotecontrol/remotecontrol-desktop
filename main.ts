@@ -23,10 +23,10 @@ function createWindow(): BrowserWindow {
     height: size.height / 1.5,
     icon: path.join(__dirname, 'data/icon-white.png'),
     show: !hidden,
-    titleBarStyle: 'hidden',
-    frame: true,
+    titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
+    frame: process.platform === 'darwin' ? true : true,
     center: true,
-    backgroundColor: '#2e2c29',
+    backgroundColor: '#252a33',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: serve ? true : false,

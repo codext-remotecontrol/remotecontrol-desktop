@@ -8,7 +8,7 @@ import { ScreenSelectComponent } from '../../app/shared/components/screen-select
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -190,6 +190,12 @@ export class HomePage implements OnInit {
     });
     const id = ids.join('');
     if (id.length != 9) {
+      Swal.fire({
+        title: 'Info',
+        text: 'Die ID ist nicht vollständig',
+        icon: 'info',
+        showCancelButton: false,
+      });
       return;
     }
 
@@ -198,10 +204,11 @@ export class HomePage implements OnInit {
       const win = new BrowserWindow({
         height: 600,
         width: 800,
-        frame: false,
+        titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
+        frame: process.platform === 'darwin' ? true : true,
         center: true,
         show: false,
-        titleBarStyle: 'hidden',
+        backgroundColor: '#252a33',
         webPreferences: {
           nodeIntegration: true,
           allowRunningInsecureContent: true,
