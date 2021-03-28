@@ -9,6 +9,7 @@ import { ElectronService } from './../../app/core/services/electron/electron.ser
 import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
 import Swal from 'sweetalert2';
+import { ElectronService as NgxService } from 'ngx-electron';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -35,11 +36,12 @@ export class HomePage implements OnInit {
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private electronService: ElectronService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private ngxService: NgxService
   ) {}
 
   async ngOnInit() {
-    this.robot = this.electronService.remote?.require('robotjs');
+    this.robot = this.ngxService.remote?.require('robotjs');
     this.robot.setMouseDelay(5);
 
     this.id = `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
@@ -184,7 +186,7 @@ export class HomePage implements OnInit {
     return Math.floor(Math.random() * (999 - 100 + 1) + 100);
   }
 
-  async connect() {
+  connect() {
     const ids = this.remoteIdArray.map((item) => {
       return item['number'];
     });
@@ -220,10 +222,8 @@ export class HomePage implements OnInit {
       if (AppConfig.production) {
         win.loadURL(
           url.format({
-            pathname: this.electronService.path.join(
-              __dirname,
-              'dist/index.html/#/remote?id=' + id
-            ),
+            pathname: this.electronService.path.join(__dirname, 'index.html'),
+            hash: '/remote?id=' + id,
             protocol: 'file:',
             slashes: true,
           })

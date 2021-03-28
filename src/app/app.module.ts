@@ -15,8 +15,8 @@ import { AppComponent } from './app.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { NgxElectronModule } from 'ngx-electron';
 
-// AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -38,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       },
     }),
     IonicModule.forRoot(),
+    NgxElectronModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

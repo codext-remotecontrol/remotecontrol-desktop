@@ -1,9 +1,8 @@
+require('@electron/remote/main').initialize();
+
 import { app, BrowserWindow, Menu, nativeImage, screen, Tray } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-
-// Initialize remote module
-require('@electron/remote/main').initialize();
 
 let hidden, tray;
 
@@ -14,8 +13,7 @@ const args = process.argv.slice(1),
   serve = args.some((val) => val === '--serve');
 
 function createWindow(): BrowserWindow {
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  const size = screen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -66,7 +64,6 @@ function createWindow(): BrowserWindow {
     });
     win.loadURL('http://localhost:4200/#/home');
   } else {
-    win.webContents.openDevTools();
     win.loadURL(
       url.format({
         pathname: path.join(__dirname, 'dist/index.html'),
