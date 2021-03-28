@@ -201,6 +201,7 @@ export class HomePage implements OnInit {
         frame: false,
         center: true,
         show: false,
+        titleBarStyle: 'hidden',
         webPreferences: {
           nodeIntegration: true,
           allowRunningInsecureContent: true,

@@ -23,6 +23,7 @@ function createWindow(): BrowserWindow {
     height: size.height / 1.5,
     icon: path.join(__dirname, 'data/icon-white.png'),
     show: !hidden,
+    titleBarStyle: 'hidden',
     frame: true,
     center: true,
     backgroundColor: '#2e2c29',
