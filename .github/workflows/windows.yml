@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --global windows-build-tools
+      - run: npm install --global windows-build-tools@4.0.0
       - name: Install Dependencies
         run: npm install
       - name: Check lint
