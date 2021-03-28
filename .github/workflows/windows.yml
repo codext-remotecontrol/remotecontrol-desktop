@@ -19,10 +19,10 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [12.x]
 
     # The type of runner that the job will run on
-    runs-on: 'windows-2016'
+    runs-on: 'windows-latest'
 
     steps:
       - uses: actions/checkout@v2
