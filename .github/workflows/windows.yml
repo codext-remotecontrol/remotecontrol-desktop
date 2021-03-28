@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
 
     # The type of runner that the job will run on
     runs-on: 'windows-latest'
@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install --global --production windows-build-tools --vs2015
+      - run: npm install --global windows-build-tools@4.0.0
       - name: Install Dependencies
         run: npm install
       - name: Check lint
