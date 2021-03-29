@@ -12,18 +12,19 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     runs-on: 'windows-latest'
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '14.x'
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+      - name: Set Version Number
+        run: |
+          npx replace-in-files-cli --string="##version##" --replacement="$GIT_TAG_NAME" "src/**/*" "scripts/**/*"
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
@@ -37,9 +38,7 @@ jobs:
       - run: npm run rebuild
       - name: Install Dependencies
         run: npm install
-      - name: Set Version Number
-        run: |
-          npx replace-in-files-cli --string="##version##" --replacement="${{ steps.get_version.outputs.VERSION }}" "src/**/*" "scripts/**/*"
+
       - name: Check lint
         run: npm run lint
       - name: Build the app

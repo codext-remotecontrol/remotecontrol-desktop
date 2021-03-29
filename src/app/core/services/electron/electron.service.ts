@@ -59,6 +59,8 @@ export class ElectronService {
   }
 
   close() {
-    this.window.close();
+    console.log('close');
+    this.window.hide();
+    // app.exit(0);
   }
 }
