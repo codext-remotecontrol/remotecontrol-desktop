@@ -70,6 +70,7 @@ function createWindow(): BrowserWindow {
   });
 
   if (serve) {
+    win.webContents.openDevTools();
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
     });
@@ -83,7 +84,6 @@ function createWindow(): BrowserWindow {
       })
     );
   }
-  win.webContents.openDevTools();
 
   // win.webContents.openDevTools();
 
