@@ -1,23 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { ElectronService as NgxService } from 'ngx-electron';
+import { Component, OnInit } from '@angular/core';
+import { LoadingController, ModalController } from '@ionic/angular';
 import SimplePeer from 'simple-peer';
-import Swal from 'sweetalert2';
 import * as url from 'url';
 import * as vkey from 'vkey';
 import 'webrtc-adapter';
-// import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
-import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
+import Swal from 'sweetalert2';
+import { ElectronService as NgxService } from 'ngx-electron';
+// import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
+import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy {
+export class HomePage implements OnInit {
   id = '';
   idArray = [];
   remoteIdArray = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
@@ -27,23 +27,22 @@ export class HomePage implements OnInit, OnDestroy {
   peer1;
   socket: any;
   robot: any;
+
+  userId = 'daniel';
+
   videoSource;
 
-  doubleClick = false;
+  dbl = false;
 
   constructor(
     private modalCtrl: ModalController,
+    private loadingCtrl: LoadingController,
     public electronService: ElectronService,
     private socketService: SocketService,
     private ngxService: NgxService
   ) {}
 
-  ngOnDestroy() {
-    this.socketService.socket.close();
-  }
-
   async ngOnInit() {
-    this.socketService.init();
     if (this.ngxService.isElectronApp) {
       if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
