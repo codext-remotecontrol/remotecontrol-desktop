@@ -8,15 +8,19 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
-import { stringify } from 'zipson';
-import { SocketService } from '../../app/core/services/socket.service';
+
 import { AppService } from './../../app/core/services/app.service';
+import { Socket, io } from 'socket.io-client';
+import { Observable } from 'rxjs';
+
 @Component({
   selector: 'app-remote',
   templateUrl: './remote.page.html',
   styleUrls: ['./remote.page.scss'],
 })
 export class RemotePage implements OnInit, OnDestroy {
+  public socket: Socket;
+
   signalData = '';
   peer2;
   userId = 'browser';
@@ -51,18 +55,38 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   constructor(
-    private socketService: SocketService,
     private elementRef: ElementRef,
     private appService: AppService,
     private route: ActivatedRoute
   ) {}
 
+  joinRoom(id: string) {
+    console.log('join', id);
+    this.socket.emit('join', id);
+  }
+  sendMessage(
+    msg: any,
+    type: 'message' | 'call' | 'remoteData' = 'remoteData'
+  ) {
+    this.socket.emit(type, { room: 1234, data: msg });
+  }
+
+  onNewMessage(type: 'message' | 'remoteData' | 'signaling' = 'remoteData') {
+    return new Observable((observer) => {
+      this.socket.on(type, (msg) => {
+        observer.next(msg);
+      });
+    });
+  }
+
   ngOnInit() {
+    this.socket = io('https://node.remote-control.codext.de');
     const id = this.route.snapshot.queryParams.id;
     console.log('id', id);
-    this.socketService.joinRoom(id);
-    this.socketService.sendMessage('hi', 'remoteData');
-    this.socketService.onNewMessage().subscribe((data: any) => {
+    this.socket.emit('join', id);
+    this.joinRoom(id);
+    this.sendMessage('hi', 'remoteData');
+    this.onNewMessage().subscribe((data: any) => {
       // console.log('tester');
       this.peer2.signal(data);
     });
@@ -89,7 +113,7 @@ export class RemotePage implements OnInit, OnDestroy {
     });
 
     this.peer2.on('signal', (data) => {
-      this.socketService.sendMessage(data);
+      this.sendMessage(data);
     });
 
     this.peer2.on('stream', (stream) => {
@@ -151,6 +175,7 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.appService.sideMenu = true;
     this.removeEventListeners();
+    this.socket.close();
   }
 
   removeEventListeners() {
@@ -234,7 +259,7 @@ export class RemotePage implements OnInit, OnDestroy {
     const data = {
       type: 'scroll',
     };
-    this.socketService.sendMessage(data, 'remoteData');
+    this.sendMessage(data, 'remoteData');
   }
 
   scale(x, fromLow, fromHigh, toLow, toHigh) {
