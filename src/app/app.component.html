@@ -1,4 +1,4 @@
-<div id="title-bar" class="action-bar">
+<div id="title-bar" class="action-bar" *ngIf="appService.actionBar">
   <div class="app-actions" *ngIf="process && process.platform !== 'darwin'">
     <button (click)="electronService.minimize()">
       <ion-icon name="remove-outline"></ion-icon>

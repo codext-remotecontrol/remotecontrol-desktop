@@ -43,6 +43,7 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // this.showInfoWindow();
     if (this.ngxService.isElectronApp) {
       if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
@@ -235,7 +236,6 @@ export class HomePage implements OnInit {
     }
 
     if (this.ngxService.isElectronApp) {
-      console.log('dist/index.html');
       const appPath = this.electronService.remote.app.getAppPath();
 
       try {
@@ -258,7 +258,6 @@ export class HomePage implements OnInit {
             enableRemoteModule: true,
           },
         });
-        // win.webContents.openDevTools();
 
         if (AppConfig.production) {
           win.loadURL(
@@ -283,6 +282,54 @@ export class HomePage implements OnInit {
       }
     } else {
       window.open('http://192.168.1.30:4200/#/remote?id=' + id, '_blank');
+    }
+  }
+
+  showInfoWindow() {
+    if (this.ngxService.isElectronApp) {
+      const appPath = this.electronService.remote.app.getAppPath();
+      try {
+        const BrowserWindow = this.electronService.remote.BrowserWindow;
+        const win = new BrowserWindow({
+          height: 50,
+          width: 50,
+          x: 0,
+          y: 20,
+          resizable: false,
+          show: false,
+          frame: false,
+          backgroundColor: '#252a33',
+          webPreferences: {
+            webSecurity: false,
+            nodeIntegration: true,
+            allowRunningInsecureContent: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+          },
+        });
+        win.setAlwaysOnTop(true, 'status');
+
+        if (AppConfig.production) {
+          win.loadURL(
+            url.format({
+              pathname: this.electronService.path.join(
+                appPath,
+                'dist/index.html'
+              ),
+              hash: '/info-window',
+              protocol: 'file:',
+              slashes: true,
+            })
+          );
+        } else {
+          win.loadURL('http://localhost:4200/#/info-window');
+        }
+        win.show();
+      } catch (error) {
+        console.log('error', error);
+      }
+    } else {
+      window.open('http://192.168.1.30:4200/#/info-window', '_blank');
     }
   }
 }

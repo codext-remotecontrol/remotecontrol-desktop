@@ -1,3 +1,4 @@
+import { InfoWindowPageModule } from './../pages/info-window/info-window.module';
 import { SettingsPageModule } from '../pages/settings/settings.module';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'remote',
     loadChildren: () => RemotePageModule,
+  },
+  {
+    path: 'info-window',
+    loadChildren: () => InfoWindowPageModule,
   },
   {
     path: 'settings',
