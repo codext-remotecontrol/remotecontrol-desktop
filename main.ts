@@ -35,7 +35,17 @@ function createWindow(): BrowserWindow {
       enableRemoteModule: true,
     },
   });
+  /*const isMac = process.platform === 'darwin';
+  const template = [
+    { id: '1', label: 'one' },
+    { id: '2', label: 'two' },
+    { id: '3', label: 'three' },
+    { id: '4', label: 'four' },
+  ];
 
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+*/
   const iconPath = path.join(__dirname, 'data/icon-white.png');
   tray = new Tray(nativeImage.createFromPath(iconPath));
   const contextMenu = Menu.buildFromTemplate([
@@ -52,7 +62,7 @@ function createWindow(): BrowserWindow {
       },
     },
   ]);
-  tray.setToolTip('RemoteControl');
+  tray.setToolTip('Remotecontrol Desktop');
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {

@@ -43,11 +43,8 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    if (this.electronService.isElectron) {
-      if (
-        window.process.platform == 'darwin' &&
-        !hasScreenCapturePermission()
-      ) {
+    if (this.ngxService.isElectronApp) {
+      if (this.ngxService.isMacOS && !hasScreenCapturePermission()) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,
           backdropDismiss: false,
@@ -63,14 +60,6 @@ export class HomePage implements OnInit {
   }
 
   async screenSelect() {
-    console.log(
-      'hasPromptedForPermission'
-      // hasPromptedForPermission(),
-      // hasScreenCapturePermission()
-    );
-
-    //openSystemPreferences('security');
-    //await systemPreferences.askForMediaAccess('camera');
     this.robot = this.ngxService.remote?.require('robotjs');
 
     const modal = await this.modalCtrl.create({
@@ -115,11 +104,6 @@ export class HomePage implements OnInit {
     if (element == null) return;
     else element.focus();
   }
-
-  start() {
-    this.videoConnector(this.videoSource);
-  }
-
   videoConnector(source) {
     console.log('videoConnector', source);
     const stream = source.stream;

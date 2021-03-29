@@ -8,7 +8,6 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <!--<ion-button (click)="start()">Starten</ion-button>-->
   <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
     <div
       *ngIf="electronService.isElectron"
@@ -18,22 +17,15 @@
         class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11"
       >
         <h2 class="text-white text-xs">
-          Teilen Sie diese ID Ihrem Partner mit
+          Teilen Sie diese ID mit ihrem Partner
         </h2>
         <h4 class="text-white text-center font-bold text-xl mt-2">Meine ID</h4>
       </div>
       <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
-        <!--<input
-          type="text"
-          readonly
-          [(ngModel)]="id"
-          placeholder="Meine ID"
-          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:ring-5 focus:ring-gray-300 focus:border-transparent"
-        />-->
         <div class="flex items-center justify-center">
           <span
             *ngFor="let number of idArray;let  i = index"
-            class="h-10 mr-1 rounded w-8 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
+            class="h-10 mr-1 rounded w-7 min-w-7 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
             [class.mr-4]="i == 2 || i == 5"
             >{{number}}</span
           >
@@ -52,19 +44,12 @@
         </h4>
       </div>
       <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
-        <!--<input
-          autofocus
-          [(ngModel)]="remoteId"
-          type="number"
-          placeholder="555 555 555"
-          class="px-2 py-2 border-4 rounded-md border-gray-200 focus:ring-5 focus:ring-gray-300 focus:border-transparent"
-        />-->
         <div class="flex items-center justify-center">
           <input
             #digitSix
             *ngFor="let number of remoteIdArray; let  i = index"
             (keyup)="onDigitInput($event)"
-            class="h-10 mr-1 rounded w-8 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
+            class="h-10 mr-1 rounded w-7 min-w-7 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
             [class.mr-4]="i == 2 || i == 5"
             [(ngModel)]="number.number"
             maxlength="1"
@@ -74,8 +59,9 @@
           />
         </div>
         <button
+          size="small"
           (click)="connect()"
-          class="w-full py-3 bg-gray-900 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent shadow-lg"
+          class="w-full py-2 bg-gray-900 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent shadow-lg"
         >
           Verbinden
         </button>
