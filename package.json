@@ -45,6 +45,7 @@
     "@ionic/storage": "^3.0.2",
     "@sweetalert2/ngx-sweetalert2": "9.0.0",
     "@types/simple-peer": "9.6.2",
+    "build-number-generator": "1.0.0",
     "electron-util": "github:dertieran/electron-util",
     "mac-screen-capture-permissions": "1.1.0",
     "ngx-electron": "2.2.0",

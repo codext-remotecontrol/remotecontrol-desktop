@@ -8,7 +8,7 @@ fs.readFile(file, 'utf8', function (err, data) {
   }
 
   var tmp = JSON.parse(data);
-  tmp.version = generate('##version#');
+  tmp.version = '##version##'; // generate('##version##');
 
   fs.writeFile(file, JSON.stringify(tmp), 'utf8', function (err) {
     if (err) return console.log(err);

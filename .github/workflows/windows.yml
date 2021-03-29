@@ -16,7 +16,6 @@ jobs:
       matrix:
         node-version: [14.x]
 
-    # The type of runner that the job will run on
     runs-on: 'windows-latest'
 
     steps:
@@ -44,4 +43,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
-          path: release/Remotecontrol Desktop ${{ steps.get_version.outputs.VERSION }}.exe
+          path: release/
