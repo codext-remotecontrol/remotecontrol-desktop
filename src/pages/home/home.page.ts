@@ -10,7 +10,7 @@ import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
 import Swal from 'sweetalert2';
 import { ElectronService as NgxService } from 'ngx-electron';
-import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
+// import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
 import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
 @Component({
   selector: 'app-home',
@@ -44,7 +44,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     if (this.ngxService.isElectronApp) {
-      if (this.ngxService.isMacOS && !hasScreenCapturePermission()) {
+      if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,
           backdropDismiss: false,

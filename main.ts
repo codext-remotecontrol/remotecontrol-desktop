@@ -83,6 +83,7 @@ function createWindow(): BrowserWindow {
       })
     );
   }
+  win.webContents.openDevTools();
 
   // win.webContents.openDevTools();
 
