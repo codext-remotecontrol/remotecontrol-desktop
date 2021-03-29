@@ -155,17 +155,18 @@ export class HomePage implements OnInit {
     });
 
     this.peer1.on('data', (data) => {
-      console.log('signal');
-      try {
-        let text = new TextDecoder('utf-8').decode(data);
-        if (text.startsWith('{')) {
-          text = JSON.parse(text);
-          this.handleKey(text);
-        } else {
-          this.handleMouse(text);
+      if (data) {
+        try {
+          let text = new TextDecoder('utf-8').decode(data);
+          if (text.startsWith('{')) {
+            text = JSON.parse(text);
+            this.handleKey(text);
+          } else {
+            this.handleMouse(text);
+          }
+        } catch (error) {
+          console.log('error', error);
         }
-      } catch (error) {
-        console.log('error', error);
       }
     });
   }
@@ -181,7 +182,10 @@ export class HomePage implements OnInit {
 
     switch (data.t) {
       case 'dc': {
-        // this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        if (this.ngxService.isMacOS) {
+          this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+        }
+
         break;
       }
       case 'md': {

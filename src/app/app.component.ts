@@ -1,15 +1,15 @@
 import { AppService } from './core/services/app.service';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ElectronService } from './core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
-
+import * as drag from 'electron-drag';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   platform = window.process;
   process = window.process;
   version = '##version##';
@@ -26,5 +26,10 @@ export class AppComponent {
   ) {
     this.translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
+  }
+
+  ngAfterViewInit() {
+    console.log('drag', drag);
+    drag('#title-bar');
   }
 }

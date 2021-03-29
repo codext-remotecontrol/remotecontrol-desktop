@@ -1,4 +1,4 @@
-<div class="action-bar">
+<div id="title-bar" class="action-bar">
   <div class="app-actions" *ngIf="process && process.platform !== 'darwin'">
     <button (click)="electronService.minimize()">
       <ion-icon name="remove-outline"></ion-icon>
@@ -47,7 +47,7 @@
       </ion-content>
       <ion-footer>
         <div class="version">
-          Version<br /><small>{{ version }}</small>
+          Version<small class="pl-2">{{ version }}</small>
         </div>
         <!--<ion-list *ngIf="appPages">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
