@@ -37,4 +37,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: mac-build
-          path: release/remotecontrol-desktop-${{ steps.get_version.outputs.VERSION }}.dmg
+          path: release/Remotecontrol Desktop-${{ steps.get_version.outputs.VERSION }}.dmg
