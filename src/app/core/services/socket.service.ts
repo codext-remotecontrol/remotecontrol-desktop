@@ -22,7 +22,7 @@ export class SocketService {
     msg: any,
     type: 'message' | 'call' | 'remoteData' = 'remoteData'
   ) {
-    this.socket.emit(type, { room: 1234, data: msg });
+    this.socket.emit(type, { data: msg });
   }
 
   onNewMessage(type: 'message' | 'remoteData' | 'signaling' = 'remoteData') {
