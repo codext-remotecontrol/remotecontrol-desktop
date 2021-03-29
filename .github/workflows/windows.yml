@@ -30,6 +30,7 @@ jobs:
         run: |
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+      - run: node "./scripts/version.script.js"
       - run: npm i electron-rebuild
       - run: npm run rebuild
       - name: Install Dependencies

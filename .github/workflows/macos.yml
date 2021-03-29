@@ -26,6 +26,7 @@ jobs:
       - name: Set Version Number
         run: |
           npx replace-in-files-cli --string="##version##" --replacement="${{ steps.tagName.outputs.tag }}" "src/**/*" "scripts/**/*"
+      - run: node "./scripts/version.script.js"
       - name: Install Dependencies
         run: npm install
       - name: Check lint
