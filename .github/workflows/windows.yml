@@ -24,7 +24,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: patch node gyp on windows to support Visual Studio 2019
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: Install node-gyp
         shell: powershell
         run: |
           npm install --global node-gyp@latest
