@@ -234,7 +234,10 @@ export class HomePage implements OnInit {
       return;
     }
 
-    if (this.electronService.isElectron) {
+    if (this.ngxService.isElectronApp) {
+      console.log('dist/index.html');
+      const appPath = this.electronService.remote.app.getAppPath();
+
       try {
         const BrowserWindow = this.electronService.remote.BrowserWindow;
         const win = new BrowserWindow({
@@ -248,17 +251,22 @@ export class HomePage implements OnInit {
           show: false,
           backgroundColor: '#252a33',
           webPreferences: {
+            webSecurity: false,
             nodeIntegration: true,
             allowRunningInsecureContent: true,
             contextIsolation: false,
             enableRemoteModule: true,
           },
         });
+        // win.webContents.openDevTools();
 
         if (AppConfig.production) {
           win.loadURL(
             url.format({
-              pathname: this.electronService.path.join(__dirname, 'index.html'),
+              pathname: this.electronService.path.join(
+                appPath,
+                'dist/index.html'
+              ),
               hash: '/remote?id=' + id,
               protocol: 'file:',
               slashes: true,

@@ -70,8 +70,6 @@ function createWindow(): BrowserWindow {
   });
 
   if (serve) {
-    win.webContents.openDevTools();
-
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
     });
@@ -86,12 +84,19 @@ function createWindow(): BrowserWindow {
     );
   }
 
+  // win.webContents.openDevTools();
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
+  });
+
+  win.on('close', (e) => {
+    e.preventDefault();
+    win.destroy();
   });
 
   return win;
@@ -115,6 +120,7 @@ try {
       if (win) {
         win.show();
         win.focus();
+        win.restore();
         // if (win.isMinimized()) win.restore();
       }
     });
@@ -131,6 +137,7 @@ try {
     }
   });
 } catch (e) {
+  console.log('e', e);
   // Catch Error
   // throw e;
 }

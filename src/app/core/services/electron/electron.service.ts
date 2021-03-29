@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ipcRenderer, webFrame, desktopCapturer } from 'electron';
-import * as remote from '@electron/remote';
+import { ipcRenderer, webFrame, desktopCapturer, remote } from 'electron';
+// import * as remote from '@electron/remote';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -18,6 +18,7 @@ export class ElectronService {
   fs: typeof fs;
   path: typeof path;
   window: any;
+
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
   }
@@ -59,8 +60,7 @@ export class ElectronService {
   }
 
   close() {
-    console.log('close');
-    this.window.hide();
-    // app.exit(0);
+    const win = window.require('electron').remote.getCurrentWindow();
+    win.close();
   }
 }
