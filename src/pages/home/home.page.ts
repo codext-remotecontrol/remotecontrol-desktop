@@ -44,7 +44,10 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     if (this.electronService.isElectron) {
-      if (!hasScreenCapturePermission()) {
+      if (
+        window.process.platform == 'darwin' &&
+        !hasScreenCapturePermission()
+      ) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,
           backdropDismiss: false,
@@ -53,6 +56,8 @@ export class HomePage implements OnInit {
           this.screenSelect();
         });
         await permissionModal.present();
+      } else {
+        this.screenSelect();
       }
     }
   }

@@ -11,13 +11,7 @@ import { HomePage } from './home.page';
 import { NumberDirective } from './number.directive';
 
 @NgModule({
-  imports: [
-    MacosPermissionsPageModule,
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    HomePageRoutingModule,
-  ],
+  imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
   declarations: [HomePage, NumberDirective],
 })
 export class HomePageModule {}
