@@ -12,7 +12,7 @@ import { AppConfig } from '../environments/environment';
 export class AppComponent {
   platform = window.process;
   process = window.process;
-  version = '1';
+  version = '##version##';
 
   appPages = [
     { title: 'Home', url: '/home', icon: 'code-working' },

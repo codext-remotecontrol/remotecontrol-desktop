@@ -27,6 +27,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Dependencies
         run: npm install
+      - name: Set Version Number
+        run: |
+          npx replace-in-files-cli --string="##version##" --replacement="${{ steps.get_version.outputs.VERSION }}" "src/**/*" "scripts/**/*"
       - name: Check lint
         run: npm run lint
       - name: Build the app
@@ -34,4 +37,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: mac-build
-          path: release/remotecontrol-desktop-1.0.0.dmg
+          path: release/remotecontrol-desktop-${{ steps.get_version.outputs.VERSION }}.dmg

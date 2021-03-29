@@ -252,6 +252,8 @@ export class HomePage implements OnInit {
         const win = new BrowserWindow({
           height: 600,
           width: 800,
+          minWidth: 250,
+          minHeight: 250,
           titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
           frame: process.platform === 'darwin' ? true : false,
           center: true,
