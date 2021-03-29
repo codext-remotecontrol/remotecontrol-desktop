@@ -10,7 +10,8 @@ import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
 import Swal from 'sweetalert2';
 import { ElectronService as NgxService } from 'ngx-electron';
-
+import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
+import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -43,18 +44,41 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     if (this.electronService.isElectron) {
-      const modal = await this.modalCtrl.create({
-        component: ScreenSelectComponent,
-        backdropDismiss: false,
-      });
-      modal.onDidDismiss().then((data) => {
-        if (data?.data) {
-          this.videoSource = data.data;
-          this.init();
-        }
-      });
-      await modal.present();
+      if (!hasScreenCapturePermission()) {
+        const permissionModal = await this.modalCtrl.create({
+          component: MacosPermissionsPage,
+          backdropDismiss: false,
+        });
+        permissionModal.onDidDismiss().then(() => {
+          this.screenSelect();
+        });
+        await permissionModal.present();
+      }
     }
+  }
+
+  async screenSelect() {
+    console.log(
+      'hasPromptedForPermission'
+      // hasPromptedForPermission(),
+      // hasScreenCapturePermission()
+    );
+
+    //openSystemPreferences('security');
+    //await systemPreferences.askForMediaAccess('camera');
+    this.robot = this.ngxService.remote?.require('robotjs');
+
+    const modal = await this.modalCtrl.create({
+      component: ScreenSelectComponent,
+      backdropDismiss: false,
+    });
+    modal.onDidDismiss().then((data) => {
+      if (data?.data) {
+        this.videoSource = data.data;
+        this.init();
+      }
+    });
+    await modal.present();
   }
 
   init() {

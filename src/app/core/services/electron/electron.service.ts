@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
 
-// If you import a module but never use any of the imported values other than as TypeScript types,
-// the resulting javascript file will look as if you never imported the module at all.
-import {
-  ipcRenderer,
-  webFrame,
-  desktopCapturer,
-  globalShortcut,
-} from 'electron';
+import { ipcRenderer, webFrame, desktopCapturer } from 'electron';
 import * as remote from '@electron/remote';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
@@ -25,7 +18,6 @@ export class ElectronService {
   fs: typeof fs;
   path: typeof path;
   window: any;
-
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
   }
