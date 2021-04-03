@@ -59,8 +59,15 @@ export class RemotePage implements OnInit, OnDestroy {
     this.socketService.joinRoom(id);
     this.socketService.sendMessage('hi', 'remoteData');
     this.socketService.onNewMessage().subscribe((data: any) => {
-      if (data?.startsWith('screenSize:')) {
-        console.log('data screenSize:', data);
+      if (typeof data == 'string' && data?.startsWith('screenSize')) {
+        console.log('data screenSize', data.split(','));
+        const size = data.split(',');
+
+        this.hostScreenSize = {
+          height: size[2],
+          width: size[1],
+        };
+
         // this.videoConnector(this.videoSource);
       } else {
         this.peer2.signal(data);
@@ -139,14 +146,13 @@ export class RemotePage implements OnInit, OnDestroy {
 
   calcVideoSize() {
     this.videoSize = this.video?.getBoundingClientRect();
-    const height = this.stream?.getVideoTracks()[0].getSettings().height;
-    const width = this.stream?.getVideoTracks()[0].getSettings().width;
-    this.hostScreenSize = {
+    // const height = this.stream?.getVideoTracks()[0].getSettings().height;
+    // const width = this.stream?.getVideoTracks()[0].getSettings().width;
+
+    /*this.hostScreenSize = {
       height: 1080,
       width: 1920,
-      // height,
-      // width,
-    };
+    };*/
     console.log('this.hostScreenSize', this.hostScreenSize, this.videoSize);
   }
 
