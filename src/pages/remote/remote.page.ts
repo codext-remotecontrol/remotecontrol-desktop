@@ -8,7 +8,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
-import { stringify } from 'zipson';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
 @Component({
@@ -60,8 +59,12 @@ export class RemotePage implements OnInit, OnDestroy {
     this.socketService.joinRoom(id);
     this.socketService.sendMessage('hi', 'remoteData');
     this.socketService.onNewMessage().subscribe((data: any) => {
-      // console.log('tester');
-      this.peer2.signal(data);
+      if (data.startsWith('screenSize:')) {
+        console.log('data screenSize:', data);
+        // this.videoConnector(this.videoSource);
+      } else {
+        this.peer2.signal(data);
+      }
     });
 
     this.appService.sideMenu = false;
@@ -139,10 +142,12 @@ export class RemotePage implements OnInit, OnDestroy {
     const height = this.stream?.getVideoTracks()[0].getSettings().height;
     const width = this.stream?.getVideoTracks()[0].getSettings().width;
     this.hostScreenSize = {
-      height,
-      width,
+      height: 1080,
+      width: 1920,
+      // height,
+      // width,
     };
-    console.log('this.hostScreenSize', this.hostScreenSize);
+    console.log('this.hostScreenSize', this.hostScreenSize, this.videoSize);
   }
 
   ngOnDestroy() {
@@ -185,12 +190,6 @@ export class RemotePage implements OnInit, OnDestroy {
       this.hostScreenSize?.height
     );
 
-    const data = {
-      t: type,
-      x,
-      y,
-      b: event.button,
-    };
     const stringData = `${type},${x},${y},${event.button}`;
     this.peer2.send(stringData);
   }

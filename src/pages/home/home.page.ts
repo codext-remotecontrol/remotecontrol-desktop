@@ -90,9 +90,15 @@ export class HomePage implements OnInit {
     this.idArray = ('' + this.id).split('');
 
     this.socketService.joinRoom(this.id);
+
     this.socketService.onNewMessage().subscribe((data: any) => {
       console.log('onNewMessage', data);
       if (data == 'hi') {
+        const {
+          width,
+          height,
+        } = this.ngxService.screen.getPrimaryDisplay().workAreaSize;
+        this.socketService.sendMessage(`screenSize:${width},${height}`);
         this.videoConnector(this.videoSource);
       } else {
         this.peer1.signal(data);
