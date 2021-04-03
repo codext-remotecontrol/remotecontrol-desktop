@@ -59,7 +59,7 @@ export class RemotePage implements OnInit, OnDestroy {
     this.socketService.joinRoom(id);
     this.socketService.sendMessage('hi', 'remoteData');
     this.socketService.onNewMessage().subscribe((data: any) => {
-      if (data.startsWith('screenSize:')) {
+      if (data?.startsWith('screenSize:')) {
         console.log('data screenSize:', data);
         // this.videoConnector(this.videoSource);
       } else {
