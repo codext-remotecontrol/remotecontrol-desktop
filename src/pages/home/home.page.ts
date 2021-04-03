@@ -97,7 +97,7 @@ export class HomePage implements OnInit {
         const {
           width,
           height,
-        } = this.ngxService.screen.getPrimaryDisplay().workAreaSize;
+        } = this.ngxService.screen.getPrimaryDisplay().size;
         this.socketService.sendMessage(`screenSize,${width},${height}`);
         this.videoConnector(this.videoSource);
       } else {
