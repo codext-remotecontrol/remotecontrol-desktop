@@ -171,14 +171,13 @@ export class HomePage implements OnInit {
   }
 
   handleScroll(text) {
-    /*const textArray = text.split(',');
+    const textArray = text.split(',');
     const data = {
       t: textArray[0],
-      x: textArray[1],
-      y: textArray[2],
-      b: textArray[3] || 0,
+      ud: textArray[1],
     };
-    console.log('')*/
+    console.log('data', data);
+    this.robot.scrollMouse(0, data.ud == 'up' ? 50 : -50);
   }
 
   handleMouse(text) {
