@@ -50,6 +50,7 @@
     "electron-util": "github:dertieran/electron-util",
     "mac-screen-capture-permissions": "1.1.0",
     "ngx-electron": "2.2.0",
+    "node-machine-id": "1.1.12",
     "replace-in-files-cli": "1.0.0",
     "robotjs": "0.6.0",
     "simple-peer": "9.10.0",

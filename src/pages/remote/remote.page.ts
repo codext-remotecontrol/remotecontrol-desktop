@@ -36,12 +36,9 @@ export class RemotePage implements OnInit, OnDestroy {
     this.keydownListener(event);
   }
 
-  /**
-   *
-   * change to wheel
-   */
-  @HostListener('document:scroll', ['$event'])
+  @HostListener('mousewheel', ['$event'])
   onScroll(event) {
+    console.log('mousewheel', event);
     this.scrollListener(event);
   }
 
@@ -231,6 +228,7 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   scrollListener(event: any) {
+    return;
     const data = {
       type: 'scroll',
     };

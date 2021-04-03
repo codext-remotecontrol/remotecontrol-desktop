@@ -7,7 +7,39 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <div
+    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white"
+  >
+    <ion-item lines="none">
+      <ion-label position="floating">Anzeigename</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-label>Zufällige ID</ion-label>
+    </ion-item>
+  </div>
+
+  <div
+    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white"
+  >
+    <ion-item lines="none">
+      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-label>Unbeaufsichtigen Zugriff</ion-label>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label position="floating">Passwort</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label position="floating">Passwort bestätigen</ion-label>
+      <ion-input></ion-input>
+    </ion-item>
+  </div>
+
   <!--
   <video id="video"></video>
 

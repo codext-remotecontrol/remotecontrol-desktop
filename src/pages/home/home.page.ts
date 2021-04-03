@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { ElectronService as NgxService } from 'ngx-electron';
 // import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
 import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -76,11 +77,16 @@ export class HomePage implements OnInit {
     await modal.present();
   }
 
-  init() {
+  async init() {
     this.robot = this.ngxService.remote?.require('robotjs');
     this.robot?.setMouseDelay(5);
+    const nodeMachineId = this.ngxService.remote.require('node-machine-id');
+    const id = await nodeMachineId.machineId();
 
-    this.id = `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
+    const uniqId = parseInt(id, 36).toString().substring(3, 12);
+    console.log(id, uniqId);
+
+    this.id = uniqId; // `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
     this.idArray = ('' + this.id).split('');
 
     this.socketService.joinRoom(this.id);
@@ -273,6 +279,7 @@ export class HomePage implements OnInit {
           );
         } else {
           win.loadURL('http://localhost:4200/#/remote?id=' + id);
+          win.webContents.openDevTools();
         }
 
         win.maximize();
