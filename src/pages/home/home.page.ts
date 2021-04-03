@@ -176,7 +176,6 @@ export class HomePage implements OnInit {
       t: textArray[0],
       ud: textArray[1],
     };
-    console.log('data', data);
     this.robot.scrollMouse(0, data.ud == 'up' ? 50 : -50);
   }
 
