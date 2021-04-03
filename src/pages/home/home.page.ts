@@ -158,6 +158,8 @@ export class HomePage implements OnInit {
           if (text.startsWith('{')) {
             text = JSON.parse(text);
             this.handleKey(text);
+          } else if (text.startsWith('s')) {
+            this.handleScroll(text);
           } else {
             this.handleMouse(text);
           }
@@ -166,6 +168,17 @@ export class HomePage implements OnInit {
         }
       }
     });
+  }
+
+  handleScroll(text) {
+    /*const textArray = text.split(',');
+    const data = {
+      t: textArray[0],
+      x: textArray[1],
+      y: textArray[2],
+      b: textArray[3] || 0,
+    };
+    console.log('')*/
   }
 
   handleMouse(text) {
