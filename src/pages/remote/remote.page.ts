@@ -64,8 +64,8 @@ export class RemotePage implements OnInit, OnDestroy {
         const size = data.split(',');
 
         this.hostScreenSize = {
-          height: size[2],
-          width: size[1],
+          height: +size[2],
+          width: +size[1],
         };
 
         // this.videoConnector(this.videoSource);
