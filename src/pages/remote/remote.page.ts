@@ -233,15 +233,18 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   scrollListener(event: any) {
-    console.log('event', event);
-    const stringData = `s,`;
-    this.peer2.send(stringData);
+    let stringData;
+    if (event.deltaY < 0) {
+      console.log('scrolling up');
+      stringData = `s,up`;
+    } else if (event.deltaY > 0) {
+      console.log('scrolling down');
+      stringData = `s,down`;
+    }
 
-    return;
-    const data = {
-      type: 'scroll',
-    };
-    this.socketService.sendMessage(data, 'remoteData');
+    console.log('event', event);
+
+    this.peer2.send(stringData);
   }
 
   scale(x, fromLow, fromHigh, toLow, toHigh) {
