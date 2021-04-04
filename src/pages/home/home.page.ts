@@ -218,7 +218,10 @@ export class HomePage implements OnInit {
 
   handleKey(data) {
     const robot = this.robot;
+    console.log('data', data);
     let k = vkey[data.keyCode].toLowerCase();
+    robot.keyTap(data.key);
+    return;
     if (k === '<space>') k = ' ';
     const modifiers = [];
     if (data.shift) modifiers.push('shift');

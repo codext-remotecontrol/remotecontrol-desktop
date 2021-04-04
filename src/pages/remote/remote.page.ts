@@ -40,11 +40,16 @@ export class RemotePage implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    console.log('event', event);
+    event.preventDefault();
+    event.stopPropagation();
     this.keydownListener(event);
   }
 
   @HostListener('mousewheel', ['$event'])
   onScroll(event: WheelEvent) {
+    event.preventDefault();
+    event.stopPropagation();
     this.scrollListener(event);
   }
 
@@ -243,7 +248,7 @@ export class RemotePage implements OnInit, OnDestroy {
       t: 'k',
       code: event.code,
       keyCode: event.keyCode,
-      // key: event.key,
+      key: event.key,
       shift: event.shiftKey,
       control: event.ctrlKey,
       alt: event.altKey,
