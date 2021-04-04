@@ -48,6 +48,7 @@
     "build-number-generator": "1.0.0",
     "electron-drag": "2.0.0",
     "electron-util": "github:dertieran/electron-util",
+    "fsevents": "2.3.2",
     "lottie-web": "5.7.7",
     "mac-screen-capture-permissions": "1.1.0",
     "ngx-electron": "2.2.0",

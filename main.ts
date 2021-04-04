@@ -18,10 +18,10 @@ function createWindow(): BrowserWindow {
 
   // Create the browser window.
   win = new BrowserWindow({
-    width: 450,
+    width: 410,
     minWidth: 250,
     minHeight: 250,
-    height: size.height / 1.5,
+    height: 600,
     icon: path.join(__dirname, 'data/icon-white.png'),
     show: !hidden,
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
