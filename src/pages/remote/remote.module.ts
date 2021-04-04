@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { RemotePageRoutingModule } from './remote-routing.module';
 
 import { RemotePage } from './remote.page';
-
+import { LottieModule } from 'ngx-lottie';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RemotePageRoutingModule
+    RemotePageRoutingModule,
+    LottieModule,
   ],
-  declarations: [RemotePage]
+  declarations: [RemotePage],
 })
 export class RemotePageModule {}

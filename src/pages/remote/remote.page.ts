@@ -6,6 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AnimationOptions } from 'ngx-lottie';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
@@ -24,6 +25,13 @@ export class RemotePage implements OnInit, OnDestroy {
   videoSize;
   hostScreenSize;
 
+  connected = false;
+
+  options: AnimationOptions | any = {
+    path: '/assets/animations/lf30_editor_PsHnfk.json',
+    loop: true,
+  };
+
   @HostListener('contextmenu', ['$event'])
   oncontextmenu(event) {
     event.preventDefault();
@@ -36,8 +44,7 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   @HostListener('mousewheel', ['$event'])
-  onScroll(event) {
-    console.log('mousewheel', event);
+  onScroll(event: WheelEvent) {
     this.scrollListener(event);
   }
 
@@ -56,6 +63,7 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnInit() {
     const id = this.route.snapshot.queryParams.id;
     console.log('id', id);
+
     this.socketService.joinRoom(id);
     this.socketService.sendMessage('hi', 'remoteData');
     this.socketService.onNewMessage().subscribe((data: any) => {
@@ -67,8 +75,6 @@ export class RemotePage implements OnInit, OnDestroy {
           height: +size[2],
           width: +size[1],
         };
-
-        // this.videoConnector(this.videoSource);
       } else {
         this.peer2.signal(data);
       }
@@ -100,6 +106,7 @@ export class RemotePage implements OnInit, OnDestroy {
     });
 
     this.peer2.on('stream', (stream) => {
+      this.connected = true;
       const video: HTMLVideoElement = this.elementRef.nativeElement.querySelector(
         'video'
       );
@@ -137,9 +144,13 @@ export class RemotePage implements OnInit, OnDestroy {
     });
 
     this.peer2.on('close', () => {
+      console.log('close');
+      this.connected = false;
       this.removeEventListeners();
     });
     this.peer2.on('error', () => {
+      console.log('error');
+      this.connected = false;
       this.removeEventListeners();
     });
   }
@@ -172,6 +183,9 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   mouseListener(event: MouseEvent) {
+    if (!this.connected) {
+      return;
+    }
     let type: string;
     if (event.type == 'mouseup') {
       type = 'mu';
@@ -201,6 +215,9 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   mouseMoveListener(event) {
+    if (!this.connected) {
+      return;
+    }
     const x = this.scale(
       event?.offsetX,
       0,
@@ -219,6 +236,9 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2.send(stringData);
   }
   keydownListener(event: KeyboardEvent) {
+    if (!this.connected) {
+      return;
+    }
     const data = {
       t: 'k',
       code: event.code,
@@ -232,7 +252,10 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2.send(JSON.stringify(data));
   }
 
-  scrollListener(event: any) {
+  scrollListener(event: WheelEvent) {
+    if (!this.connected) {
+      return;
+    }
     let stringData;
     if (event.deltaY < 0) {
       stringData = `s,up`;

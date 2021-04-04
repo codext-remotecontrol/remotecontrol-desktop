@@ -78,8 +78,12 @@ export class HomePage implements OnInit {
   }
 
   async init() {
+    this.ngxService.screen.on('display-metrics-changed', () => {
+      this.sendScreenSize();
+    });
     this.robot = this.ngxService.remote?.require('robotjs');
-    this.robot?.setMouseDelay(5);
+    this.robot?.setMouseDelay(1);
+    this.robot?.setKeyboardDelay(1);
     const nodeMachineId = this.ngxService.remote.require('node-machine-id');
     const id = await nodeMachineId.machineId();
 
@@ -94,16 +98,17 @@ export class HomePage implements OnInit {
     this.socketService.onNewMessage().subscribe((data: any) => {
       console.log('onNewMessage', data);
       if (data == 'hi') {
-        const {
-          width,
-          height,
-        } = this.ngxService.screen.getPrimaryDisplay().size;
-        this.socketService.sendMessage(`screenSize,${width},${height}`);
+        this.sendScreenSize();
         this.videoConnector(this.videoSource);
       } else {
         this.peer1.signal(data);
       }
     });
+  }
+
+  sendScreenSize() {
+    const { width, height } = this.ngxService.screen.getPrimaryDisplay().size;
+    this.socketService.sendMessage(`screenSize,${width},${height}`);
   }
 
   onDigitInput(event) {
@@ -117,6 +122,7 @@ export class HomePage implements OnInit {
     if (element == null) return;
     else element.focus();
   }
+
   videoConnector(source) {
     console.log('videoConnector', source);
     const stream = source.stream;
@@ -143,10 +149,10 @@ export class HomePage implements OnInit {
     });
 
     this.peer1.on('signal', (data) => {
-      console.log('signal');
       this.socketService.sendMessage(data);
     });
     this.peer1.on('error', () => {});
+
     this.peer1.on('connect', () => {
       console.log('connect');
     });
@@ -155,10 +161,10 @@ export class HomePage implements OnInit {
       if (data) {
         try {
           let text = new TextDecoder('utf-8').decode(data);
-          if (text.startsWith('{')) {
+          if (text.substring(0, 1) == '{') {
             text = JSON.parse(text);
             this.handleKey(text);
-          } else if (text.startsWith('s')) {
+          } else if (text.substring(0, 1) == 's') {
             this.handleScroll(text);
           } else {
             this.handleMouse(text);
@@ -193,7 +199,6 @@ export class HomePage implements OnInit {
         if (this.ngxService.isMacOS) {
           this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
         }
-
         break;
       }
       case 'md': {

@@ -20,6 +20,12 @@ import { NgxElectronModule } from 'ngx-electron';
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+
+export function playerFactory() {
+  return player;
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +36,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CoreModule,
     SharedModule,
     AppRoutingModule,
+    LottieModule.forRoot({ player: playerFactory }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
