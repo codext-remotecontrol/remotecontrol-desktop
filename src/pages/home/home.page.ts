@@ -82,8 +82,8 @@ export class HomePage implements OnInit {
       this.sendScreenSize();
     });
     this.robot = this.ngxService.remote?.require('robotjs');
-    this.robot?.setMouseDelay(1);
-    this.robot?.setKeyboardDelay(1);
+    this.robot?.setMouseDelay(0);
+    this.robot?.setKeyboardDelay(0);
     const nodeMachineId = this.ngxService.remote.require('node-machine-id');
     const id = await nodeMachineId.machineId();
 
@@ -219,7 +219,7 @@ export class HomePage implements OnInit {
   handleKey(data) {
     const robot = this.robot;
     console.log('data', data);
-    let k = data.key;
+    const k = data.key;
     // let k = vkey[data.keyCode].toLowerCase();
     // robot.keyTap(data.key);
 
@@ -228,23 +228,21 @@ export class HomePage implements OnInit {
     if (data.control) modifiers.push('control');
     if (data.alt) modifiers.push('alt');
     if (data.meta) modifiers.push('command');
-    if (k[0] !== '<') {
+    if (k === 'Enter') robot.keyTap('enter');
+    else if (k === 'Backspace') robot.keyTap('backspace');
+    else if (k === 'ArrowUp') robot.keyTap('up');
+    else if (k === 'ArrowDown') robot.keyTap('down');
+    else if (k === 'ArrowLeft') robot.keyTap('left');
+    else if (k === 'ArrowRight') robot.keyTap('right');
+    else if (k === 'Escape') robot.keyTap('escape');
+    else if (k === '<delete>') robot.keyTap('delete');
+    else if (k === 'Meta') robot.keyTap('home');
+    else if (k === '<end>') robot.keyTap('end');
+    else if (k === 'PageUp') robot.keyTap('pageup');
+    else if (k === 'PageDown') robot.keyTap('pagedown');
+    else {
       if (modifiers[0]) robot.keyTap(k, modifiers[0]);
       else robot.keyTap(k);
-    } else {
-      if (k === 'Enter') robot.keyTap('enter');
-      else if (k === 'Backspace') robot.keyTap('backspace');
-      else if (k === 'ArrowUp') robot.keyTap('up');
-      else if (k === 'ArrowDown') robot.keyTap('down');
-      else if (k === 'ArrowLeft') robot.keyTap('left');
-      else if (k === 'ArrowRight') robot.keyTap('right');
-      else if (k === 'Escape') robot.keyTap('escape');
-      else if (k === '<delete>') robot.keyTap('delete');
-      else if (k === 'Meta') robot.keyTap('home');
-      else if (k === '<end>') robot.keyTap('end');
-      else if (k === 'PageUp') robot.keyTap('pageup');
-      else if (k === 'PageDown') robot.keyTap('pagedown');
-      else console.log('did not type ', k);
     }
   }
 
