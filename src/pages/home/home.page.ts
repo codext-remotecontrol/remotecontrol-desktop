@@ -219,10 +219,10 @@ export class HomePage implements OnInit {
   handleKey(data) {
     const robot = this.robot;
     console.log('data', data);
-    let k = vkey[data.keyCode].toLowerCase();
-    robot.keyTap(data.key);
-    return;
-    if (k === '<space>') k = ' ';
+    let k = data.key;
+    // let k = vkey[data.keyCode].toLowerCase();
+    // robot.keyTap(data.key);
+
     const modifiers = [];
     if (data.shift) modifiers.push('shift');
     if (data.control) modifiers.push('control');
@@ -232,17 +232,18 @@ export class HomePage implements OnInit {
       if (modifiers[0]) robot.keyTap(k, modifiers[0]);
       else robot.keyTap(k);
     } else {
-      if (k === '<enter>') robot.keyTap('enter');
-      else if (k === '<backspace>') robot.keyTap('backspace');
-      else if (k === '<up>') robot.keyTap('up');
-      else if (k === '<down>') robot.keyTap('down');
-      else if (k === '<left>') robot.keyTap('left');
-      else if (k === '<right>') robot.keyTap('right');
+      if (k === 'Enter') robot.keyTap('enter');
+      else if (k === 'Backspace') robot.keyTap('backspace');
+      else if (k === 'ArrowUp') robot.keyTap('up');
+      else if (k === 'ArrowDown') robot.keyTap('down');
+      else if (k === 'ArrowLeft') robot.keyTap('left');
+      else if (k === 'ArrowRight') robot.keyTap('right');
+      else if (k === 'Escape') robot.keyTap('escape');
       else if (k === '<delete>') robot.keyTap('delete');
-      else if (k === '<home>') robot.keyTap('home');
+      else if (k === 'Meta') robot.keyTap('home');
       else if (k === '<end>') robot.keyTap('end');
-      else if (k === '<page-up>') robot.keyTap('pageup');
-      else if (k === '<page-down>') robot.keyTap('pagedown');
+      else if (k === 'PageUp') robot.keyTap('pageup');
+      else if (k === 'PageDown') robot.keyTap('pagedown');
       else console.log('did not type ', k);
     }
   }
