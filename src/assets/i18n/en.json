@@ -1,12 +1,20 @@
 {
-  "PAGES": {
-      "HOME": {
-          "TITLE": "App works !",
-          "GO_TO_DETAIL": "Go to Detail"
-      },
-      "DETAIL": {
-        "TITLE": "Detail page !",
-        "BACK_TO_HOME": "Back to Home"
-    }
-  }
+  "Entire Screen": "Entire Screen",
+  "Screen 1": "Desktop 1",
+  "Screen 2": "Desktop 2",
+  "Screen 3": "Desktop 3",
+  "Screen 4": "Desktop 4",
+  "Screen 5": "Desktop 5",
+  "Password": "Password",
+  "Repeat Password": "Repeat Password",
+  "Cancel": "Cancel",
+  "Save": "Save",
+  "Password does not match": "Password does not match",
+  "Must contain at least 8 characters": "Muss mindestens 8 Zeichen enthalten",
+  "Must contain at least one number": "Muss mindestens eine Zahl enthalten",
+  "Must contain at least one capital letter": "Muss mindestens ein Großbuchstaben enthalten",
+  "Must contain at least one lower case letter": "Muss mindestens ein Kleinbuchstaben enthalten",
+  "Must contain at least one special character": "Muss mindestens ein Sonderzeichen enthalten",
+  "Language": "Language",
+  "Settings": "Settings"
 }

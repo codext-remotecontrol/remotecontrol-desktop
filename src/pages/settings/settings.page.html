@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title> Einstellungen </ion-title>
+    <ion-title> {{'Settings'| translate}} </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -32,6 +32,19 @@
         slot="start"
       ></ion-checkbox>
       <ion-label>Autostart</ion-label>
+    </ion-item>
+
+    <ion-item
+      lines="none"
+      class="language"
+      button
+      (click)="selectLanguage($event)"
+    >
+      <ion-label> {{'Language' |translate}} </ion-label>
+      <span slot="end">
+        <img *ngIf="language.code == 'de'" src="./assets/icons/DE.png" />
+        <img *ngIf="language.code == 'en'" src="./assets/icons/US.png" />
+      </span>
     </ion-item>
   </div>
 

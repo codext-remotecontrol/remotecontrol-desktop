@@ -9,6 +9,7 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionSheetController } from '@ionic/angular';
 
 export interface DialogData {
   pw: string;
@@ -43,7 +44,12 @@ export interface DialogData {
     flex-wrap: nowrap;"
     >
       <button mat-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
-      <button mat-button cdkFocusInitial (click)="save()">
+      <button
+        mat-button
+        cdkFocusInitial
+        (click)="save()"
+        [disabled]="!(newPasswordCheck.correct && data.pw == data.newPw)"
+      >
         {{ 'Save' | translate }}
       </button>
     </div>
@@ -94,14 +100,26 @@ export class SettingsPage implements OnInit {
     passwordHash: '',
   };
 
+  language: { text: string; code: string } = {
+    text: 'Deutsch',
+    code: 'de',
+  };
+
   constructor(
     private electronService: ElectronService,
     private cdr: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private translate: TranslateService,
+    private actionSheetCtrl: ActionSheetController
   ) {}
+
   async ngOnInit() {
-    const settings = await this.electronService.settings.get('settings');
+    const settings: any = await this.electronService.settings.get('settings');
     console.log(settings);
+    if (settings?.language) {
+      this.language = settings.language;
+    }
+
     Object.assign(this.settings, settings);
     this.compName = this.electronService.os.hostname();
     this.autoLaunch = new this.electronService.autoLaunch({
@@ -112,6 +130,37 @@ export class SettingsPage implements OnInit {
     const isEnabled = await this.autoLaunch.isEnabled();
     this.autoStartEnabled = isEnabled;
     this.cdr.detectChanges();
+  }
+
+  public async selectLanguage(ev): Promise<any> {
+    const actionSheetCtrl = await this.actionSheetCtrl.create({
+      translucent: true,
+      buttons: [
+        {
+          text: 'Deutsch',
+          handler: () => {
+            this.changeLanguage({ code: 'de', text: 'Deutsch' });
+          },
+        },
+        {
+          text: 'English',
+          handler: () => {
+            this.changeLanguage({ code: 'en', text: 'English' });
+          },
+        },
+      ],
+    });
+
+    await actionSheetCtrl.present();
+  }
+
+  async changeLanguage(selection: { text: string; code: string }) {
+    await this.saveSettings({
+      language: selection,
+    });
+
+    this.language = selection;
+    this.translate.use(selection.code);
   }
 
   async changeHiddenAccess() {

@@ -25,11 +25,17 @@ export class AppComponent implements AfterViewInit {
     private translate: TranslateService,
     public appService: AppService
   ) {
-    this.translate.setDefaultLang('de');
     console.log('AppConfig', AppConfig);
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    const settings: any = await this.electronService.settings.get('settings');
+
+    if (settings?.language) {
+      this.translate.setDefaultLang(settings?.language.code);
+    } else {
+      this.translate.setDefaultLang('de');
+    }
     console.log('drag', drag);
     drag('#title-bar');
   }

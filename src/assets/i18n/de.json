@@ -14,5 +14,7 @@
   "Must contain at least one number": "Muss mindestens eine Zahl enthalten",
   "Must contain at least one capital letter": "Muss mindestens ein Großbuchstaben enthalten",
   "Must contain at least one lower case letter": "Muss mindestens ein Kleinbuchstaben enthalten",
-  "Must contain at least one special character": "Muss mindestens ein Sonderzeichen enthalten"
+  "Must contain at least one special character": "Muss mindestens ein Sonderzeichen enthalten",
+  "Language": "Sprache",
+  "Settings": "Einstellungen"
 }
