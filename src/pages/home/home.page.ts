@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import SimplePeer from 'simple-peer';
 import * as url from 'url';
@@ -72,6 +72,14 @@ export class HomePage implements OnInit {
 
   settings;
   loading;
+
+  @HostListener('document:paste', ['$event'])
+  onPaste(event) {
+    console.log('event', event);
+    let id: string = event.clipboardData.getData('text');
+    id = id.trim().replace(/(\r\n|\n|\r)/gm, '');
+    this.setId(id);
+  }
 
   constructor(
     private modalCtrl: ModalController,
@@ -362,6 +370,18 @@ export class HomePage implements OnInit {
 
   threeDigit() {
     return Math.floor(Math.random() * (999 - 100 + 1) + 100);
+  }
+
+  setId(id) {
+    if (id.length == 9) {
+      const idArray = id.split('').map((number) => {
+        return Number(number);
+      });
+
+      idArray.forEach((number, index) => {
+        this.remoteIdArray[index] = { number };
+      });
+    }
   }
 
   connect() {
