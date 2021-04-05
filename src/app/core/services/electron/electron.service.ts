@@ -6,6 +6,8 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import * as AutoLaunch from 'auto-launch';
+import settings from 'electron-settings';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +22,8 @@ export class ElectronService {
   os: typeof os;
   path: typeof path;
   window: any;
+  autoLaunch: typeof AutoLaunch;
+  settings: typeof settings;
 
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
@@ -32,8 +36,10 @@ export class ElectronService {
       this.webFrame = window.require('electron').webFrame;
       this.remote = window.require('electron').remote;
       this.os = window.require('os');
+      this.autoLaunch = window.require('auto-launch');
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
+      this.settings = window.require('electron-settings');
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');

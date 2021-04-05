@@ -20,24 +20,38 @@
       <ion-checkbox slot="start"></ion-checkbox>
       <ion-label>Zufällige ID</ion-label>
     </ion-item>
+    <ion-item lines="none">
+      <ion-checkbox
+        [(ngModel)]="autoStartEnabled"
+        (ngModelChange)="changeAutoStart()"
+        slot="start"
+      ></ion-checkbox>
+      <ion-label>Autostart</ion-label>
+    </ion-item>
   </div>
 
   <div
     class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3"
   >
     <ion-item lines="none">
-      <ion-checkbox slot="start"></ion-checkbox>
+      <ion-checkbox
+        [(ngModel)]="settings.hiddenAccess"
+        (ngModelChange)="changeHiddenAccess()"
+        slot="start"
+      ></ion-checkbox>
       <ion-label>Unbeaufsichtigen Zugriff</ion-label>
     </ion-item>
 
-    <mat-form-field>
-      <mat-label>Passwort</mat-label>
-      <input matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Passwort bestätigen</mat-label>
-      <input matInput />
-    </mat-form-field>
+    <ng-container *ngIf="hiddenAccess">
+      <mat-form-field>
+        <mat-label>Passwort</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Passwort bestätigen</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </ng-container>
   </div>
 
   <!--
