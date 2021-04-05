@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomePageModule } from '../pages/home/home.module';
 import { RemotePageModule } from '../pages/remote/remote.module';
 import { PageNotFoundComponent } from './shared/components';
+import { AddressBookPageModule } from '../pages/address-book/address-book.module';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => SettingsPageModule,
+  },
+  {
+    path: 'address-book',
+    loadChildren: () => AddressBookPageModule,
   },
   {
     path: '**',
