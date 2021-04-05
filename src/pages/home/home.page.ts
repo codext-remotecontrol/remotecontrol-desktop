@@ -34,6 +34,7 @@ export class HomePage implements OnInit {
   videoSource;
 
   dbl = false;
+  initDone = false;
 
   constructor(
     private modalCtrl: ModalController,
@@ -46,6 +47,10 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     // this.showInfoWindow();
     if (this.ngxService.isElectronApp) {
+      this.robot = this.ngxService.remote?.require('robotjs');
+      this.robot?.setMouseDelay(0);
+      this.robot?.setKeyboardDelay(0);
+
       if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,
@@ -62,8 +67,6 @@ export class HomePage implements OnInit {
   }
 
   async screenSelect() {
-    this.robot = this.ngxService.remote?.require('robotjs');
-
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
       backdropDismiss: false,
@@ -71,19 +74,18 @@ export class HomePage implements OnInit {
     modal.onDidDismiss().then((data) => {
       if (data?.data) {
         this.videoSource = data.data;
-        this.init();
+        !this.initDone ? this.init() : null;
       }
     });
     await modal.present();
   }
 
   async init() {
+    this.initDone = true;
     this.ngxService.screen.on('display-metrics-changed', () => {
       this.sendScreenSize();
     });
-    this.robot = this.ngxService.remote?.require('robotjs');
-    this.robot?.setMouseDelay(0);
-    this.robot?.setKeyboardDelay(0);
+
     const nodeMachineId = this.ngxService.remote.require('node-machine-id');
     const id = await nodeMachineId.machineId();
 
@@ -308,6 +310,14 @@ export class HomePage implements OnInit {
 
         win.maximize();
         win.show();
+        win.on('closed', () => {
+          Swal.fire({
+            title: 'Info',
+            text: 'Sitzung geschlossen',
+            icon: 'info',
+            showCancelButton: false,
+          });
+        });
       } catch (error) {
         console.log('error', error);
       }

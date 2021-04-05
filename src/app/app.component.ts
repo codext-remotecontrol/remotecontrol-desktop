@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit {
     private translate: TranslateService,
     public appService: AppService
   ) {
-    this.translate.setDefaultLang('en');
+    this.translate.setDefaultLang('de');
     console.log('AppConfig', AppConfig);
   }
 

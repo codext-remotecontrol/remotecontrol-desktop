@@ -16,7 +16,7 @@
       (click)="selectStream(video)"
       class="transition-all hover:shadow-xl cursor-pointer rounded-xl bg-white video-container overflow-hidden"
     >
-      <div class="title">{{ video.source.name }}</div>
+      <div class="title">{{ video.source.name | translate }}</div>
       <video muted autoplay [srcObject]="video.stream"></video>
     </div>
   </div>

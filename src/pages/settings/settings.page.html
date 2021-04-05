@@ -9,12 +9,12 @@
 
 <ion-content class="ion-padding">
   <div
-    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white"
+    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3"
   >
-    <ion-item lines="none">
-      <ion-label position="floating">Anzeigename</ion-label>
-      <ion-input></ion-input>
-    </ion-item>
+    <mat-form-field>
+      <mat-label>Anzeigename</mat-label>
+      <input [(ngModel)]="compName" matInput />
+    </mat-form-field>
 
     <ion-item lines="none">
       <ion-checkbox slot="start"></ion-checkbox>
@@ -23,21 +23,21 @@
   </div>
 
   <div
-    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white"
+    class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3"
   >
     <ion-item lines="none">
       <ion-checkbox slot="start"></ion-checkbox>
       <ion-label>Unbeaufsichtigen Zugriff</ion-label>
     </ion-item>
 
-    <ion-item lines="none">
-      <ion-label position="floating">Passwort</ion-label>
-      <ion-input></ion-input>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label position="floating">Passwort bestätigen</ion-label>
-      <ion-input></ion-input>
-    </ion-item>
+    <mat-form-field>
+      <mat-label>Passwort</mat-label>
+      <input matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Passwort bestätigen</mat-label>
+      <input matInput />
+    </mat-form-field>
   </div>
 
   <!--

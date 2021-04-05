@@ -39,6 +39,10 @@
     "rebuild": "electron-rebuild -f -t prod,optional,dev -w robotjs"
   },
   "dependencies": {
+    "@angular/animations": "^11.0.0 || ^12.0.0-0",
+    "@angular/cdk": "11.0.4",
+    "@angular/forms": "^11.0.0 || ^12.0.0-0",
+    "@angular/material": "11.0.4",
     "@electron/remote": "1.0.4",
     "@ionic/angular": "^5.6.3",
     "@ionic/core": "^5.6.3",

@@ -1,3 +1,4 @@
+import { ElectronService } from './../../app/core/services/electron/electron.service';
 import {
   Component,
   ElementRef,
@@ -62,7 +63,8 @@ export class RemotePage implements OnInit, OnDestroy {
     private socketService: SocketService,
     private elementRef: ElementRef,
     private appService: AppService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private electronService: ElectronService
   ) {}
 
   ngOnInit() {
@@ -150,14 +152,22 @@ export class RemotePage implements OnInit, OnDestroy {
 
     this.peer2.on('close', () => {
       console.log('close');
-      this.connected = false;
-      this.removeEventListeners();
+      this.close();
     });
     this.peer2.on('error', () => {
       console.log('error');
-      this.connected = false;
-      this.removeEventListeners();
+      this.close();
     });
+  }
+
+  close() {
+    this.connected = false;
+    this.removeEventListeners();
+    const BrowserWindow = this.electronService.remote.BrowserWindow;
+    const currentWindow = BrowserWindow.getAllWindows().filter((b) => {
+      return b.isFocused();
+    });
+    currentWindow[0]?.close();
   }
 
   calcVideoSize() {

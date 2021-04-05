@@ -5,6 +5,7 @@ import { ipcRenderer, webFrame, desktopCapturer, remote } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class ElectronService {
   remote: typeof remote;
   childProcess: typeof childProcess;
   fs: typeof fs;
+  os: typeof os;
   path: typeof path;
   window: any;
 
@@ -29,6 +31,7 @@ export class ElectronService {
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
       this.remote = window.require('electron').remote;
+      this.os = window.require('os');
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
 
