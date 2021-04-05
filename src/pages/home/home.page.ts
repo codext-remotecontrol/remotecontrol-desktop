@@ -86,6 +86,11 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    const nutJs = this.electronService.nutJs;
+    await nutJs.mouse.move(nutJs.right(100));
+    await nutJs.mouse.move(nutJs.down(100));
+    await nutJs.mouse.move(nutJs.left(100));
+    await nutJs.mouse.move(nutJs.up(100));
     this.loading = await this.loadingCtrl.create();
     this.socketService.init();
     if (this.ngxService.isElectronApp) {
