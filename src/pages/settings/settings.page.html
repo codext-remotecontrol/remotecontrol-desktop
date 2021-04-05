@@ -12,7 +12,7 @@
     class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3"
   >
     <mat-form-field>
-      <mat-label>Anzeigename</mat-label>
+      <mat-label>{{'display name' |translate}}</mat-label>
       <input [(ngModel)]="compName" matInput />
     </mat-form-field>
 
@@ -22,7 +22,7 @@
         (ngModelChange)="randomIdChange()"
         slot="start"
       ></ion-checkbox>
-      <ion-label>Zufällige ID</ion-label>
+      <ion-label>{{'Random ID' |translate}}</ion-label>
     </ion-item>
 
     <ion-item lines="none">
@@ -31,7 +31,7 @@
         (ngModelChange)="changeAutoStart()"
         slot="start"
       ></ion-checkbox>
-      <ion-label>Autostart</ion-label>
+      <ion-label>{{'Autostart' |translate}}</ion-label>
     </ion-item>
 
     <ion-item
@@ -57,12 +57,17 @@
         (ngModelChange)="changeHiddenAccess()"
         slot="start"
       ></ion-checkbox>
-      <ion-label>Unbeaufsichtigen Zugriff</ion-label>
+      <ion-label>{{'Unattended access' |translate}}</ion-label>
     </ion-item>
 
     <div class="mt-2" *ngIf="settings.hiddenAccess">
       <button color="accent" mat-flat-button (click)="addPw()">
-        Passwort hinzufügen
+        <ng-container *ngIf="!settings.passwordHash"
+          >{{'Add Password'| translate}}</ng-container
+        >
+        <ng-container *ngIf="settings.passwordHash"
+          >{{'Change Password'| translate}}</ng-container
+        >
       </button>
     </div>
   </div>

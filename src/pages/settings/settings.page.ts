@@ -46,7 +46,6 @@ export interface DialogData {
       <button mat-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
       <button
         mat-button
-        cdkFocusInitial
         (click)="save()"
         [disabled]="!(newPasswordCheck.correct && data.pw == data.newPw)"
       >

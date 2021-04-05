@@ -1,4 +1,3 @@
-import { ElectronService } from './../../app/core/services/electron/electron.service';
 import {
   Component,
   ElementRef,
@@ -6,12 +5,53 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { AnimationOptions } from 'ngx-lottie';
 import SimplePeer from 'simple-peer';
 import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
+import { ElectronService } from './../../app/core/services/electron/electron.service';
+
+@Component({
+  template: `
+    <div mat-dialog-title>Passwort eingeben</div>
+    <div mat-dialog-content>
+      <mat-form-field>
+        <mat-label>{{ 'Password' | translate }}</mat-label>
+        <input matInput [(ngModel)]="pw" type="password" />
+      </mat-form-field>
+    </div>
+    <div
+      mat-dialog-actions
+      style="
+    flex-wrap: nowrap;"
+    >
+      <button mat-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
+      <button mat-button cdkFocusInitial (click)="connect()">
+        {{ 'Connect' | translate }}
+      </button>
+    </div>
+  `,
+})
+export class PwDialog {
+  pw = '';
+  constructor(
+    public dialogRef: MatDialogRef<PwDialog>,
+    private translateService: TranslateService
+  ) {}
+
+  connect() {
+    this.dialogRef.close(this.pw);
+  }
+
+  cancel() {
+    this.dialogRef.close();
+  }
+}
+
 @Component({
   selector: 'app-remote',
   templateUrl: './remote.page.html',
@@ -41,17 +81,21 @@ export class RemotePage implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    console.log('event', event);
-    event.preventDefault();
-    event.stopPropagation();
-    this.keydownListener(event);
+    if (this.connected) {
+      console.log('event', event);
+      event.preventDefault();
+      event.stopPropagation();
+      this.keydownListener(event);
+    }
   }
 
   @HostListener('mousewheel', ['$event'])
   onScroll(event: WheelEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.scrollListener(event);
+    if (this.connected) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.scrollListener(event);
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -64,24 +108,46 @@ export class RemotePage implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private appService: AppService,
     private route: ActivatedRoute,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private dialog: MatDialog
   ) {}
+
+  pwPrompt() {
+    return new Promise<string>((resolve, reject) => {
+      const dialogRef = this.dialog.open(PwDialog, {
+        width: '250px',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        resolve(result);
+      });
+    });
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.queryParams.id;
     console.log('id', id);
 
     this.socketService.joinRoom(id);
-    this.socketService.sendMessage('hi', 'remoteData');
-    this.socketService.onNewMessage().subscribe((data: any) => {
+    this.socketService.sendMessage('hi');
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.socketService.onNewMessage().subscribe(async (data: any) => {
       if (typeof data == 'string' && data?.startsWith('screenSize')) {
-        console.log('data screenSize', data.split(','));
         const size = data.split(',');
-
         this.hostScreenSize = {
           height: +size[2],
           width: +size[1],
         };
+      } else if (typeof data == 'string' && data?.startsWith('pwRequest')) {
+        const pw: string = await this.pwPrompt();
+        if (pw) {
+          this.socketService.sendMessage(`pwAnswer:${pw}`);
+        } else {
+          this.socketService.sendMessage('decline');
+          this.close();
+        }
+      } else if (typeof data == 'string' && data?.startsWith('decline')) {
+        this.close();
       } else {
         this.peer2.signal(data);
       }

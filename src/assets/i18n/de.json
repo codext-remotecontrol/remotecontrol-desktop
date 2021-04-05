@@ -16,5 +16,13 @@
   "Must contain at least one lower case letter": "Muss mindestens ein Kleinbuchstaben enthalten",
   "Must contain at least one special character": "Muss mindestens ein Sonderzeichen enthalten",
   "Language": "Sprache",
-  "Settings": "Einstellungen"
+  "Settings": "Einstellungen",
+  "Add Password": "Passwort hinzufügen",
+  "Unattended access": "Unbeaufsichtigten Zugriff",
+  "Autostart": "Autostart",
+  "Random ID": "Zufällige ID",
+  "display name": "Anzeigename",
+  "decline": "Ablehnen",
+  "Accept": "Annehmen",
+  "Connect": "Verbinden"
 }

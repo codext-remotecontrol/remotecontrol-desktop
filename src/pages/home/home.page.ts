@@ -12,6 +12,40 @@ import Swal from 'sweetalert2';
 import { ElectronService as NgxService } from 'ngx-electron';
 // import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
 import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+
+@Component({
+  template: `
+    <div mat-dialog-title>Neue Verbindung</div>
+    <div
+      mat-dialog-actions
+      style="
+    flex-wrap: nowrap;"
+    >
+      <button mat-button (click)="decline()">
+        {{ 'decline' | translate }}
+      </button>
+      <button mat-button cdkFocusInitial (click)="accept()">
+        {{ 'Accept' | translate }}
+      </button>
+    </div>
+  `,
+})
+export class AskForPermissionDialog {
+  constructor(
+    public dialogRef: MatDialogRef<AskForPermissionDialog>,
+    private translateService: TranslateService
+  ) {}
+
+  accept() {
+    this.dialogRef.close(true);
+  }
+
+  decline() {
+    this.dialogRef.close();
+  }
+}
 
 @Component({
   selector: 'app-home',
@@ -36,17 +70,27 @@ export class HomePage implements OnInit {
   dbl = false;
   initDone = false;
 
+  settings;
+  loading;
+
   constructor(
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     public electronService: ElectronService,
     private socketService: SocketService,
-    private ngxService: NgxService
+    private ngxService: NgxService,
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
+    this.loading = await this.loadingCtrl.create();
+
     // this.showInfoWindow();
     if (this.ngxService.isElectronApp) {
+      const BrowserWindow = this.electronService.remote.BrowserWindow;
+      console.log(BrowserWindow.getAllWindows());
+      const settings: any = await this.electronService.settings.get('settings');
+      this.settings = settings;
       this.robot = this.ngxService.remote?.require('robotjs');
       this.robot?.setMouseDelay(0);
       this.robot?.setKeyboardDelay(0);
@@ -86,25 +130,85 @@ export class HomePage implements OnInit {
       this.sendScreenSize();
     });
 
-    const nodeMachineId = this.ngxService.remote.require('node-machine-id');
-    const id = await nodeMachineId.machineId();
-
-    const uniqId = parseInt(id, 36).toString().substring(3, 12);
-    console.log(id, uniqId);
-
-    this.id = uniqId; // `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
+    if (this.settings.randomId) {
+      this.id = `${this.threeDigit()}${this.threeDigit()}${this.threeDigit()}`;
+    } else {
+      const nodeMachineId = this.ngxService.remote.require('node-machine-id');
+      const id = await nodeMachineId.machineId();
+      const uniqId = parseInt(id, 36).toString().substring(3, 12);
+      this.id = uniqId;
+    }
     this.idArray = ('' + this.id).split('');
-
     this.socketService.joinRoom(this.id);
 
-    this.socketService.onNewMessage().subscribe((data: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.socketService.onNewMessage().subscribe(async (data: any) => {
       console.log('onNewMessage', data);
-      if (data == 'hi') {
+      if (typeof data == 'string' && data == 'hi') {
+        this.loading.present();
+
+        if (!this.settings?.hiddenAccess) {
+          const win = this.electronService.window;
+          win.show();
+          win.focus();
+          win.restore();
+          const result = await this.askForConnectPermission();
+          if (!result) {
+            this.socketService.sendMessage('decline', 'remoteData');
+            this.loading.dismiss();
+            return;
+          }
+        } else {
+          this.socketService.sendMessage('pwRequest', 'remoteData');
+          return;
+        }
         this.sendScreenSize();
-        this.videoConnector(this.videoSource);
+        this.videoConnector();
+      } else if (
+        typeof data == 'string' &&
+        data.substring(0, 8) == 'pwAnswer'
+      ) {
+        const pw = data.replace(data.substring(0, 9), '');
+        const pwCorrect = await this.electronService.bcrypt.compare(
+          pw,
+          this.settings.passwordHash
+        );
+        console.log('pw', pw, pwCorrect);
+        if (pwCorrect) {
+          this.sendScreenSize();
+          this.videoConnector();
+        } else {
+          this.socketService.sendMessage('decline');
+          this.loading.dismiss();
+          Swal.fire({
+            title: 'Info',
+            text: 'Passwort nicht korrekt',
+            icon: 'info',
+            showCancelButton: false,
+            showCloseButton: false,
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+          });
+          return;
+        }
+      } else if (typeof data == 'string' && data.startsWith('decline')) {
+        this.loading.dismiss();
       } else {
         this.peer1.signal(data);
       }
+    });
+  }
+
+  askForConnectPermission() {
+    return new Promise((resolve) => {
+      const dialogRef = this.dialog.open(AskForPermissionDialog, {
+        width: '250px',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        resolve(result);
+      });
     });
   }
 
@@ -114,18 +218,26 @@ export class HomePage implements OnInit {
   }
 
   onDigitInput(event) {
+    console.log('event', event);
     let element;
     if (event.code !== 'Backspace')
       element = event.srcElement.nextElementSibling;
 
-    if (event.code === 'Backspace')
+    if (event.code === 'Backspace') {
       element = event.srcElement.previousElementSibling;
+      element.value = '';
+    }
 
     if (element == null) return;
-    else element.focus();
+    else
+      setTimeout(() => {
+        element.focus();
+      }, 10);
   }
 
-  videoConnector(source) {
+  videoConnector() {
+    this.loading.dismiss();
+    const source = this.videoSource;
     console.log('videoConnector', source);
     const stream = source.stream;
     this.peer1 = new SimplePeer({
@@ -311,12 +423,15 @@ export class HomePage implements OnInit {
         win.maximize();
         win.show();
         win.on('closed', () => {
-          Swal.fire({
+          /*Swal.fire({
             title: 'Info',
             text: 'Sitzung geschlossen',
             icon: 'info',
             showCancelButton: false,
-          });
+            showCloseButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+          });*/
         });
       } catch (error) {
         console.log('error', error);

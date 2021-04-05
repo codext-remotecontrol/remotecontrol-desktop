@@ -2,23 +2,92 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Core CSS required for Ionic components to work properly */
 @import '@ionic/angular/css/core.css';
 
-/* Basic CSS for apps built with Ionic */
 @import '@ionic/angular/css/normalize.css';
 @import '@ionic/angular/css/structure.css';
 @import '@ionic/angular/css/typography.css';
 @import '@ionic/angular/css/display.css';
 
-/* Optional CSS utils that can be commented out */
 @import '@ionic/angular/css/padding.css';
 @import '@ionic/angular/css/float-elements.css';
 @import '@ionic/angular/css/text-alignment.css';
 @import '@ionic/angular/css/text-transformation.css';
 @import '@ionic/angular/css/flex-utils.css';
 
-@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '~@angular/material/theming';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+$mdPrimary: (
+  50: #e2eaf2,
+  100: #b6cbdf,
+  200: #85a9ca,
+  300: #5487b4,
+  400: #306da4,
+  500: #0b5394,
+  600: #0a4c8c,
+  700: #084281,
+  800: #063977,
+  900: #032965,
+  A100: #95b6ff,
+  A200: #6294ff,
+  A400: #2f71ff,
+  A700: #155fff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+$md-mcgpalette0: (
+  50: #e2eaf2,
+  100: #b6cbdf,
+  200: #85a9ca,
+  300: #5487b4,
+  400: #306da4,
+  500: #0b5394,
+  600: #0a4c8c,
+  700: #084281,
+  800: #063977,
+  900: #032965,
+  A100: #95b6ff,
+  A200: #6294ff,
+  A400: #2f71ff,
+  A700: #155fff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$primary: mat-palette($mdPrimary);
+$accent: mat-palette($md-mcgpalette0);
+$theme: mat-light-theme($primary, $accent);
+
+@include angular-material-theme($theme);
 
 [type='text']:focus,
 [type='email']:focus,
@@ -36,6 +105,10 @@
 textarea:focus,
 select:focus {
   --tw-ring-color: transparent;
+}
+
+input:focus {
+  outline: none;
 }
 
 button {
