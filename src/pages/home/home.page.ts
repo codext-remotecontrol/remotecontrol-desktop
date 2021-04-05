@@ -395,6 +395,10 @@ export class HomePage implements OnInit, OnDestroy {
         text: 'Die ID ist nicht vollständig',
         icon: 'info',
         showCancelButton: false,
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
       });
       return;
     }
