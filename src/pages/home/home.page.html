@@ -35,7 +35,7 @@
         <div class="flex items-center justify-center">
           <span
             *ngFor="let number of idArray;let  i = index"
-            class="h-10 mr-1 rounded w-7 min-w-7 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
+            class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0"
             [class.mr-4]="i == 2 || i == 5"
             >{{number}}</span
           >
@@ -59,7 +59,7 @@
             #digitSix
             *ngFor="let number of remoteIdArray; let  i = index"
             (keyup)="onDigitInput($event)"
-            class="h-10 mr-1 rounded w-7 min-w-7 border flex items-center text-center font-thin text-3xl bg-gray-200 justify-center"
+            class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0"
             [class.mr-4]="i == 2 || i == 5"
             [(ngModel)]="number.number"
             maxlength="1"

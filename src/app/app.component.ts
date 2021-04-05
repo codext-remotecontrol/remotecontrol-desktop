@@ -16,7 +16,7 @@ export class AppComponent implements AfterViewInit {
 
   appPages = [
     { title: 'Home', url: '/home', icon: 'code-working-outline' },
-    { title: 'Addressbuch', url: '/address-book', icon: 'book-outline' },
+    { title: 'Adressbuch', url: '/address-book', icon: 'book-outline' },
     { title: 'Einstellungen', url: '/settings', icon: 'cog-outline' },
   ];
 

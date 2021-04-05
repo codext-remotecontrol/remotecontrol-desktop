@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import * as AutoLaunch from 'auto-launch';
+import * as bcrypt from 'bcrypt';
 import settings from 'electron-settings';
 
 @Injectable({
@@ -24,6 +25,7 @@ export class ElectronService {
   window: any;
   autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
+  bcrypt: typeof bcrypt;
 
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
@@ -37,6 +39,7 @@ export class ElectronService {
       this.remote = window.require('electron').remote;
       this.os = window.require('os');
       this.autoLaunch = window.require('auto-launch');
+      this.bcrypt = window.require('bcrypt');
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
       this.settings = window.require('electron-settings');

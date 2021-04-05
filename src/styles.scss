@@ -18,10 +18,25 @@
 @import '@ionic/angular/css/text-transformation.css';
 @import '@ionic/angular/css/flex-utils.css';
 
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
+button {
+  outline: none;
+  &:focus {
+    outline: none;
+  }
+}
+ion-item {
+  ion-label {
+    white-space: pre-wrap !important;
+  }
+}
 ion-button {
   text-transform: none !important;
+}
+
+ion-item {
+  border-radius: 10px;
 }
 
 ion-content {
