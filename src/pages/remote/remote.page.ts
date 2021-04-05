@@ -301,7 +301,7 @@ export class RemotePage implements OnInit, OnDestroy {
     );
 
     const stringData = `${type},${x},${y},${event.button}`;
-    this.peer2.send(stringData);
+    this.peer2?.send(stringData);
   }
 
   mouseMoveListener(event) {
@@ -323,7 +323,7 @@ export class RemotePage implements OnInit, OnDestroy {
       this.hostScreenSize?.height
     );
     const stringData = `mm,${x},${y}`;
-    this.peer2.send(stringData);
+    this.peer2?.send(stringData);
   }
   keydownListener(event: KeyboardEvent) {
     if (!this.connected) {
@@ -339,7 +339,7 @@ export class RemotePage implements OnInit, OnDestroy {
       alt: event.altKey,
       meta: event.metaKey,
     };
-    this.peer2.send(JSON.stringify(data));
+    this.peer2?.send(JSON.stringify(data));
   }
 
   scrollListener(event: WheelEvent) {
@@ -352,7 +352,7 @@ export class RemotePage implements OnInit, OnDestroy {
     } else if (event.deltaY > 0) {
       stringData = `s,down`;
     }
-    this.peer2.send(stringData);
+    this.peer2?.send(stringData);
   }
 
   scale(x, fromLow, fromHigh, toLow, toHigh) {
