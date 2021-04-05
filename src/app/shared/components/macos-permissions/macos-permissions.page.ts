@@ -16,9 +16,9 @@ export class MacosPermissionsPage implements OnInit {
   ngOnInit() {}
 
   openSettings() {
-    this.electronService.childProcess.exec(
+    /*this.electronService.childProcess.exec(
       'open "x-apple.systempreferences:com.apple.preference.security"'
-    );
+    );*/
     this.modalCtrl.dismiss();
   }
 }
