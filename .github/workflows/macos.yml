@@ -36,4 +36,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: mac-build
-          path: release/
+          path: release/*.dmg
