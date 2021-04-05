@@ -1,19 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoadingController, ModalController } from '@ionic/angular';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
+import { ElectronService as NgxService } from 'ngx-electron';
 import SimplePeer from 'simple-peer';
+import Swal from 'sweetalert2';
 import * as url from 'url';
-import * as vkey from 'vkey';
 import 'webrtc-adapter';
+import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
-import Swal from 'sweetalert2';
-import { ElectronService as NgxService } from 'ngx-electron';
-// import { hasScreenCapturePermission } from 'mac-screen-capture-permissions';
-import { MacosPermissionsPage } from '../../app/shared/components/macos-permissions/macos-permissions.page';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   template: `
@@ -47,23 +46,20 @@ export class AskForPermissionDialog {
   }
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   id = '';
   idArray = [];
   remoteIdArray = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
   remoteId = '';
-
   signalData = '';
-  peer1;
-  socket: any;
+  peer1: SimplePeer.Instance;
   robot: any;
-
-  userId = 'daniel';
 
   videoSource;
 
@@ -75,7 +71,6 @@ export class HomePage implements OnInit {
 
   @HostListener('document:paste', ['$event'])
   onPaste(event) {
-    console.log('event', event);
     let id: string = event.clipboardData.getData('text');
     id = id.trim().replace(/(\r\n|\n|\r)/gm, '');
     this.setId(id);
@@ -92,13 +87,11 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.loading = await this.loadingCtrl.create();
-
-    // this.showInfoWindow();
+    this.socketService.init();
     if (this.ngxService.isElectronApp) {
-      const BrowserWindow = this.electronService.remote.BrowserWindow;
-      console.log(BrowserWindow.getAllWindows());
       const settings: any = await this.electronService.settings.get('settings');
       this.settings = settings;
+
       this.robot = this.ngxService.remote?.require('robotjs');
       this.robot?.setMouseDelay(0);
       this.robot?.setKeyboardDelay(0);
@@ -116,6 +109,12 @@ export class HomePage implements OnInit {
         this.screenSelect();
       }
     }
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.peer1.destroy();
+    this.socketService.destroy();
   }
 
   async screenSelect() {
@@ -149,63 +148,64 @@ export class HomePage implements OnInit {
     this.idArray = ('' + this.id).split('');
     this.socketService.joinRoom(this.id);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.socketService.onNewMessage().subscribe(async (data: any) => {
-      console.log('onNewMessage', data);
-      if (typeof data == 'string' && data == 'hi') {
-        this.loading.present();
-
-        if (!this.settings?.hiddenAccess) {
-          const win = this.electronService.window;
-          win.show();
-          win.focus();
-          win.restore();
-          const result = await this.askForConnectPermission();
-          if (!result) {
-            this.socketService.sendMessage('decline', 'remoteData');
-            this.loading.dismiss();
-            return;
-          }
-        } else {
-          this.socketService.sendMessage('pwRequest', 'remoteData');
-          return;
-        }
-        this.sendScreenSize();
-        this.videoConnector();
-      } else if (
-        typeof data == 'string' &&
-        data.substring(0, 8) == 'pwAnswer'
-      ) {
-        const pw = data.replace(data.substring(0, 9), '');
-        const pwCorrect = await this.electronService.bcrypt.compare(
-          pw,
-          this.settings.passwordHash
-        );
-        console.log('pw', pw, pwCorrect);
-        if (pwCorrect) {
+    this.socketService
+      .onNewMessage()
+      .pipe(untilDestroyed(this))
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      .subscribe(async (data: any) => {
+        console.log('onNewMessage', data);
+        if (typeof data == 'string' && data == 'hi') {
+          await this.loading.present();
           this.sendScreenSize();
-          this.videoConnector();
-        } else {
-          this.socketService.sendMessage('decline');
+
+          if (this.settings?.hiddenAccess) {
+            this.socketService.sendMessage('pwRequest');
+            return;
+          } else {
+            const win = this.electronService.window;
+            win.show();
+            win.focus();
+            win.restore();
+            const result = await this.askForConnectPermission();
+            if (!result) {
+              this.socketService.sendMessage('decline');
+              this.loading.dismiss();
+              return;
+            }
+            this.videoConnector();
+          }
+        } else if (
+          typeof data == 'string' &&
+          data.substring(0, 8) == 'pwAnswer'
+        ) {
+          const pw = data.replace(data.substring(0, 9), '');
+          const pwCorrect = await this.electronService.bcrypt.compare(
+            pw,
+            this.settings.passwordHash
+          );
+          console.log('pw', pw, pwCorrect);
+          if (pwCorrect) {
+            this.videoConnector();
+          } else {
+            this.socketService.sendMessage('decline');
+            this.loading.dismiss();
+            Swal.fire({
+              title: 'Info',
+              text: 'Passwort nicht korrekt',
+              icon: 'info',
+              showCancelButton: false,
+              showCloseButton: false,
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          }
+        } else if (typeof data == 'string' && data.startsWith('decline')) {
           this.loading.dismiss();
-          Swal.fire({
-            title: 'Info',
-            text: 'Passwort nicht korrekt',
-            icon: 'info',
-            showCancelButton: false,
-            showCloseButton: false,
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-          });
-          return;
+        } else {
+          this.peer1.signal(data);
         }
-      } else if (typeof data == 'string' && data.startsWith('decline')) {
-        this.loading.dismiss();
-      } else {
-        this.peer1.signal(data);
-      }
-    });
+      });
   }
 
   askForConnectPermission() {

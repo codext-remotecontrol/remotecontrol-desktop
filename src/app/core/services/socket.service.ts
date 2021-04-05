@@ -8,9 +8,15 @@ import { Observable } from 'rxjs';
 export class SocketService {
   public socket: Socket;
 
-  constructor() {
+  constructor() {}
+
+  init() {
+    this.socket?.disconnect();
     this.socket = io('https://node.remote-control.codext.de');
-    // this.socket.join('game');
+  }
+
+  destroy() {
+    this.socket.disconnect();
   }
 
   joinRoom(id: string) {

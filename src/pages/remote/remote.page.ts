@@ -113,7 +113,7 @@ export class RemotePage implements OnInit, OnDestroy {
   ) {}
 
   pwPrompt() {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string>((resolve) => {
       const dialogRef = this.dialog.open(PwDialog, {
         width: '250px',
       });
@@ -126,12 +126,18 @@ export class RemotePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = this.route.snapshot.queryParams.id;
+    this.appService.sideMenu = false;
     console.log('id', id);
-
+    this.socketService.init();
     this.socketService.joinRoom(id);
-    this.socketService.sendMessage('hi');
+    setTimeout(() => {
+      this.socketService.sendMessage('hi');
+    }, 100);
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.socketService.onNewMessage().subscribe(async (data: any) => {
+      console.log('onNewMessage', data);
+
       if (typeof data == 'string' && data?.startsWith('screenSize')) {
         const size = data.split(',');
         this.hostScreenSize = {
@@ -153,7 +159,10 @@ export class RemotePage implements OnInit, OnDestroy {
       }
     });
 
-    this.appService.sideMenu = false;
+    this.initPeer(id);
+  }
+
+  initPeer(id) {
     this.peer2 = new SimplePeer({
       channelName: id,
       config: {
@@ -173,11 +182,9 @@ export class RemotePage implements OnInit, OnDestroy {
         ],
       },
     });
-
     this.peer2.on('signal', (data) => {
       this.socketService.sendMessage(data);
     });
-
     this.peer2.on('stream', (stream) => {
       this.connected = true;
       const video: HTMLVideoElement = this.elementRef.nativeElement.querySelector(
@@ -194,7 +201,7 @@ export class RemotePage implements OnInit, OnDestroy {
       video.addEventListener('mousemove', this.mouseMoveListener.bind(this));
       video.addEventListener(
         'resize',
-        (ev) => {
+        () => {
           const w = video.videoWidth;
           const h = video.videoHeight;
 
@@ -215,7 +222,6 @@ export class RemotePage implements OnInit, OnDestroy {
         false
       );
     });
-
     this.peer2.on('close', () => {
       console.log('close');
       this.close();
@@ -229,6 +235,7 @@ export class RemotePage implements OnInit, OnDestroy {
   close() {
     this.connected = false;
     this.removeEventListeners();
+    return;
     const BrowserWindow = this.electronService.remote.BrowserWindow;
     const currentWindow = BrowserWindow.getAllWindows().filter((b) => {
       return b.isFocused();
@@ -251,6 +258,8 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.appService.sideMenu = true;
     this.removeEventListeners();
+    this.socketService.destroy();
+    this.peer2.destroy();
   }
 
   removeEventListeners() {
