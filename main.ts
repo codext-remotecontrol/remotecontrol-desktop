@@ -113,7 +113,7 @@ async function createWindow(): Promise<BrowserWindow> {
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {
-    // win.show();
+    win.show();
   });
 
   if (serve) {
@@ -142,10 +142,10 @@ async function createWindow(): Promise<BrowserWindow> {
     // win = null;
   });
 
-  win.on('close', (e) => {
+  /*win.on('close', (e) => {
     e.preventDefault();
     win.destroy();
-  });
+  });*/
 
   return win;
 }
@@ -168,7 +168,7 @@ try {
       if (win) {
         win.show();
         win.focus();
-        win.restore();
+        // win.restore();
         // if (win.isMinimized()) win.restore();
       }
     });

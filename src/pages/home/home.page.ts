@@ -1,4 +1,10 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -82,11 +88,14 @@ export class HomePage implements OnInit, OnDestroy {
     public electronService: ElectronService,
     private socketService: SocketService,
     private ngxService: NgxService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
-    this.loading = await this.loadingCtrl.create();
+    this.loading = await this.loadingCtrl.create({
+      duration: 15000,
+    });
     this.socketService.init();
     if (this.ngxService.isElectronApp) {
       const settings: any = await this.electronService.settings.get('settings');
@@ -165,8 +174,9 @@ export class HomePage implements OnInit, OnDestroy {
             const win = this.electronService.window;
             win.show();
             win.focus();
-            win.restore();
+
             const result = await this.askForConnectPermission();
+            this.cdr.detectChanges();
             if (!result) {
               this.socketService.sendMessage('decline');
               this.loading.dismiss();
@@ -200,8 +210,10 @@ export class HomePage implements OnInit, OnDestroy {
               timerProgressBar: true,
             });
           }
+          this.cdr.detectChanges();
         } else if (typeof data == 'string' && data.startsWith('decline')) {
           this.loading.dismiss();
+          this.cdr.detectChanges();
         } else {
           this.peer1.signal(data);
         }

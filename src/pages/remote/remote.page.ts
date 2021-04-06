@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -109,7 +110,8 @@ export class RemotePage implements OnInit, OnDestroy {
     private appService: AppService,
     private route: ActivatedRoute,
     private electronService: ElectronService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   pwPrompt() {
@@ -152,8 +154,10 @@ export class RemotePage implements OnInit, OnDestroy {
           this.socketService.sendMessage('decline');
           this.close();
         }
+        this.cdr.detectChanges();
       } else if (typeof data == 'string' && data?.startsWith('decline')) {
         this.close();
+        this.cdr.detectChanges();
       } else {
         this.peer2.signal(data);
       }
