@@ -53,11 +53,12 @@ export class ElectronService {
 
       this.remote.globalShortcut.register('CommandOrControl+I', () => {
         console.log('CommandOrControl+I');
-        //x.hide();
       });
       this.remote.globalShortcut.register('CommandOrControl+O', () => {
         console.log('CommandOrControl+O');
-        //x.show();
+      });
+      this.remote.globalShortcut.register('Control+Shift+I', () => {
+        return false;
       });
     }
   }
