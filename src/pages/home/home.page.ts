@@ -197,7 +197,7 @@ export class HomePage implements OnInit, OnDestroy {
           if (pwCorrect) {
             this.videoConnector();
           } else {
-            this.socketService.sendMessage('decline');
+            this.socketService.sendMessage('pwWrong');
             this.loading.dismiss();
             Swal.fire({
               title: 'Info',

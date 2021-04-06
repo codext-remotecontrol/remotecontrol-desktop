@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AnimationOptions } from 'ngx-lottie';
 import SimplePeer from 'simple-peer';
+import Swal from 'sweetalert2';
 import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
@@ -147,16 +148,23 @@ export class RemotePage implements OnInit, OnDestroy {
           width: +size[1],
         };
       } else if (typeof data == 'string' && data?.startsWith('pwRequest')) {
-        const pw: string = await this.pwPrompt();
-        if (pw) {
-          this.socketService.sendMessage(`pwAnswer:${pw}`);
-        } else {
-          this.socketService.sendMessage('decline');
-          this.close();
-        }
-        this.cdr.detectChanges();
+        this.askForPw();
       } else if (typeof data == 'string' && data?.startsWith('decline')) {
         this.close();
+        this.cdr.detectChanges();
+      } else if (typeof data == 'string' && data?.startsWith('pwWrong')) {
+        await Swal.fire({
+          title: 'Info',
+          text: 'Passwort nicht korrekt',
+          icon: 'info',
+          showCancelButton: false,
+          showCloseButton: false,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        this.askForPw();
+        // this.close();
         this.cdr.detectChanges();
       } else {
         this.peer2.signal(data);
@@ -164,6 +172,17 @@ export class RemotePage implements OnInit, OnDestroy {
     });
 
     this.initPeer(id);
+  }
+
+  async askForPw() {
+    const pw: string = await this.pwPrompt();
+    if (pw) {
+      this.socketService.sendMessage(`pwAnswer:${pw}`);
+    } else {
+      this.socketService.sendMessage('decline');
+      this.close();
+    }
+    this.cdr.detectChanges();
   }
 
   initPeer(id) {
