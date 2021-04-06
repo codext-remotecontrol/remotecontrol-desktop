@@ -126,10 +126,13 @@ export class HomePage implements OnInit, OnDestroy {
     this.socketService?.destroy();
   }
 
-  async screenSelect() {
+  async screenSelect(autoSelect = true) {
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
       backdropDismiss: false,
+      componentProps: {
+        autoSelect,
+      },
     });
     modal.onDidDismiss().then((data) => {
       if (data?.data) {

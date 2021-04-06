@@ -1,5 +1,5 @@
 import { LoadingController, ModalController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ElectronService } from '../../../core/services/electron/electron.service';
 
 @Component({
@@ -8,6 +8,8 @@ import { ElectronService } from '../../../core/services/electron/electron.servic
   styleUrls: ['./screen-select.component.scss'],
 })
 export class ScreenSelectComponent implements OnInit {
+  @Input() autoSelect = true;
+
   sources = [];
   constructor(
     private electronService: ElectronService,
@@ -55,6 +57,9 @@ export class ScreenSelectComponent implements OnInit {
     } catch (error) {
       console.log('error', error);
     } finally {
+      if (this.autoSelect && this.sources) {
+        this.selectStream(this.sources[0]);
+      }
       // this.electronService.window.show();
       // this.electronService.window.focus();
       setTimeout(() => {

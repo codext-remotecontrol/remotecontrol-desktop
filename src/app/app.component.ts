@@ -1,9 +1,9 @@
 import { AppService } from './core/services/app.service';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectorRef } from '@angular/core';
 import { ElectronService } from './core/services';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
-import * as drag from 'electron-drag';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -23,7 +23,8 @@ export class AppComponent implements AfterViewInit {
   constructor(
     public electronService: ElectronService,
     private translate: TranslateService,
-    public appService: AppService
+    public appService: AppService,
+    private cdr: ChangeDetectorRef
   ) {
     console.log('AppConfig', AppConfig);
   }
@@ -36,7 +37,6 @@ export class AppComponent implements AfterViewInit {
     } else {
       this.translate.setDefaultLang('de');
     }
-    console.log('drag', drag);
-    drag('#title-bar');
+    this.cdr.detectChanges();
   }
 }
