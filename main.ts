@@ -77,7 +77,7 @@ function createWindow(): BrowserWindow {
     minWidth: 250,
     minHeight: 250,
     height: 600,
-    icon: path.join(__dirname, 'data/icon-white.png'),
+    icon: path.join(__dirname, 'data/icon.png'),
     show: !hidden,
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     frame: process.platform === 'darwin' ? true : false,
@@ -101,7 +101,7 @@ function createWindow(): BrowserWindow {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 */
-  const iconPath = path.join(__dirname, 'data/icon-white.png');
+  const iconPath = path.join(__dirname, 'data/icon.png');
   tray = new Tray(nativeImage.createFromPath(iconPath));
   const contextMenu = Menu.buildFromTemplate([
     {
