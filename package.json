@@ -10,7 +10,8 @@
     "child_process": false,
     "stream": false,
     "crypto": false,
-    "bcrypt": false
+    "bcrypt": false,
+    "@nut-tree/nut-js": false
   },
   "author": {
     "name": "Codext GmbH",
