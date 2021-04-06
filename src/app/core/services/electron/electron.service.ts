@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as AutoLaunch from 'auto-launch';
 import * as bcrypt from 'bcrypt';
-import * as nutJs from '@nut-tree/nut-js';
+// import * as nutJs from '@nut-tree/nut-js';
 import * as settings from 'electron-settings';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class ElectronService {
   autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
   bcrypt: typeof bcrypt;
-  nutJs: typeof nutJs;
+  // nutJs: typeof nutJs;
 
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
@@ -34,7 +34,7 @@ export class ElectronService {
   constructor() {
     // Conditional imports
     if (this.isElectron) {
-      this.nutJs = window.require('@nut-tree/nut-js');
+      // this.nutJs = window.require('@nut-tree/nut-js');
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
       this.remote = window.require('electron').remote;
