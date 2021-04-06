@@ -40,7 +40,7 @@ jobs:
         run: npm run lint
       - name: Build the app
         run: npm run electron:windows
-      - run: node scripts/copy-file.js
+      - run: node "./scripts/copy-file.js"
       - uses: actions/upload-artifact@v2
         with:
           name: windows-build
