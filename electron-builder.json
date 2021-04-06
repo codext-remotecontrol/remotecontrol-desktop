@@ -1,11 +1,20 @@
 {
   "productName": "Remotecontrol Desktop",
+  "appId": "de.codext.remotecontrol-desktop",
   "directories": {
     "output": "release/"
   },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://ftp.codext.de/remotecontrol-desktop/released/"
+    }
+  ],
   "files": [
     "**/*",
     "!**/*.ts",
+    "!stuff/",
+    "!socketio-node/",
     "!old/",
     "!.github",
     "!.vscode",
@@ -28,7 +37,17 @@
   ],
   "win": {
     "icon": "dist/assets/icons",
-    "target": ["portable"]
+    "target": ["nsis"]
+  },
+  "nsis": {
+    "allowElevation": true,
+    "deleteAppDataOnUninstall": true,
+    "oneClick": true,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": false,
+    "runAfterFinish": true,
+    "createStartMenuShortcut": true,
+    "createDesktopShortcut": true
   },
   "portable": {},
   "mac": {

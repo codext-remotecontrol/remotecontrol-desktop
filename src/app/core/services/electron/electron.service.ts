@@ -75,6 +75,8 @@ export class ElectronService {
   }
 
   close() {
+    this.window.hide();
+    return;
     const win = window.require('electron').remote.getCurrentWindow();
     win.close();
   }

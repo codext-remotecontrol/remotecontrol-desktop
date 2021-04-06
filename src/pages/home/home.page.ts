@@ -113,8 +113,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('ngOnDestroy');
-    this.peer1.destroy();
-    this.socketService.destroy();
+    this.peer1?.destroy();
+    this.socketService?.destroy();
   }
 
   async screenSelect() {

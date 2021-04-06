@@ -1,8 +1,60 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 require('@electron/remote/main').initialize();
 
-import { app, BrowserWindow, Menu, nativeImage, screen, Tray } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  nativeImage,
+  screen,
+  Tray,
+  dialog,
+} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { autoUpdater } from 'electron-updater';
+
+let type: string;
+if (process.platform === 'win32') {
+  type = 'win';
+}
+if (process.platform === 'darwin') {
+  type = 'macos';
+}
+if (process.platform === 'linux') {
+  type = 'linux';
+}
+
+autoUpdater.setFeedURL(
+  `https://ftp.codext.de/remotecontrol-desktop/${type}/released/`
+);
+autoUpdater.autoDownload = true;
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message =
+    log_message +
+    ' (' +
+    progressObj.transferred +
+    '/' +
+    progressObj.total +
+    ')';
+});
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Neustart', 'Später'],
+    title: 'Anwendungsaktualisierung',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'Eine neue Version wurde heruntergeladen. Starten Sie die Anwendung neu, um die Updates anzuwenden.',
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
 
 let hidden, tray;
 
@@ -13,6 +65,8 @@ const args = process.argv.slice(1),
   serve = args.some((val) => val === '--serve');
 
 function createWindow(): BrowserWindow {
+  autoUpdater.checkForUpdates();
+  app.setAppUserModelId('de.codext.remotedesktop-control');
   app.allowRendererProcessReuse = false;
   const size = screen.getPrimaryDisplay().workAreaSize;
   console.log('process.platform', process.platform);
