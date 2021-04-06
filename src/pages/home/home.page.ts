@@ -155,6 +155,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.id = uniqId;
     }
     this.idArray = ('' + this.id).split('');
+    this.cdr.detectChanges();
     this.socketService.joinRoom(this.id);
 
     this.socketService
