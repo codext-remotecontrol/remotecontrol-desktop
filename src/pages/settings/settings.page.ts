@@ -131,6 +131,14 @@ export class SettingsPage implements OnInit {
     this.cdr.detectChanges();
   }
 
+  async checkForUpdates() {
+    console.log(
+      'this.electronService.autoUpdater',
+      this.electronService.autoUpdater.autoUpdater
+    );
+    await this.electronService.autoUpdater.autoUpdater.checkForUpdates();
+  }
+
   public async selectLanguage(ev): Promise<any> {
     const actionSheetCtrl = await this.actionSheetCtrl.create({
       translucent: true,

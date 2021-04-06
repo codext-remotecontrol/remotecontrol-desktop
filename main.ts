@@ -78,7 +78,6 @@ async function createWindow(): Promise<BrowserWindow> {
       allowRunningInsecureContent: serve ? true : false,
       contextIsolation: false,
       enableRemoteModule: true,
-      devTools: false,
     },
   });
   /*const isMac = process.platform === 'darwin';

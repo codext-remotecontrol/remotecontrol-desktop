@@ -8,7 +8,7 @@ import * as AutoLaunch from 'auto-launch';
 import * as bcrypt from 'bcrypt';
 // import * as nutJs from '@nut-tree/nut-js';
 import * as settings from 'electron-settings';
-
+import * as autoUpdater from 'electron-updater';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +25,8 @@ export class ElectronService {
   autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
   bcrypt: typeof bcrypt;
+  autoUpdater: typeof autoUpdater;
+
   // nutJs: typeof nutJs;
 
   get isElectron(): boolean {
@@ -36,6 +38,7 @@ export class ElectronService {
     if (this.isElectron) {
       // this.nutJs = window.require('@nut-tree/nut-js');
       this.ipcRenderer = window.require('electron').ipcRenderer;
+      this.autoUpdater = window.require('electron-updater');
       this.webFrame = window.require('electron').webFrame;
       this.remote = window.require('electron').remote;
       this.os = window.require('os');
