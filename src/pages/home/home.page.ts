@@ -86,11 +86,6 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    const nutJs = this.electronService.nutJs;
-    await nutJs.mouse.move(nutJs.right(100));
-    await nutJs.mouse.move(nutJs.down(100));
-    await nutJs.mouse.move(nutJs.left(100));
-    await nutJs.mouse.move(nutJs.up(100));
     this.loading = await this.loadingCtrl.create();
     this.socketService.init();
     if (this.ngxService.isElectronApp) {
@@ -309,7 +304,10 @@ export class HomePage implements OnInit, OnDestroy {
       t: textArray[0],
       ud: textArray[1],
     };
-    this.robot.scrollMouse(0, data.ud == 'up' ? 50 : -50);
+    data.ud == 'up'
+      ? this.electronService.nutJs.mouse.scrollUp(50)
+      : this.electronService.nutJs.mouse.scrollDown(50);
+    // this.robot.scrollMouse(0, data.ud == 'up' ? 50 : -50);
   }
 
   handleMouse(text) {
@@ -324,20 +322,30 @@ export class HomePage implements OnInit, OnDestroy {
     switch (data.t) {
       case 'dc': {
         if (this.ngxService.isMacOS) {
-          this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+          //  this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
+
+          this.electronService.nutJs.mouse.leftClick();
+          this.electronService.nutJs.mouse.leftClick();
         }
         break;
       }
       case 'md': {
-        this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
+        this.electronService.nutJs.mouse.pressButton(data.b == 2 ? 2 : 0);
         break;
       }
       case 'mu': {
-        this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
+        // this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
+        this.electronService.nutJs.mouse.releaseButton(data.b == 2 ? 2 : 0);
         break;
       }
       case 'mm': {
-        this.robot.dragMouse(data.x, data.y);
+        // this.robot.dragMouse(data.x, data.y);
+
+        this.electronService.nutJs.mouse.setPosition({
+          x: +data.x,
+          y: +data.y,
+        });
         break;
       }
     }
