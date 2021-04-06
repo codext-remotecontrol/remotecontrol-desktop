@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { ipcRenderer, webFrame, desktopCapturer, remote } from 'electron';
-// import * as remote from '@electron/remote';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -9,7 +7,7 @@ import * as os from 'os';
 import * as AutoLaunch from 'auto-launch';
 import * as bcrypt from 'bcrypt';
 import * as nutJs from '@nut-tree/nut-js';
-import settings from 'electron-settings';
+import * as settings from 'electron-settings';
 
 @Injectable({
   providedIn: 'root',
