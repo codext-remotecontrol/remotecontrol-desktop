@@ -25,9 +25,7 @@ if (process.platform === 'linux') {
   type = 'linux';
 }
 
-autoUpdater.setFeedURL(
-  `https://ftp.codext.de/remotecontrol-desktop/${type}/released/`
-);
+autoUpdater.setFeedURL(`https://ftp.codext.de/remotecontrol-desktop/${type}/`);
 autoUpdater.autoDownload = true;
 
 autoUpdater.on('download-progress', (progressObj) => {
