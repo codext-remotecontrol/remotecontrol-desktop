@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import {
   ChangeDetectorRef,
   Component,
@@ -19,6 +20,7 @@ import { ScreenSelectComponent } from '../../app/shared/components/screen-select
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import { SocketService } from './../../app/core/services/socket.service';
 import { AppConfig } from './../../environments/environment';
+import SimplePeerFiles from 'simple-peer-files';
 
 @Component({
   template: `
@@ -65,6 +67,7 @@ export class HomePage implements OnInit, OnDestroy {
   remoteId = '';
   signalData = '';
   peer1: SimplePeer.Instance;
+  spf: SimplePeerFiles;
   robot: any;
 
   videoSource;
@@ -74,6 +77,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   settings;
   loading;
+  transfer;
+  files = [];
 
   @HostListener('document:paste', ['$event'])
   onPaste(event) {
@@ -93,6 +98,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.spf = new SimplePeerFiles();
     this.loading = await this.loadingCtrl.create({
       duration: 15000,
     });
@@ -291,12 +297,45 @@ export class HomePage implements OnInit, OnDestroy {
     });
     this.peer1.on('error', () => {});
 
-    this.peer1.on('connect', () => {
-      console.log('connect');
-    });
+    this.peer1.on('connect', () => {});
 
-    this.peer1.on('data', (data) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.peer1.on('data', async (data) => {
       if (data) {
+        const fileTransfer = data.toString();
+        if (fileTransfer.substr(0, 5) === 'file-') {
+          const fileID = fileTransfer.substr(5);
+          this.spf.receive(this.peer1, fileID).then((transfer: any) => {
+            transfer.on('progress', (p) => {
+              console.log('progress', p);
+            });
+            transfer.on('done', (file) => {
+              console.log('done', file);
+              const element = document.createElement('a');
+              element.href = URL.createObjectURL(file);
+              element.download = file.name;
+              element.click();
+            });
+          });
+          this.peer1.send(`start-${fileID}`);
+          return;
+        } else if (fileTransfer.substr(0, 6) === 'start-') {
+          const fileID = fileTransfer.substr(6);
+          this.transfer = await this.spf.send(
+            this.peer1,
+            fileID,
+            this.files[fileID]
+          );
+          this.transfer.on('progress', (p) => {
+            console.log('progress', p);
+          });
+          this.transfer.on('done', (file) => {
+            console.log('done', file);
+          });
+          this.transfer.start();
+          return;
+        }
+
         try {
           let text = new TextDecoder('utf-8').decode(data);
           if (text.substring(0, 1) == '{') {
@@ -308,7 +347,7 @@ export class HomePage implements OnInit, OnDestroy {
             this.handleMouse(text);
           }
         } catch (error) {
-          console.log('error', error);
+          // console.log('error', error);
         }
       }
     });

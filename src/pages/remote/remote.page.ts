@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import {
   ChangeDetectorRef,
   Component,
@@ -16,6 +19,7 @@ import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
+import SimplePeerFiles from 'simple-peer-files';
 
 @Component({
   template: `
@@ -61,7 +65,8 @@ export class PwDialog {
 })
 export class RemotePage implements OnInit, OnDestroy {
   signalData = '';
-  peer2;
+  peer2: SimplePeer.Instance;
+  spf: SimplePeerFiles;
   userId = 'browser';
   video: HTMLVideoElement;
   stream: any;
@@ -70,6 +75,8 @@ export class RemotePage implements OnInit, OnDestroy {
 
   connected = false;
   fileDrop = false;
+  transfer;
+  files = [];
 
   options: AnimationOptions | any = {
     path: '/assets/animations/lf30_editor_PsHnfk.json',
@@ -96,9 +103,15 @@ export class RemotePage implements OnInit, OnDestroy {
     evt.preventDefault();
     evt.stopPropagation();
     this.fileDrop = false;
-    const files = evt.dataTransfer.files;
-    if (files.length > 0) {
-      console.log(files);
+    const f = evt.dataTransfer.files;
+    if (f.length > 0) {
+      console.log(f);
+      for (let i = 0; i < f.length; i++) {
+        const file = f[i];
+        const fileID = file.name + file.size;
+        this.files[fileID] = file;
+        this.peer2.send('file-' + fileID);
+      }
     }
   }
 
@@ -157,6 +170,8 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnInit() {
     const id = this.route.snapshot.queryParams.id;
     this.appService.sideMenu = false;
+    this.spf = new SimplePeerFiles();
+
     console.log('id', id);
     this.socketService.init();
     this.socketService.joinRoom(id);
@@ -232,6 +247,7 @@ export class RemotePage implements OnInit, OnDestroy {
         ],
       },
     });
+
     this.peer2.on('signal', (data) => {
       this.socketService.sendMessage(data);
     });
@@ -279,6 +295,39 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2.on('error', () => {
       console.log('error');
       this.close();
+    });
+    this.peer2.on('data', async (data) => {
+      if (data) {
+        const fileTransfer = data.toString();
+        if (fileTransfer.substr(0, 5) === 'file-') {
+          const fileID = fileTransfer.substr(5);
+          this.spf.receive(this.peer2, fileID).then((transfer: any) => {
+            transfer.on('progress', (p) => {
+              console.log('progress', p);
+            });
+            transfer.on('done', (done) => {
+              console.log('done', done);
+            });
+          });
+          this.peer2.send(`start-${fileID}`);
+          return;
+        } else if (fileTransfer.substr(0, 6) === 'start-') {
+          const fileID = fileTransfer.substr(6);
+          this.transfer = await this.spf.send(
+            this.peer2,
+            fileID,
+            this.files[fileID]
+          );
+          this.transfer.on('progress', (p) => {
+            console.log('progress', p);
+          });
+          this.transfer.on('done', (done) => {
+            console.log('done', done);
+          });
+          this.transfer.start();
+          return;
+        }
+      }
     });
   }
 
