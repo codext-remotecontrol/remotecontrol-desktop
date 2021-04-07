@@ -47,20 +47,7 @@ export class AppComponent implements AfterViewInit {
     console.log('AppConfig', AppConfig);
   }
 
-  async ngAfterViewInit() {
-    const settings: any = await this.electronService.settings.get('settings');
-
-    if (settings?.language) {
-      this.translate.setDefaultLang(settings?.language.code);
-    } else {
-      this.translate.setDefaultLang('de');
-    }
-    this.cdr.detectChanges();
-    console.log(
-      'this.route.snapshot.queryParams',
-      this.route.snapshot.queryParams
-    );
-
+  ngAfterViewInit() {
     if (this.ngxService.isElectronApp && !this.route.snapshot.queryParams.id) {
       /*if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
@@ -78,7 +65,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  async screenSelect(autoSelect = true) {
+  async screenSelect(autoSelect = true, replaceVideo?) {
     const modal = await this.modalCtrl.create({
       component: ScreenSelectComponent,
       backdropDismiss: false,
@@ -88,8 +75,12 @@ export class AppComponent implements AfterViewInit {
     });
     modal.onDidDismiss().then((data) => {
       if (data?.data) {
-        this.connectService.videoSource = data.data;
-        !this.initDone ? this.init() : null;
+        if (replaceVideo) {
+          this.connectService.replaceVideo(data.data.stream);
+        } else {
+          this.connectService.videoSource = data.data;
+          !this.initDone ? this.init() : null;
+        }
       }
     });
     await modal.present();

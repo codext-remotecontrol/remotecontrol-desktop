@@ -25,6 +25,7 @@ export class ConnectService {
   peer1: SimplePeer.Instance;
   spf: SimplePeerFiles;
   socketSub: Subscription;
+  sub2: Subscription;
   videoSource;
   transfer;
 
@@ -102,7 +103,7 @@ export class ConnectService {
       duration: 15000,
     });
     this.initialized = true;
-    this.ngxService.screen.on('display-metrics-changed', () => {
+    this.ngxService.screen.addListener('display-metrics-changed', () => {
       this.sendScreenSize();
     });
 
@@ -169,6 +170,11 @@ export class ConnectService {
           this.peer1.signal(data);
         }
       });
+  }
+
+  replaceVideo(stream) {
+    this.peer1.removeStream(this.videoSource.stream);
+    this.peer1.addStream(stream);
   }
 
   videoConnector() {
@@ -255,6 +261,7 @@ export class ConnectService {
     await this.peer1?.destroy();
     await this.socketService?.destroy();
     await this.socketSub?.unsubscribe();
+    await this.ngxService.screen.removeAllListeners();
   }
 
   connect(id) {
