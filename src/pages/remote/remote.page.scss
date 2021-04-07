@@ -29,3 +29,19 @@ ion-content {
     transform: scale(0.7);
   }
 }
+.file-drop {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(5, 93, 194, 0.5);
+
+  //backdrop-filter: saturate(180%) blur(20px);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+  color: #fff;
+  font-size: 80px;
+}

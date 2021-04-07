@@ -1,6 +1,9 @@
+<div *ngIf="fileDrop" class="file-drop">
+  <ion-icon name="document-outline"></ion-icon>
+</div>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-  <div class="connecting" *ngIf="!connected">
+  <!--<div class="connecting" *ngIf="!connected">
     <ng-lottie [options]="options"></ng-lottie>
-  </div>
+  </div>-->
   <video muted autoplay onloadedmetadata="this.muted = true" id="video"></video>
 </ion-content>

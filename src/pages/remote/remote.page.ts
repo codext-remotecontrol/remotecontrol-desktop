@@ -69,11 +69,38 @@ export class RemotePage implements OnInit, OnDestroy {
   hostScreenSize;
 
   connected = false;
+  fileDrop = false;
 
   options: AnimationOptions | any = {
     path: '/assets/animations/lf30_editor_PsHnfk.json',
     loop: true,
   };
+
+  @HostListener('document:dragover', ['$event'])
+  onDragOver(event) {
+    console.log('event', event);
+    event.preventDefault();
+    event.stopPropagation();
+    this.fileDrop = true;
+  }
+
+  @HostListener('document:dragleave', ['$event'])
+  onDragLeave(event) {
+    console.log('event', event);
+    event.preventDefault();
+    event.stopPropagation();
+    this.fileDrop = false;
+  }
+
+  @HostListener('drop', ['$event']) public ondrop(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.fileDrop = false;
+    const files = evt.dataTransfer.files;
+    if (files.length > 0) {
+      console.log(files);
+    }
+  }
 
   @HostListener('contextmenu', ['$event'])
   oncontextmenu(event) {

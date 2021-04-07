@@ -453,7 +453,6 @@ export class HomePage implements OnInit, OnDestroy {
             allowRunningInsecureContent: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            devTools: false,
           },
         });
 

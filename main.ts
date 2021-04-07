@@ -57,7 +57,7 @@ const args = process.argv.slice(1),
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function createWindow(): Promise<BrowserWindow> {
-  // autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdates();
   app.setAppUserModelId('de.codext.remotedesktop-control');
   app.allowRendererProcessReuse = false;
 
@@ -105,6 +105,7 @@ async function createWindow(): Promise<BrowserWindow> {
       label: 'Schließen',
       click: () => {
         win?.close();
+        app?.quit();
       },
     },
   ]);
@@ -138,7 +139,7 @@ async function createWindow(): Promise<BrowserWindow> {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    // win = null;
+    win = null;
   });
 
   /*win.on('close', (e) => {
