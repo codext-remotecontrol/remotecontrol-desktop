@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/await-thenable */
+import { ConnectService } from './../../app/core/services/connect.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import 'webrtc-adapter';
@@ -100,7 +102,8 @@ export class SettingsPage implements OnInit {
     public dialog: MatDialog,
     private translate: TranslateService,
     private actionSheetCtrl: ActionSheetController,
-    public settingsService: SettingsService
+    public settingsService: SettingsService,
+    private connectService: ConnectService
   ) {}
 
   async ngOnInit() {
@@ -164,6 +167,8 @@ export class SettingsPage implements OnInit {
     await this.settingsService.saveSettings({
       randomId: this.settingsService.settings.randomId,
     });
+    await this.connectService.destroy();
+    this.connectService.init();
   }
 
   addPw() {

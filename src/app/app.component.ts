@@ -97,18 +97,6 @@ export class AppComponent implements AfterViewInit {
 
   async init() {
     this.initDone = true;
-
-    if (this.settingsService.settings?.randomId) {
-      this.connectService.id = `${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}`;
-    } else {
-      const nodeMachineId = this.ngxService.remote.require('node-machine-id');
-      const id = await nodeMachineId.machineId();
-      const uniqId = parseInt(id, 36).toString().substring(3, 12);
-      this.connectService.id = uniqId;
-    }
-    this.connectService.idArray = ('' + this.connectService.id).split('');
-    this.cdr.detectChanges();
-
-    this.connectService.init(this.connectService.id, this.matDialog);
+    await this.connectService.init(this.matDialog);
   }
 }

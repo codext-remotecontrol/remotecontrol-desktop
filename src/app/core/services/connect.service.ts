@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
@@ -76,16 +77,31 @@ export class ConnectService {
     });
   }
 
-  async init(id, matDialog) {
+  async generateId() {
+    if (this.settingsService.settings?.randomId) {
+      this.id = `${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}`;
+    } else {
+      const nodeMachineId = this.ngxService.remote.require('node-machine-id');
+      const id = await nodeMachineId.machineId();
+      const uniqId = parseInt(id, 36).toString().substring(3, 12);
+      this.id = uniqId;
+    }
+    this.idArray = ('' + this.id).split('');
+  }
+
+  async init(matDialog?) {
     if (this.initialized) {
       return;
     }
-    this.dialog = matDialog;
+    if (!this.dialog) {
+      this.dialog = matDialog;
+    }
+    await this.generateId();
+
     this.loading = await this.loadingCtrl.create({
       duration: 15000,
     });
     this.initialized = true;
-    this.id = id;
     this.ngxService.screen.on('display-metrics-changed', () => {
       this.sendScreenSize();
     });
@@ -234,11 +250,11 @@ export class ConnectService {
     });
   }
 
-  destroy() {
+  async destroy() {
     this.initialized = false;
-    this.peer1?.destroy();
-    this.socketService?.destroy();
-    this.socketSub?.unsubscribe();
+    await this.peer1?.destroy();
+    await this.socketService?.destroy();
+    await this.socketSub?.unsubscribe();
   }
 
   connect(id) {
