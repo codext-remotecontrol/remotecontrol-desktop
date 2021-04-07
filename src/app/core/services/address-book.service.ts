@@ -18,6 +18,9 @@ export class AddressBookService {
   }
 
   async add(adItem) {
+    if (this.addressBook.find((item) => adItem.id == item.id)) {
+      return;
+    }
     if (!this.addressBook) {
       this.addressBook = [];
     }

@@ -47,8 +47,8 @@ export class AppComponent implements AfterViewInit {
     console.log('AppConfig', AppConfig);
   }
 
-  ngAfterViewInit() {
-    if (this.ngxService.isElectronApp && !this.route.snapshot.queryParams.id) {
+  async ngAfterViewInit() {
+    if (this.ngxService.isElectronApp) {
       /*if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,
@@ -61,7 +61,10 @@ export class AppComponent implements AfterViewInit {
       } else {
         this.screenSelect();
       }*/
-      this.screenSelect();
+      await this.settingsService.load();
+      if (!window.location.href.includes('id=')) {
+        this.screenSelect();
+      }
     }
   }
 
