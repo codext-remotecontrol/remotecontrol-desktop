@@ -47,6 +47,7 @@
     "@angular/cdk": "11.2.7",
     "@angular/forms": "^11.0.0 || ^12.0.0-0",
     "@angular/material": "11.2.7",
+    "@capacitor/core": "2.4.7",
     "@electron/remote": "1.1.0",
     "@ionic/angular": "^5.6.3",
     "@ionic/core": "^5.6.3",

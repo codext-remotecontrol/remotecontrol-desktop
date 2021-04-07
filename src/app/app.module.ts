@@ -23,6 +23,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
+import { AskForPermissionPageModule } from './shared/components/ask-for-permission/ask-for-permission.module';
 
 export function playerFactory() {
   return player;
@@ -48,6 +49,7 @@ export function playerFactory() {
     }),
     IonicModule.forRoot(),
     NgxElectronModule,
+    AskForPermissionPageModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

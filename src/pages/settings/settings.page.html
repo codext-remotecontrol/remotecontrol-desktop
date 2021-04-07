@@ -18,7 +18,7 @@
 
     <ion-item lines="none">
       <ion-checkbox
-        [(ngModel)]="settings.randomId"
+        [(ngModel)]="settingsService.settings.randomId"
         (ngModelChange)="randomIdChange()"
         slot="start"
       ></ion-checkbox>
@@ -42,8 +42,14 @@
     >
       <ion-label> {{'Language' |translate}} </ion-label>
       <span slot="end">
-        <img *ngIf="language.code == 'de'" src="./assets/icons/DE.png" />
-        <img *ngIf="language.code == 'en'" src="./assets/icons/US.png" />
+        <img
+          *ngIf="settingsService.language.code == 'de'"
+          src="./assets/icons/DE.png"
+        />
+        <img
+          *ngIf="settingsService.language.code == 'en'"
+          src="./assets/icons/US.png"
+        />
       </span>
     </ion-item>
   </div>
@@ -53,19 +59,19 @@
   >
     <ion-item lines="none">
       <ion-checkbox
-        [(ngModel)]="settings.hiddenAccess"
+        [(ngModel)]="settingsService.settings.hiddenAccess"
         (ngModelChange)="changeHiddenAccess()"
         slot="start"
       ></ion-checkbox>
       <ion-label>{{'Unattended access' |translate}}</ion-label>
     </ion-item>
 
-    <div class="mt-2" *ngIf="settings.hiddenAccess">
+    <div class="mt-2" *ngIf="settingsService.settings.hiddenAccess">
       <button color="accent" mat-flat-button (click)="addPw()">
-        <ng-container *ngIf="!settings.passwordHash"
+        <ng-container *ngIf="!settingsService.settings.passwordHash"
           >{{'Add Password'| translate}}</ng-container
         >
-        <ng-container *ngIf="settings.passwordHash"
+        <ng-container *ngIf="settingsService.settings.passwordHash"
           >{{'Change Password'| translate}}</ng-container
         >
       </button>

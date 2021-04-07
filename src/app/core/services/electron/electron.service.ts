@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ipcRenderer, webFrame, desktopCapturer, remote } from 'electron';
+import {
+  ipcRenderer,
+  webFrame,
+  desktopCapturer,
+  remote,
+  BrowserWindow,
+} from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -21,7 +27,7 @@ export class ElectronService {
   fs: typeof fs;
   os: typeof os;
   path: typeof path;
-  window: any;
+  window: BrowserWindow;
   autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
   bcrypt: typeof bcrypt;

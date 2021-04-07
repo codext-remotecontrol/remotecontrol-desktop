@@ -10,6 +10,7 @@ import {
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActionSheetController } from '@ionic/angular';
+import { SettingsService } from '../../app/core/services/settings.service';
 
 export interface DialogData {
   pw: string;
@@ -93,33 +94,16 @@ export class SettingsPage implements OnInit {
 
   hiddenAccess = false;
 
-  settings = {
-    hiddenAccess: false,
-    randomId: false,
-    passwordHash: '',
-  };
-
-  language: { text: string; code: string } = {
-    text: 'Deutsch',
-    code: 'de',
-  };
-
   constructor(
     private electronService: ElectronService,
     private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     private translate: TranslateService,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    public settingsService: SettingsService
   ) {}
 
   async ngOnInit() {
-    const settings: any = await this.electronService.settings.get('settings');
-    console.log(settings);
-    if (settings?.language) {
-      this.language = settings.language;
-    }
-
-    Object.assign(this.settings, settings);
     this.compName = this.electronService.os.hostname();
     this.autoLaunch = new this.electronService.autoLaunch({
       name: 'Remotecontrol - Desktop',
@@ -162,23 +146,23 @@ export class SettingsPage implements OnInit {
   }
 
   async changeLanguage(selection: { text: string; code: string }) {
-    await this.saveSettings({
+    await this.settingsService.saveSettings({
       language: selection,
     });
 
-    this.language = selection;
+    this.settingsService.language = selection;
     this.translate.use(selection.code);
   }
 
   async changeHiddenAccess() {
-    await this.saveSettings({
-      hiddenAccess: this.settings.hiddenAccess,
+    await this.settingsService.saveSettings({
+      hiddenAccess: this.settingsService.settings.hiddenAccess,
     });
   }
 
   async randomIdChange() {
-    await this.saveSettings({
-      randomId: this.settings.randomId,
+    await this.settingsService.saveSettings({
+      randomId: this.settingsService.settings.randomId,
     });
   }
 
@@ -202,15 +186,9 @@ export class SettingsPage implements OnInit {
   async setPwHash(pw) {
     const hash = await this.electronService.bcrypt.hash(pw, 5);
 
-    await this.saveSettings({
+    await this.settingsService.saveSettings({
       passwordHash: hash,
     });
-  }
-
-  async saveSettings(settings) {
-    Object.assign(this.settings, settings);
-    console.log(this.settings);
-    await this.electronService.settings.set('settings', this.settings);
   }
 
   changeAutoStart() {

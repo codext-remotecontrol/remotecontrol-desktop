@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { HomePageRoutingModule } from './home-routing.module';
-import { AskForPermissionDialog, HomePage } from './home.page';
+import { HomePage } from './home.page';
 import { NumberDirective } from './number.directive';
 
 @NgModule({
@@ -21,6 +21,6 @@ import { NumberDirective } from './number.directive';
     MatButtonModule,
     TranslateModule,
   ],
-  declarations: [HomePage, NumberDirective, AskForPermissionDialog],
+  declarations: [HomePage, NumberDirective],
 })
 export class HomePageModule {}

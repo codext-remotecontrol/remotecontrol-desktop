@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,8 +14,9 @@ import { AddressBookPage } from './address-book.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AddressBookPageRoutingModule
+    AddressBookPageRoutingModule,
+    MatButtonModule,
   ],
-  declarations: [AddressBookPage]
+  declarations: [AddressBookPage],
 })
 export class AddressBookPageModule {}

@@ -2,6 +2,7 @@
   <ion-icon name="document-outline"></ion-icon>
 </div>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <div *ngIf="fileLoading" class="fileLoading"><ion-spinner></ion-spinner></div>
   <!--<div class="connecting" *ngIf="!connected">
     <ng-lottie [options]="options"></ng-lottie>
   </div>-->

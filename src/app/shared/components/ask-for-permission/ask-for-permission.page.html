@@ -1,0 +1,7 @@
+<div mat-dialog-title>{{ 'Incoming Connection' | translate }}</div>
+<div mat-dialog-actions style="flex-wrap: nowrap">
+  <button mat-button (click)="decline()">{{ 'decline' | translate }}</button>
+  <button mat-button cdkFocusInitial (click)="accept()">
+    {{ 'Accept' | translate }}
+  </button>
+</div>

@@ -75,6 +75,7 @@ export class RemotePage implements OnInit, OnDestroy {
 
   connected = false;
   fileDrop = false;
+  fileLoading = false;
   transfer;
   files = [];
 
@@ -229,7 +230,7 @@ export class RemotePage implements OnInit, OnDestroy {
 
   initPeer(id) {
     this.peer2 = new SimplePeer({
-      channelName: id,
+      // channelName: id,
       config: {
         iceServers: [
           {
@@ -312,6 +313,7 @@ export class RemotePage implements OnInit, OnDestroy {
           this.peer2.send(`start-${fileID}`);
           return;
         } else if (fileTransfer.substr(0, 6) === 'start-') {
+          this.fileLoading = true;
           const fileID = fileTransfer.substr(6);
           this.transfer = await this.spf.send(
             this.peer2,
@@ -323,6 +325,7 @@ export class RemotePage implements OnInit, OnDestroy {
           });
           this.transfer.on('done', (done) => {
             console.log('done', done);
+            this.fileLoading = false;
           });
           this.transfer.start();
           return;
@@ -334,12 +337,7 @@ export class RemotePage implements OnInit, OnDestroy {
   close() {
     this.connected = false;
     this.removeEventListeners();
-    return;
-    const BrowserWindow = this.electronService.remote.BrowserWindow;
-    const currentWindow = BrowserWindow.getAllWindows().filter((b) => {
-      return b.isFocused();
-    });
-    currentWindow[0]?.close();
+    this.electronService.window.close();
   }
 
   calcVideoSize() {
