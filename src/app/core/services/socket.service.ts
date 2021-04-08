@@ -12,7 +12,8 @@ export class SocketService {
 
   init() {
     this.socket?.disconnect();
-    this.socket = io('https://node.remote-control.codext.de');
+
+    this.socket = io('http://localhost:3000'); // io('https://node.remote-control.codext.de');
   }
 
   destroy() {
@@ -29,6 +30,15 @@ export class SocketService {
     type: 'message' | 'call' | 'remoteData' = 'remoteData'
   ) {
     this.socket.emit(type, { data: msg });
+  }
+
+  onDisconnected() {
+    return new Observable((observer) => {
+      this.socket.on('disconnected', () => {
+        console.log('disconnected');
+        observer.next('disconnected');
+      });
+    });
   }
 
   onNewMessage(type: 'message' | 'remoteData' | 'signaling' = 'remoteData') {

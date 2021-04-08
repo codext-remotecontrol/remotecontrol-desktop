@@ -26,6 +26,7 @@ export class ConnectService {
   spf: SimplePeerFiles;
   socketSub: Subscription;
   sub2: Subscription;
+  sub3: Subscription;
   videoSource;
   transfer;
 
@@ -112,6 +113,19 @@ export class ConnectService {
     this.socketService.init();
     this.socketService.joinRoom(this.id);
 
+    this.sub3 = this.socketService.onDisconnected().subscribe(() => {
+      Swal.fire({
+        title: 'Info',
+        text: 'Verbindung wurde beendet',
+        icon: 'info',
+        showCancelButton: false,
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      this.reconnect();
+    });
     this.socketSub = this.socketService
       .onNewMessage()
       .subscribe(async (data: any) => {
@@ -207,13 +221,14 @@ export class ConnectService {
       this.socketService.sendMessage(data);
     });
     this.peer1.on('error', () => {
-      this.connected = false;
+      this.reconnect();
     });
     this.peer1.on('close', () => {
-      this.connected = false;
+      this.reconnect();
     });
     this.peer1.on('connect', () => {
       this.connected = true;
+      this.connectHelperService.showInfoWindow();
     });
 
     this.peer1.on('data', (data) => {
@@ -256,11 +271,21 @@ export class ConnectService {
     });
   }
 
+  async reconnect() {
+    this.connected = false;
+    this.connectHelperService.closeInfoWindow();
+    await this.destroy();
+    setTimeout(() => {
+      this.init();
+    }, 500);
+  }
+
   async destroy() {
     this.initialized = false;
     await this.peer1?.destroy();
     await this.socketService?.destroy();
     await this.socketSub?.unsubscribe();
+    await this.sub3?.unsubscribe();
     await this.ngxService.screen.removeAllListeners();
   }
 

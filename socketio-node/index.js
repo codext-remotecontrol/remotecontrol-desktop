@@ -11,8 +11,9 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+  socket.on('disconnect', (data) => {
+    console.log('user disconnected', data);
+    socket.broadcast.emit('disconnected');
   });
 
   /*socket.on('remoteData', (data) => {

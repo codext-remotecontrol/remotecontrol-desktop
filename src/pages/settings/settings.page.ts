@@ -167,8 +167,7 @@ export class SettingsPage implements OnInit {
     await this.settingsService.saveSettings({
       randomId: this.settingsService.settings.randomId,
     });
-    await this.connectService.destroy();
-    this.connectService.init();
+    this.connectService.reconnect();
   }
 
   addPw() {

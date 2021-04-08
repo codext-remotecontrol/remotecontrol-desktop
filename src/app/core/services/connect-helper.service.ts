@@ -1,3 +1,4 @@
+import { BrowserWindow } from 'electron';
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { ElectronService } from './electron/electron.service';
 import { ElectronService as NgxService } from 'ngx-electron';
@@ -9,6 +10,7 @@ import * as url from 'url';
 })
 export class ConnectHelperService {
   robot: any;
+  infoWindow: BrowserWindow;
 
   constructor(
     private electronService: ElectronService,
@@ -102,16 +104,25 @@ export class ConnectHelperService {
     }
   }
 
+  closeInfoWindow() {
+    if (this.ngxService.isElectronApp) {
+      this.infoWindow?.close();
+    }
+  }
+
   showInfoWindow() {
     if (this.ngxService.isElectronApp) {
       const appPath = this.electronService.remote.app.getAppPath();
       try {
         const BrowserWindow = this.electronService.remote.BrowserWindow;
-        const win = new BrowserWindow({
+        /*const {
+          height,
+        } = this.electronService.screen.getPrimaryDisplay().workAreaSize;*/
+        this.infoWindow = new BrowserWindow({
           height: 50,
           width: 50,
           x: 0,
-          y: 20,
+          y: 100, //height / 2 - 50,
           resizable: false,
           show: false,
           frame: false,
@@ -125,10 +136,10 @@ export class ConnectHelperService {
             devTools: false,
           },
         });
-        win.setAlwaysOnTop(true, 'status');
+        this.infoWindow.setAlwaysOnTop(true, 'status');
 
         if (AppConfig.production) {
-          win.loadURL(
+          this.infoWindow.loadURL(
             url.format({
               pathname: this.electronService.path.join(
                 appPath,
@@ -140,9 +151,9 @@ export class ConnectHelperService {
             })
           );
         } else {
-          win.loadURL('http://localhost:4200/#/info-window');
+          this.infoWindow.loadURL('http://localhost:4200/#/info-window');
         }
-        win.show();
+        this.infoWindow.show();
       } catch (error) {
         console.log('error', error);
       }

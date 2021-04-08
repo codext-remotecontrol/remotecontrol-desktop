@@ -4,8 +4,18 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title> </ion-title>
-    <ion-buttons *ngIf="connectService.fileLoading" class="mr-3" slot="end">
-      <ion-spinner color="light"></ion-spinner>
+    <ion-buttons class="mr-3" slot="end">
+      <ion-spinner
+        *ngIf="connectService.fileLoading"
+        color="light"
+      ></ion-spinner>
+      <ion-button
+        [matTooltip]="'Verbindung schließen'"
+        (click)="connectService.reconnect()"
+        *ngIf="connectService.connected"
+      >
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

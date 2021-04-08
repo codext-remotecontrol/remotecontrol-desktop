@@ -31,6 +31,8 @@ export class AppComponent implements AfterViewInit {
 
   initDone: boolean = false;
 
+  isRemote: boolean = false;
+
   constructor(
     public electronService: ElectronService,
     private translate: TranslateService,
@@ -64,6 +66,8 @@ export class AppComponent implements AfterViewInit {
       await this.settingsService.load();
       if (!window.location.href.includes('id=')) {
         this.screenSelect();
+      } else {
+        this.isRemote = true;
       }
     }
   }

@@ -5,6 +5,7 @@ import {
   desktopCapturer,
   remote,
   BrowserWindow,
+  screen,
 } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
@@ -32,6 +33,7 @@ export class ElectronService {
   settings: typeof settings;
   bcrypt: typeof bcrypt;
   autoUpdater: typeof autoUpdater;
+  screen: typeof screen;
 
   // nutJs: typeof nutJs;
 
@@ -46,6 +48,7 @@ export class ElectronService {
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.autoUpdater = window.require('electron-updater');
       this.webFrame = window.require('electron').webFrame;
+      this.screen = window.require('electron').screen;
       this.remote = window.require('electron').remote;
       this.os = window.require('os');
       this.autoLaunch = window.require('auto-launch');
@@ -82,10 +85,11 @@ export class ElectronService {
     }
   }
 
-  close() {
+  hide() {
     this.window.hide();
-    return;
-    const win = window.require('electron').remote.getCurrentWindow();
-    win.close();
+  }
+
+  close() {
+    this.window.close();
   }
 }

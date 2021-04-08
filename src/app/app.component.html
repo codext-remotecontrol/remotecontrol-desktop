@@ -1,6 +1,6 @@
 <div id="title-bar" class="action-bar" *ngIf="appService.actionBar">
   <div class="app-actions" *ngIf="process && process.platform !== 'darwin'">
-    <button (click)="screenSelect(false, true)">
+    <button *ngIf="!isRemote" (click)="screenSelect(false, true)">
       <ion-icon name="browsers-outline"></ion-icon>
     </button>
     <button (click)="electronService.minimize()">
@@ -11,7 +11,11 @@
       <ion-icon name="resize-outline"></ion-icon>
     </button>
 
-    <button class="close" (click)="electronService.close()">
+    <button *ngIf="isRemote" class="close" (click)="electronService.close()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+
+    <button *ngIf="!isRemote" class="close" (click)="electronService.hide()">
       <ion-icon name="close-outline"></ion-icon>
     </button>
   </div>
