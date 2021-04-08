@@ -24,7 +24,7 @@ export class ScreenSelectComponent implements OnInit {
     try {
       await this.electronService.desktopCapturer
         .getSources({ types: ['screen'] })
-        .then(async (sources: any) => {
+        .then(async (sources: Electron.DesktopCapturerSource[]) => {
           for (const source of sources) {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
@@ -34,6 +34,7 @@ export class ScreenSelectComponent implements OnInit {
                     mandatory: {
                       chromeMediaSource: 'desktop',
                       chromeMediaSourceId: source.id,
+
                       maxFrameRate: 25,
                       /*minWidth: 200,
                       maxWidth: 1920,

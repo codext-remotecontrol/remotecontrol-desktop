@@ -233,6 +233,8 @@ export class ConnectService {
     this.peer1.on('connect', () => {
       this.connected = true;
       this.connectHelperService.showInfoWindow();
+      const win = this.electronService.window;
+      win.minimize();
     });
 
     this.peer1.on('data', (data) => {
@@ -276,6 +278,8 @@ export class ConnectService {
   }
 
   async reconnect() {
+    const win = this.electronService.window;
+    win.restore();
     this.connected = false;
     await this.destroy();
     setTimeout(() => {
