@@ -12,8 +12,7 @@ export class SocketService {
 
   init() {
     this.socket?.disconnect();
-
-    this.socket = io('http://localhost:3000'); // io('https://node.remote-control.codext.de');
+    this.socket = io('https://node.remote-control.codext.de'); // io('https://node.remote-control.codext.de');
   }
 
   destroy() {

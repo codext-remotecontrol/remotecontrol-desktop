@@ -355,8 +355,8 @@ export class RemotePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.appService.sideMenu = true;
     this.removeEventListeners();
-    this.socketService.destroy();
-    this.peer2.destroy();
+    this.socketService?.destroy();
+    this.peer2?.destroy();
   }
 
   removeEventListeners() {
@@ -419,7 +419,14 @@ export class RemotePage implements OnInit, OnDestroy {
       0,
       this.hostScreenSize?.height
     );
+
     const stringData = `mm,${x},${y}`;
+    console.log(
+      event?.offsetY,
+      this.videoSize?.height,
+      this.hostScreenSize?.height,
+      stringData
+    );
     this.peer2?.send(stringData);
   }
   keydownListener(event: KeyboardEvent) {

@@ -23,17 +23,13 @@ export class ScreenSelectComponent implements OnInit {
 
     try {
       await this.electronService.desktopCapturer
-        .getSources({ types: ['screen', 'audio'] })
+        .getSources({ types: ['screen'] })
         .then(async (sources: any) => {
           for (const source of sources) {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
                 {
-                  audio: {
-                    mandatory: {
-                      chromeMediaSource: 'desktop',
-                    },
-                  },
+                  audio: false,
                   video: {
                     mandatory: {
                       chromeMediaSource: 'desktop',

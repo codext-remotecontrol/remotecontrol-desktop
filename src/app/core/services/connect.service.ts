@@ -65,6 +65,7 @@ export class ConnectService {
   sendScreenSize() {
     const { width, height } = this.ngxService.screen.getPrimaryDisplay().size;
     this.socketService.sendMessage(`screenSize,${width},${height}`);
+    console.log('sendScreenSize', width, height);
   }
 
   askForConnectPermission() {
