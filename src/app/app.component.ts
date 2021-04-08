@@ -64,10 +64,13 @@ export class AppComponent implements AfterViewInit {
         this.screenSelect();
       }*/
       await this.settingsService.load();
-      if (!window.location.href.includes('id=')) {
-        this.screenSelect();
-      } else {
+      if (
+        window.location.href.includes('id=') ||
+        window.location.href.includes('info-window')
+      ) {
         this.isRemote = true;
+      } else {
+        this.screenSelect();
       }
     }
   }

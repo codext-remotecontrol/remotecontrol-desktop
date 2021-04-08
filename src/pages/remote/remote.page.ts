@@ -397,6 +397,13 @@ export class RemotePage implements OnInit, OnDestroy {
       this.hostScreenSize?.height
     );
 
+    console.log(
+      event.offsetX,
+      this.videoSize?.height,
+      this.hostScreenSize?.height,
+      x
+    );
+
     const stringData = `${type},${x},${y},${event.button}`;
     this.peer2?.send(stringData);
   }
