@@ -11,12 +11,11 @@ export class SocketService {
   constructor() {}
 
   init() {
-    this.socket?.disconnect();
-    this.socket = io('https://node.remote-control.codext.de'); // io('https://node.remote-control.codext.de');
+    this.socket = io('https://node.remote-control.codext.de');
   }
 
   destroy() {
-    this.socket.disconnect();
+    this.socket?.disconnect();
   }
 
   joinRoom(id: string) {

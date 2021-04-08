@@ -32,6 +32,7 @@ export class AppComponent implements AfterViewInit {
   initDone: boolean = false;
 
   isRemote: boolean = false;
+  isInfoWindow: boolean = false;
 
   constructor(
     public electronService: ElectronService,
@@ -64,11 +65,11 @@ export class AppComponent implements AfterViewInit {
         this.screenSelect();
       }*/
       await this.settingsService.load();
-      if (
-        window.location.href.includes('id=') ||
-        window.location.href.includes('info-window')
-      ) {
+      if (window.location.href.includes('id=')) {
         this.isRemote = true;
+      } else if (window.location.href.includes('info-window')) {
+        this.isRemote = true;
+        this.isInfoWindow = true;
       } else {
         this.screenSelect();
       }

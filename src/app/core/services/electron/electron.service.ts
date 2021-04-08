@@ -12,7 +12,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import * as AutoLaunch from 'auto-launch';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 // import * as nutJs from '@nut-tree/nut-js';
 import * as settings from 'electron-settings';
 import * as autoUpdater from 'electron-updater';
@@ -31,7 +31,7 @@ export class ElectronService {
   window: BrowserWindow;
   autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
-  bcrypt: typeof bcrypt;
+  bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
   screen: typeof screen;
 
@@ -52,7 +52,7 @@ export class ElectronService {
       this.remote = window.require('electron').remote;
       this.os = window.require('os');
       this.autoLaunch = window.require('auto-launch');
-      this.bcrypt = window.require('bcrypt');
+      this.bcryptjs = window.require('bcryptjs');
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
       this.settings = window.require('electron-settings');

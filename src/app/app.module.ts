@@ -1,3 +1,4 @@
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -50,6 +51,7 @@ export function playerFactory() {
     IonicModule.forRoot(),
     NgxElectronModule,
     AskForPermissionPageModule,
+    MatTooltipModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

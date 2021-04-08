@@ -47,6 +47,9 @@ ion-content {
 }
 .fileLoading {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  color: #fff;
+  padding: 10px;
 }

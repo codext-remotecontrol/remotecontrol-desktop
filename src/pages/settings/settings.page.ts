@@ -188,7 +188,7 @@ export class SettingsPage implements OnInit {
   }
 
   async setPwHash(pw) {
-    const hash = await this.electronService.bcrypt.hash(pw, 5);
+    const hash = await this.electronService.bcryptjs.hash(pw, 5);
 
     await this.settingsService.saveSettings({
       passwordHash: hash,

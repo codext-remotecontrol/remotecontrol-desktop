@@ -101,12 +101,13 @@ export class ConnectService {
     if (!this.dialog) {
       this.dialog = matDialog;
     }
+    this.initialized = true;
     await this.generateId();
 
     this.loading = await this.loadingCtrl.create({
       duration: 15000,
     });
-    this.initialized = true;
+
     this.ngxService.screen.addListener('display-metrics-changed', () => {
       this.sendScreenSize();
     });
@@ -160,7 +161,7 @@ export class ConnectService {
           data.substring(0, 8) == 'pwAnswer'
         ) {
           const pw = data.replace(data.substring(0, 9), '');
-          const pwCorrect = await this.electronService.bcrypt.compare(
+          const pwCorrect = await this.electronService.bcryptjs.compare(
             pw,
             this.settingsService.settings.passwordHash
           );
@@ -276,11 +277,11 @@ export class ConnectService {
 
   async reconnect() {
     this.connected = false;
-    this.connectHelperService.closeInfoWindow();
     await this.destroy();
     setTimeout(() => {
       this.init();
     }, 500);
+    this.connectHelperService.closeInfoWindow();
   }
 
   async destroy() {

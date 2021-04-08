@@ -314,6 +314,7 @@ export class RemotePage implements OnInit, OnDestroy {
           return;
         } else if (fileTransfer.substr(0, 6) === 'start-') {
           this.fileLoading = true;
+          this.cdr.detectChanges();
           const fileID = fileTransfer.substr(6);
           this.transfer = await this.spf.send(
             this.peer2,
@@ -326,6 +327,7 @@ export class RemotePage implements OnInit, OnDestroy {
           this.transfer.on('done', (done) => {
             console.log('done', done);
             this.fileLoading = false;
+            this.cdr.detectChanges();
           });
           this.transfer.start();
           return;

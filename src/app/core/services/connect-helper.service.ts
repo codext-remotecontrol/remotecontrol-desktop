@@ -106,7 +106,10 @@ export class ConnectHelperService {
 
   closeInfoWindow() {
     if (this.ngxService.isElectronApp) {
-      this.infoWindow?.close();
+      try {
+        this.infoWindow?.close();
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
     }
   }
 
@@ -123,9 +126,10 @@ export class ConnectHelperService {
           width: 50,
           x: 0,
           y: 100, //height / 2 - 50,
-          resizable: false,
+          resizable: false, // AppConfig.production ? false : true,
           show: false,
           frame: false,
+          transparent: true,
           backgroundColor: '#252a33',
           webPreferences: {
             webSecurity: false,
@@ -133,7 +137,6 @@ export class ConnectHelperService {
             allowRunningInsecureContent: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            devTools: false,
           },
         });
         this.infoWindow.setAlwaysOnTop(true, 'status');
@@ -152,6 +155,7 @@ export class ConnectHelperService {
           );
         } else {
           this.infoWindow.loadURL('http://localhost:4200/#/info-window');
+          // this.infoWindow.webContents.openDevTools();
         }
         this.infoWindow.show();
       } catch (error) {

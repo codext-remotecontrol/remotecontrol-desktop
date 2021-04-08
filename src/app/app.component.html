@@ -1,6 +1,10 @@
 <div id="title-bar" class="action-bar" *ngIf="appService.actionBar">
   <div class="app-actions" *ngIf="process && process.platform !== 'darwin'">
-    <button *ngIf="!isRemote" (click)="screenSelect(false, true)">
+    <button
+      [matTooltip]="'Bildschirm wählen'"
+      *ngIf="!isRemote"
+      (click)="screenSelect(false, true)"
+    >
       <ion-icon name="browsers-outline"></ion-icon>
     </button>
     <button (click)="electronService.minimize()">
@@ -20,7 +24,7 @@
     </button>
   </div>
 </div>
-<ion-app class="main-area">
+<ion-app [class.main-area]="!isInfoWindow">
   <ion-split-pane contentId="main-content">
     <ion-menu
       *ngIf="appService.sideMenu"
