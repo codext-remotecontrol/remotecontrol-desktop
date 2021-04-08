@@ -428,12 +428,6 @@ export class RemotePage implements OnInit, OnDestroy {
     );
 
     const stringData = `mm,${x},${y}`;
-    console.log(
-      event?.offsetY,
-      this.videoSize?.height,
-      this.hostScreenSize?.height,
-      stringData
-    );
     this.peer2?.send(stringData);
   }
   keydownListener(event: KeyboardEvent) {
