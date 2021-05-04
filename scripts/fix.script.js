@@ -1,7 +1,7 @@
 var fs = require('fs');
 const file =
   './node_modules/mac-screen-capture-permissions/node_modules/electron-util/index.d.ts';
-
+/*
 fs.readFile(file, 'utf8', function (err, data) {
   if (err) {
     return console.log(err);
@@ -13,3 +13,4 @@ fs.readFile(file, 'utf8', function (err, data) {
     if (err) return console.log(err);
   });
 });
+*/

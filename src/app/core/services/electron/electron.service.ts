@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  app,
   ipcRenderer,
   webFrame,
   desktopCapturer,
@@ -11,7 +12,7 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import * as AutoLaunch from 'auto-launch';
+// import * as AutoLaunch from 'auto-launch';
 import * as bcryptjs from 'bcryptjs';
 import * as nutJs from '@nut-tree/nut-js';
 import * as settings from 'electron-settings';
@@ -20,6 +21,7 @@ import * as autoUpdater from 'electron-updater';
   providedIn: 'root',
 })
 export class ElectronService {
+  app: typeof app;
   ipcRenderer: typeof ipcRenderer;
   desktopCapturer: typeof desktopCapturer;
   webFrame: typeof webFrame;
@@ -29,7 +31,7 @@ export class ElectronService {
   os: typeof os;
   path: typeof path;
   window: BrowserWindow;
-  autoLaunch: typeof AutoLaunch;
+  // autoLaunch: typeof AutoLaunch;
   settings: typeof settings;
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
@@ -50,8 +52,10 @@ export class ElectronService {
       this.webFrame = window.require('electron').webFrame;
       this.screen = window.require('electron').screen;
       this.remote = window.require('electron').remote;
+
+      this.app = this.remote.app;
       this.os = window.require('os');
-      this.autoLaunch = window.require('auto-launch');
+      // this.autoLaunch = window.require('auto-launch');
       this.bcryptjs = window.require('bcryptjs');
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;

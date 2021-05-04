@@ -106,15 +106,19 @@ export class SettingsPage implements OnInit {
     private connectService: ConnectService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    const loginSettings = this.electronService.app.getLoginItemSettings();
+
+    this.autoStartEnabled = loginSettings.executableWillLaunchAtLogin;
+    console.log();
     this.compName = this.electronService.os.hostname();
-    this.autoLaunch = new this.electronService.autoLaunch({
+    /* this.autoLaunch = new this.electronService.autoLaunch({
       name: 'Remotecontrol - Desktop',
       path: this.electronService.remote.app.getPath('exe'),
       isHidden: true,
-    });
-    const isEnabled = await this.autoLaunch.isEnabled();
-    this.autoStartEnabled = isEnabled;
+    }); */
+    // const isEnabled = await this.autoLaunch.isEnabled();
+    // this.autoStartEnabled = false; // isEnabled;
     this.cdr.detectChanges();
   }
 
@@ -196,12 +200,27 @@ export class SettingsPage implements OnInit {
   }
 
   changeAutoStart() {
-    this.autoLaunch.isEnabled().then((isEnabled) => {
+    if (this.autoStartEnabled) {
+      this.electronService.app.setLoginItemSettings({
+        openAsHidden: true,
+        openAtLogin: true,
+        name: 'Remotecontrol Desktop',
+        args: ['--hidden'],
+      });
+    } else {
+      this.electronService.app.setLoginItemSettings({
+        openAsHidden: false,
+        openAtLogin: false,
+        name: 'Remotecontrol Desktop',
+        args: ['--hidden'],
+      });
+    }
+    /*this.autoLaunch.isEnabled().then((isEnabled) => {
       if (isEnabled) {
         this.autoLaunch.disable();
       } else {
         this.autoLaunch.enable();
       }
-    });
+    });*/
   }
 }
