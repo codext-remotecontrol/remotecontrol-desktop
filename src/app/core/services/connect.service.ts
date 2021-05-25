@@ -261,6 +261,13 @@ export class ConnectService {
             return;
           }
 
+          if (fileTransfer.substr(0, 10) === 'clipboard-') {
+            const text = fileTransfer.substr(10);
+            console.log('Test', text);
+            this.ngxService.clipboard.writeText(text);
+            return;
+          }
+
           let text = new TextDecoder('utf-8').decode(data);
           if (text.substring(0, 1) == '{') {
             text = JSON.parse(text);

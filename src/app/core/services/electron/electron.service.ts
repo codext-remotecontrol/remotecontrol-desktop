@@ -17,6 +17,7 @@ import * as bcryptjs from 'bcryptjs';
 import * as nutJs from '@nut-tree/nut-js';
 import * as settings from 'electron-settings';
 import * as autoUpdater from 'electron-updater';
+import * as clipboard from 'electron-clipboard-extended';
 @Injectable({
   providedIn: 'root',
 })
@@ -36,6 +37,7 @@ export class ElectronService {
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
   screen: typeof screen;
+  clipboard: typeof clipboard;
 
   nutJs: typeof nutJs;
 
@@ -60,6 +62,7 @@ export class ElectronService {
       this.window = window.require('electron').remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
       this.settings = window.require('electron-settings');
+      this.clipboard = window.require('electron-clipboard-extended');
 
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');

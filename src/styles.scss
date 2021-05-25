@@ -89,6 +89,10 @@ $theme: mat-light-theme($primary, $accent);
 
 @include angular-material-theme($theme);
 
+@media (prefers-color-scheme: dark) {
+  @include angular-material-theme($theme);
+}
+
 [type='text']:focus,
 [type='email']:focus,
 [type='url']:focus,

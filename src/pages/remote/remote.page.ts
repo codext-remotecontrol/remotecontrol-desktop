@@ -100,7 +100,8 @@ export class RemotePage implements OnInit, OnDestroy {
     this.fileDrop = false;
   }
 
-  @HostListener('drop', ['$event']) public ondrop(evt) {
+  @HostListener('drop', ['$event'])
+  ondrop(evt) {
     evt.preventDefault();
     evt.stopPropagation();
     this.fileDrop = false;
@@ -146,6 +147,13 @@ export class RemotePage implements OnInit, OnDestroy {
     this.calcVideoSize();
   }
 
+  /*
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: ClipboardEvent) {
+    const text: string = event.clipboardData.getData('text');
+    this.peer2.send('clipboard-' + text);
+  }*/
+
   constructor(
     private socketService: SocketService,
     private elementRef: ElementRef,
@@ -169,6 +177,20 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const clipboard = this.electronService.clipboard;
+    clipboard
+      .on('text-changed', () => {
+        const currentText = clipboard.readText();
+        console.log('currentText', currentText);
+        this.peer2.send('clipboard-' + currentText);
+      })
+
+      .on('image-changed', () => {
+        const currentIMage = clipboard.readImage();
+        console.log('currentText', currentIMage);
+      })
+      .startWatching();
+
     const id = this.route.snapshot.queryParams.id;
     this.appService.sideMenu = false;
     this.spf = new SimplePeerFiles();
@@ -254,9 +276,8 @@ export class RemotePage implements OnInit, OnDestroy {
     });
     this.peer2.on('stream', (stream) => {
       this.connected = true;
-      const video: HTMLVideoElement = this.elementRef.nativeElement.querySelector(
-        'video'
-      );
+      const video: HTMLVideoElement =
+        this.elementRef.nativeElement.querySelector('video');
       this.video = video;
       this.stream = stream;
       video.srcObject = stream;
