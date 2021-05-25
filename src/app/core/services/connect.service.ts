@@ -50,6 +50,22 @@ export class ConnectService {
     private settingsService: SettingsService
   ) {}
 
+  clipboardListener() {
+    const clipboard = this.electronService.clipboard;
+    clipboard
+      .on('text-changed', () => {
+        const currentText = clipboard.readText();
+        console.log('currentText', currentText);
+        this.peer1.send('clipboard-' + currentText);
+      })
+
+      .on('image-changed', () => {
+        const currentIMage = clipboard.readImage();
+        console.log('currentText', currentIMage);
+      })
+      .startWatching();
+  }
+
   setId(id) {
     if (id.length == 9) {
       const idArray = id.split('').map((number) => {
