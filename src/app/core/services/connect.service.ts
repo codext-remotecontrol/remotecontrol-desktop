@@ -37,7 +37,7 @@ export class ConnectService {
 
   id = '';
   idArray = [];
-  remoteIdArray = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
+  remoteIdArray: any = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
   remoteId = '';
   fileLoading = false;
 
