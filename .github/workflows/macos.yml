@@ -32,6 +32,9 @@ jobs:
       - name: Check lint
         run: npm run lint
       - name: Build the app
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: npm run electron:mac
       - run: node "./scripts/copy-file-mac.js"
       - uses: actions/upload-artifact@v2
