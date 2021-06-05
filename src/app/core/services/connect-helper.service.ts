@@ -9,16 +9,16 @@ import * as url from 'url';
   providedIn: 'root',
 })
 export class ConnectHelperService {
-  robot: any;
+  // robot: any;
   infoWindow: BrowserWindow;
 
   constructor(
     private electronService: ElectronService,
     private ngxService: NgxService
   ) {
-    this.robot = this.ngxService.remote?.require('robotjs');
-    this.robot?.setMouseDelay(0);
-    this.robot?.setKeyboardDelay(0);
+    // this.robot = this.ngxService.remote?.require('robotjs');
+    // this.robot?.setMouseDelay(0);
+    // this.robot?.setKeyboardDelay(0);
   }
 
   handleScroll(text) {
@@ -81,28 +81,29 @@ export class ConnectHelperService {
   }
 
   handleKey(data) {
-    const robot = this.robot;
+    // const robot = this.robot;
+    const nut = this.electronService.nutJs;
     const k = data.key;
     const modifiers = [];
     if (data.shift) modifiers.push('shift');
     if (data.control) modifiers.push('control');
     if (data.alt) modifiers.push('alt');
     if (data.meta) modifiers.push('command');
-    if (k === 'Enter') robot.keyTap('enter');
-    else if (k === 'Backspace') robot.keyTap('backspace');
-    else if (k === 'ArrowUp') robot.keyTap('up');
-    else if (k === 'ArrowDown') robot.keyTap('down');
-    else if (k === 'ArrowLeft') robot.keyTap('left');
-    else if (k === 'ArrowRight') robot.keyTap('right');
-    else if (k === 'Escape') robot.keyTap('escape');
-    else if (k === '<delete>') robot.keyTap('delete');
-    else if (k === 'Meta') robot.keyTap('home');
-    else if (k === '<end>') robot.keyTap('end');
-    else if (k === 'PageUp') robot.keyTap('pageup');
-    else if (k === 'PageDown') robot.keyTap('pagedown');
+    if (k === 'Enter') nut.keyboard.pressKey(nut.Key.Enter);
+    else if (k === 'Backspace') nut.keyboard.pressKey(nut.Key.Backspace);
+    else if (k === 'ArrowUp') nut.keyboard.pressKey(nut.Key.Up);
+    else if (k === 'ArrowDown') nut.keyboard.pressKey(nut.Key.Down);
+    else if (k === 'ArrowLeft') nut.keyboard.pressKey(nut.Key.Left);
+    else if (k === 'ArrowRight') nut.keyboard.pressKey(nut.Key.Right);
+    else if (k === 'Escape') nut.keyboard.pressKey(nut.Key.Escape);
+    else if (k === '<delete>') nut.keyboard.pressKey(nut.Key.Delete);
+    else if (k === 'Meta') nut.keyboard.pressKey(nut.Key.Home);
+    else if (k === '<end>') nut.keyboard.pressKey(nut.Key.End);
+    else if (k === 'PageUp') nut.keyboard.pressKey(nut.Key.PageUp);
+    else if (k === 'PageDown') nut.keyboard.pressKey(nut.Key.PageDown);
     else {
-      if (modifiers[0]) robot.keyTap(k, modifiers[0]);
-      else robot.keyTap(k);
+      if (modifiers[0]) nut.keyboard.pressKey(k, modifiers[0]);
+      else nut.keyboard.pressKey(k);
     }
   }
 
