@@ -89,21 +89,21 @@ export class ConnectHelperService {
     if (data.control) modifiers.push('control');
     if (data.alt) modifiers.push('alt');
     if (data.meta) modifiers.push('command');
-    if (k === 'Enter') nut.keyboard.type(nut.Key.Enter);
-    else if (k === 'Backspace') nut.keyboard.type(nut.Key.Backspace);
-    else if (k === 'ArrowUp') nut.keyboard.type(nut.Key.Up);
-    else if (k === 'ArrowDown') nut.keyboard.type(nut.Key.Down);
-    else if (k === 'ArrowLeft') nut.keyboard.type(nut.Key.Left);
-    else if (k === 'ArrowRight') nut.keyboard.type(nut.Key.Right);
-    else if (k === 'Escape') nut.keyboard.type(nut.Key.Escape);
-    else if (k === '<delete>') nut.keyboard.type(nut.Key.Delete);
-    else if (k === 'Meta') nut.keyboard.type(nut.Key.Home);
-    else if (k === '<end>') nut.keyboard.type(nut.Key.End);
-    else if (k === 'PageUp') nut.keyboard.type(nut.Key.PageUp);
-    else if (k === 'PageDown') nut.keyboard.type(nut.Key.PageDown);
+    if (k === 'Enter') nut.keyboard.pressKey(nut.Key.Enter);
+    else if (k === 'Backspace') nut.keyboard.pressKey(nut.Key.Backspace);
+    else if (k === 'ArrowUp') nut.keyboard.pressKey(nut.Key.Up);
+    else if (k === 'ArrowDown') nut.keyboard.pressKey(nut.Key.Down);
+    else if (k === 'ArrowLeft') nut.keyboard.pressKey(nut.Key.Left);
+    else if (k === 'ArrowRight') nut.keyboard.pressKey(nut.Key.Right);
+    else if (k === 'Escape') nut.keyboard.pressKey(nut.Key.Escape);
+    else if (k === '<delete>') nut.keyboard.pressKey(nut.Key.Delete);
+    else if (k === 'Meta') nut.keyboard.pressKey(nut.Key.Home);
+    else if (k === '<end>') nut.keyboard.pressKey(nut.Key.End);
+    else if (k === 'PageUp') nut.keyboard.pressKey(nut.Key.PageUp);
+    else if (k === 'PageDown') nut.keyboard.pressKey(nut.Key.PageDown);
     else {
-      if (modifiers[0]) nut.keyboard.type(k, modifiers[0]);
-      else nut.keyboard.type(k);
+      if (modifiers[0]) nut.keyboard.pressKey(k, modifiers[0]);
+      else nut.keyboard.pressKey(k);
     }
   }
 
