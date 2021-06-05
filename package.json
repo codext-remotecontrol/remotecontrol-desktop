@@ -48,6 +48,7 @@
     "@angular/material": "12.0.3",
     "@capacitor-community/electron": "1.4.2",
     "@capacitor/core": "3.0.0",
+    "@capacitor/storage": "1.0.0",
     "@electron/remote": "1.1.0",
     "@ionic/angular": "^5.6.8",
     "@ionic/core": "^5.6.8",

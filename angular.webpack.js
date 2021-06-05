@@ -4,10 +4,6 @@
 
 module.exports = (config, options) => {
   config.target = 'electron-renderer';
-  config.node = {
-    fs: 'empty',
-    child_process: 'empty',
-  };
 
   if (options.fileReplacements) {
     for (let fileReplacement of options.fileReplacements) {

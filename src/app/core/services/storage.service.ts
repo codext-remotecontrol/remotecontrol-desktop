@@ -1,7 +1,5 @@
-import { Plugins } from '@capacitor/core';
+import { Storage } from '@capacitor/storage';
 import { AppConfig } from '../../../environments/environment';
-
-const { Storage } = Plugins;
 
 export async function set(key: string, value: any): Promise<void> {
   await Storage.set({
