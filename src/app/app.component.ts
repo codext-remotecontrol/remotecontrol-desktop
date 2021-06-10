@@ -52,6 +52,10 @@ export class AppComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     if (this.ngxService.isElectronApp) {
+      const nut: any = this.electronService.nutJs;
+      nut.keyboard.config = { autoDelayMs: 0 };
+      nut.mouse.config = { autoDelayMs: 0, mouseSpeed: 1000 };
+      nut.keyboard.nativeAdapter.keyboard.setKeyboardDelay(0);
       /*if (this.ngxService.isMacOS) {
         const permissionModal = await this.modalCtrl.create({
           component: MacosPermissionsPage,

@@ -37,6 +37,7 @@
   ],
   "win": {
     "icon": "dist/assets/icons",
+    "requestedExecutionLevel": "requireAdministrator",
     "target": ["nsis"]
   },
   "nsis": {
