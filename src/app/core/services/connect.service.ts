@@ -84,6 +84,7 @@ export class ConnectService {
     this.socketService.sendMessage(
       `screenSize,${width * scaleFactor},${height * scaleFactor}`
     );
+    console.log('scaleFactor', scaleFactor, width, height);
   }
 
   askForConnectPermission() {
