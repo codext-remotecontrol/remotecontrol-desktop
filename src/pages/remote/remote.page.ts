@@ -409,7 +409,7 @@ export class RemotePage implements OnInit, OnDestroy {
       0,
       this.videoSize?.width,
       0,
-      this.hostScreenSize?.width / 2
+      this.hostScreenSize?.width
     );
 
     const y = this.scale(
@@ -417,7 +417,7 @@ export class RemotePage implements OnInit, OnDestroy {
       0,
       this.videoSize?.height,
       0,
-      this.hostScreenSize?.height / 2
+      this.hostScreenSize?.height
     );
 
     console.log(
@@ -440,14 +440,14 @@ export class RemotePage implements OnInit, OnDestroy {
       0,
       this.videoSize?.width,
       0,
-      this.hostScreenSize?.width / 2
+      this.hostScreenSize?.width
     );
     const y = this.scale(
       event?.offsetY,
       0,
       this.videoSize?.height,
       0,
-      this.hostScreenSize?.height / 2
+      this.hostScreenSize?.height
     );
 
     const stringData = `mm,${x},${y}`;
