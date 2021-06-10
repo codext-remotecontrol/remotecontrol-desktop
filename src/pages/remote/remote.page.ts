@@ -79,6 +79,8 @@ export class RemotePage implements OnInit, OnDestroy {
   transfer;
   files = [];
 
+  fileProgress = 0;
+
   options: AnimationOptions | any = {
     path: '/assets/animations/lf30_editor_PsHnfk.json',
     loop: true,
@@ -344,6 +346,7 @@ export class RemotePage implements OnInit, OnDestroy {
           );
           this.transfer.on('progress', (p) => {
             console.log('progress', p);
+            this.fileProgress = p;
           });
           this.transfer.on('done', (done) => {
             console.log('done', done);

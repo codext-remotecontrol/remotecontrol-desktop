@@ -11,6 +11,23 @@ video {
 ion-content {
   --background: black;
 }
+.progress {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  .inner-progress {
+    background: rgba(5, 93, 194, 0.8);
+    height: 20px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
 .connecting {
   display: flex;
   align-items: center;
