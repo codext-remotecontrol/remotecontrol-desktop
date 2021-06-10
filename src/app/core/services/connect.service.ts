@@ -79,7 +79,10 @@ export class ConnectService {
   }
 
   sendScreenSize() {
-    const scaleFactor = 1; // this.ngxService.screen.getPrimaryDisplay().scaleFactor;
+    const scaleFactor =
+      process.platform === 'darwin'
+        ? 1
+        : this.ngxService.screen.getPrimaryDisplay().scaleFactor;
     const { width, height } = this.ngxService.screen.getPrimaryDisplay().size;
     this.socketService.sendMessage(
       `screenSize,${width * scaleFactor},${height * scaleFactor}`
