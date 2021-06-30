@@ -33,7 +33,7 @@ jobs:
         run: npm run lint
       - name: Build the app
         run: npm run electron:linux
-      - run: node "./scripts/copy-file.js"
+      - run: node "./scripts/copy-file-linux.js"
       - uses: actions/upload-artifact@v2
         with:
           name: linux-build
