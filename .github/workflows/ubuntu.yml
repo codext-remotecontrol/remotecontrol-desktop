@@ -37,3 +37,11 @@ jobs:
         with:
           name: linux-build
           path: release/*.AppImage
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: server01.codext.de
+          username: ${{ secrets.ftp_user }}
+          password: ${{ secrets.ftp_password }}
+          local-dir: released/
+          server-dir: ./linux/
