@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { AppConfig } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class SocketService {
   constructor() {}
 
   init() {
-    this.socket = io('https://node.remote-control.codext.de');
+    this.socket = io(AppConfig.api);
   }
 
   destroy() {
