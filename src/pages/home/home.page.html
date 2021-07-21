@@ -24,15 +24,33 @@
   <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
     <div
       *ngIf="electronService.isElectron"
-      class="box flex flex-col shadow-xl mt-3 rounded-xl overflow-hidden bg-white"
+      class="
+        box
+        flex flex-col
+        shadow-xl
+        mt-3
+        rounded-xl
+        overflow-hidden
+        bg-white
+      "
     >
       <div
-        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11 relative"
+        class="
+          py-6
+          px-14
+          bg-gradient-to-tr
+          from-gray-900
+          to-gray-700
+          text-center
+          -mb-5
+          pb-11
+          relative
+        "
       >
-        <h2 class="text-white text-xs">
-          Teilen Sie diese ID mit ihrem Partner
-        </h2>
-        <h4 class="text-white text-center font-bold text-xl mt-2">Meine ID</h4>
+        <h2 class="text-white text-xs">ID zum Teilen</h2>
+        <h4 class="text-white text-center font-bold text-xl mt-2">
+          Mein Computer
+        </h4>
         <!--<div class="absolute top-2 right-2">
           <ion-button
             color="light"
@@ -48,7 +66,21 @@
         <div class="flex items-center justify-center">
           <span
             *ngFor="let number of connectService.idArray;let  i = index"
-            class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0"
+            class="
+              h-10
+              mr-1
+              rounded
+              w-7
+              min-w-7
+              flex
+              items-center
+              text-center
+              font-thin
+              text-3xl
+              bg-gray-200
+              justify-center
+              border-0
+            "
             [class.mr-4]="i == 2 || i == 5"
             >{{number}}</span
           >
@@ -56,14 +88,31 @@
       </div>
     </div>
     <div
-      class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden bg-white"
+      class="
+        box
+        flex flex-col
+        shadow-xl
+        rounded-xl
+        mt-3
+        overflow-hidden
+        bg-white
+      "
     >
       <div
-        class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11"
+        class="
+          py-6
+          px-14
+          bg-gradient-to-tr
+          from-gray-900
+          to-gray-700
+          text-center
+          -mb-5
+          pb-11
+        "
       >
-        <h2 class="text-white text-xs">Geben Sie die ID Ihres Partners ein</h2>
+        <h2 class="text-white text-xs">Partner ID eingeben</h2>
         <h4 class="text-white text-center font-bold text-xl mt-2">
-          Partner ID
+          Anderer Computer
         </h4>
       </div>
       <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
@@ -72,7 +121,25 @@
             #digitSix
             *ngFor="let number of connectService.remoteIdArray; let  i = index"
             (keydown)="onDigitInput($event)"
-            class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+            class="
+              h-10
+              mr-1
+              rounded
+              w-7
+              min-w-7
+              flex
+              items-center
+              text-center
+              font-thin
+              text-3xl
+              bg-gray-200
+              justify-center
+              border-0
+              focus:outline-none
+              focus:ring-2
+              focus:ring-gray-600
+              focus:border-transparent
+            "
             [class.mr-4]="i == 2 || i == 5"
             [(ngModel)]="number.number"
             maxlength="1"
@@ -84,7 +151,19 @@
         <button
           size="small"
           (click)="connect()"
-          class="w-full py-2 bg-gray-900 text-white rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-transparent shadow-lg"
+          class="
+            w-full
+            py-2
+            bg-gray-900
+            text-white
+            rounded-md
+            text-sm
+            focus:outline-none
+            focus:ring-2
+            focus:ring-gray-700
+            focus:border-transparent
+            shadow-lg
+          "
         >
           Verbinden
         </button>
