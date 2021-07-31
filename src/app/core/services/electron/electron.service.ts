@@ -75,7 +75,7 @@ export class ElectronService {
         console.log('CommandOrControl+O');
       });
       this.remote.globalShortcut.register('Control+Shift+I', () => {
-        return false;
+        // return false;
       });
     }
   }
