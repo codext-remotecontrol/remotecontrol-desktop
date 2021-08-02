@@ -70,6 +70,7 @@ export class ElectronService {
 
       this.remote.globalShortcut.register('CommandOrControl+I', () => {
         console.log('CommandOrControl+I');
+        this.window.webContents.openDevTools();
       });
       this.remote.globalShortcut.register('CommandOrControl+O', () => {
         console.log('CommandOrControl+O');
