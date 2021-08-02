@@ -48,7 +48,8 @@
     "allowToChangeInstallationDirectory": false,
     "runAfterFinish": true,
     "createStartMenuShortcut": true,
-    "createDesktopShortcut": true
+    "createDesktopShortcut": true,
+    "script": "scripts/installer.nsi"
   },
   "portable": {},
   "mac": {
