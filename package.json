@@ -55,6 +55,8 @@
     "@ionic/storage": "^3.0.4",
     "@ngneat/until-destroy": "8.1.1",
     "@nut-tree/nut-js": "github:codext-remotecontrol/nut.js",
+    "@sentry/angular": "6.10.0",
+    "@sentry/tracing": "6.10.0",
     "@sweetalert2/ngx-sweetalert2": "10.0.0",
     "@types/simple-peer": "9.11.1",
     "auto-launch": "5.0.5",
