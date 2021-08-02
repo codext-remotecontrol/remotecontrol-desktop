@@ -104,6 +104,12 @@ async function createWindow(): Promise<BrowserWindow> {
       },
     },
     {
+      label: 'Dev Tools',
+      click: () => {
+        win?.webContents.openDevTools();
+      },
+    },
+    {
       label: 'Schließen',
       click: () => {
         win?.close();
