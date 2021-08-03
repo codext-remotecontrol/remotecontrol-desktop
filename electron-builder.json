@@ -49,7 +49,7 @@
     "runAfterFinish": true,
     "createStartMenuShortcut": true,
     "createDesktopShortcut": true,
-    "script": "scripts/installer.nsi"
+    "include": "build/installer.nsh"
   },
   "portable": {},
   "mac": {
