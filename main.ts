@@ -1,12 +1,13 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-require('@electron/remote/main').initialize();
 
-import { app, BrowserWindow, dialog, Menu, nativeImage, Tray } from 'electron';
+import { app, dialog, Menu, nativeImage, Tray, BrowserWindow } from 'electron';
+
 import { autoUpdater } from 'electron-updater';
 
 import * as path from 'path';
 import * as url from 'url';
+require('@electron/remote/main').initialize();
 
 let type: string;
 if (process.platform === 'win32') {
@@ -50,7 +51,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 
 let hidden, tray, serve;
 
-let win: BrowserWindow = null;
+let win: Electron.BrowserWindow | any = null;
 const gotTheLock = app.requestSingleInstanceLock();
 
 const args = process.argv.slice(1);
@@ -58,10 +59,10 @@ serve = args.some((val) => val === '--serve');
 hidden = args.some((val) => val === '--hidden');
 
 // eslint-disable-next-line @typescript-eslint/require-await
-async function createWindow(): Promise<BrowserWindow> {
+async function createWindow(): Promise<Electron.BrowserWindow> {
   autoUpdater.checkForUpdates();
   app.setAppUserModelId('de.codext.remotedesktop-control');
-  app.allowRendererProcessReuse = false;
+  //  app.allowRendererProcessReuse = false;
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -80,7 +81,8 @@ async function createWindow(): Promise<BrowserWindow> {
       allowRunningInsecureContent: serve ? true : false,
       contextIsolation: false,
       enableRemoteModule: true,
-    },
+      // enableRemoteModule: true,
+    } as any,
   });
   /*const isMac = process.platform === 'darwin';
   const template = [

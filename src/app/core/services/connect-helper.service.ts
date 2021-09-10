@@ -272,7 +272,7 @@ export class ConnectHelperService {
             allowRunningInsecureContent: true,
             contextIsolation: false,
             enableRemoteModule: true,
-          },
+          } as any,
         });
         this.infoWindow.setAlwaysOnTop(true, 'status');
 

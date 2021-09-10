@@ -4,7 +4,6 @@ import {
   ipcRenderer,
   webFrame,
   desktopCapturer,
-  remote,
   BrowserWindow,
   screen,
 } from 'electron';
@@ -15,9 +14,12 @@ import * as os from 'os';
 // import * as AutoLaunch from 'auto-launch';
 import * as bcryptjs from 'bcryptjs';
 import * as nutJs from '@nut-tree/nut-js';
-import * as settings from 'electron-settings';
+// import * as settings from 'electron-settings';
 import * as autoUpdater from 'electron-updater';
+import * as nodeMachineId from 'node-machine-id';
 import * as clipboard from 'electron-clipboard-extended';
+import * as remote from '@electron/remote';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -33,11 +35,12 @@ export class ElectronService {
   path: typeof path;
   window: BrowserWindow;
   // autoLaunch: typeof AutoLaunch;
-  settings: typeof settings;
+  // settings: typeof settings;
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
   screen: typeof screen;
   clipboard: typeof clipboard;
+  nodeMachineId: typeof nodeMachineId;
 
   nutJs: typeof nutJs;
 
@@ -53,15 +56,16 @@ export class ElectronService {
       this.autoUpdater = window.require('electron-updater');
       this.webFrame = window.require('electron').webFrame;
       this.screen = window.require('electron').screen;
-      this.remote = window.require('electron').remote;
+      this.remote = window.require('@electron/remote');
 
       this.app = this.remote.app;
       this.os = window.require('os');
       // this.autoLaunch = window.require('auto-launch');
       this.bcryptjs = window.require('bcryptjs');
-      this.window = window.require('electron').remote.getCurrentWindow();
+      this.nodeMachineId = window.require('node-machine-id');
+      this.window = this.remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
-      this.settings = window.require('electron-settings');
+      // this.settings = window.require('electron-settings');
       this.clipboard = window.require('electron-clipboard-extended');
 
       this.childProcess = window.require('child_process');

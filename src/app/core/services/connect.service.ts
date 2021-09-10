@@ -106,7 +106,7 @@ export class ConnectService {
     if (this.settingsService.settings?.randomId) {
       this.id = `${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}${this.connectHelperService.threeDigit()}`;
     } else {
-      const nodeMachineId = this.ngxService.remote.require('node-machine-id');
+      const nodeMachineId = this.electronService.nodeMachineId; //this.ngxService.remote.require('node-machine-id');
       const id = await nodeMachineId.machineId();
       const uniqId = parseInt(id, 36).toString().substring(3, 12);
       this.id = uniqId;
@@ -345,7 +345,7 @@ export class ConnectService {
             allowRunningInsecureContent: true,
             contextIsolation: false,
             enableRemoteModule: true,
-          },
+          } as any,
         });
 
         if (AppConfig.production) {
