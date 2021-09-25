@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { AppConfig } from '../../../environments/environment';
 import * as url from 'url';
 import { Key } from '@nut-tree/nut-js/dist/lib/key.enum';
+
 declare var window: any;
 @Injectable({
   providedIn: 'root',
@@ -274,6 +275,11 @@ export class ConnectHelperService {
             enableRemoteModule: true,
           } as any,
         });
+
+        this.electronService.remote
+          .require('@electron/remote/main')
+          .enable(this.infoWindow.webContents);
+
         this.infoWindow.setAlwaysOnTop(true, 'status');
 
         if (AppConfig.production) {

@@ -84,6 +84,8 @@ async function createWindow(): Promise<Electron.BrowserWindow> {
       // enableRemoteModule: true,
     } as any,
   });
+
+  require('@electron/remote/main').enable(win.webContents);
   /*const isMac = process.platform === 'darwin';
   const template = [
     { id: '1', label: 'one' },

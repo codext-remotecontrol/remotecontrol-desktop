@@ -19,6 +19,7 @@ import * as autoUpdater from 'electron-updater';
 import * as nodeMachineId from 'node-machine-id';
 import * as clipboard from 'electron-clipboard-extended';
 import * as remote from '@electron/remote';
+import * as main from '@electron/remote/main';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class ElectronService {
   desktopCapturer: typeof desktopCapturer;
   webFrame: typeof webFrame;
   remote: typeof remote;
+  main: typeof main;
   childProcess: typeof childProcess;
   fs: typeof fs;
   os: typeof os;
@@ -57,6 +59,7 @@ export class ElectronService {
       this.webFrame = window.require('electron').webFrame;
       this.screen = window.require('electron').screen;
       this.remote = window.require('@electron/remote');
+      this.main = window.require('@electron/remote/main');
 
       this.app = this.remote.app;
       this.os = window.require('os');

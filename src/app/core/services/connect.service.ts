@@ -348,6 +348,12 @@ export class ConnectService {
           } as any,
         });
 
+        console.log('main', this.electronService.main);
+        this.electronService.remote
+          .require('@electron/remote/main')
+          .enable(win.webContents);
+        // this.electronService.main.enable(win.webContents);
+
         if (AppConfig.production) {
           win.loadURL(
             url.format({
