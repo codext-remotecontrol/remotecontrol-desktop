@@ -166,6 +166,13 @@ export class RemotePage implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
+  fileChangeEvent(e: File[]) {
+    const file = e[0];
+    const fileID = file.name + file.size;
+    this.files[fileID] = file;
+    this.peer2.send('file-' + fileID);
+  }
+
   pwPrompt() {
     return new Promise<string>((resolve) => {
       const dialogRef = this.dialog.open(PwDialog, {

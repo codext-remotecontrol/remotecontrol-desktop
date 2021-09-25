@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title> Quelle wählen </ion-title>
-    <!--<ion-buttons slot="end">
+    <ion-buttons slot="end">
       <ion-button (click)="close()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
-    </ion-buttons>-->
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -14,7 +14,15 @@
     <div
       *ngFor="let video of sources"
       (click)="selectStream(video)"
-      class="transition-all hover:shadow-xl cursor-pointer rounded-xl bg-white video-container overflow-hidden"
+      class="
+        transition-all
+        hover:shadow-xl
+        cursor-pointer
+        rounded-xl
+        bg-white
+        video-container
+        overflow-hidden
+      "
     >
       <div class="title">{{ video.source.name | translate }}</div>
       <video

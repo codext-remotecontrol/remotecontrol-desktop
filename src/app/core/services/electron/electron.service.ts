@@ -6,6 +6,7 @@ import {
   desktopCapturer,
   BrowserWindow,
   screen,
+  dialog,
 } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
@@ -41,6 +42,7 @@ export class ElectronService {
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
   screen: typeof screen;
+  dialog: typeof dialog;
   clipboard: typeof clipboard;
   nodeMachineId: typeof nodeMachineId;
 
@@ -58,6 +60,7 @@ export class ElectronService {
       this.autoUpdater = window.require('electron-updater');
       this.webFrame = window.require('electron').webFrame;
       this.screen = window.require('electron').screen;
+      this.dialog = window.require('electron').dialog;
       this.remote = window.require('@electron/remote');
       this.main = window.require('@electron/remote/main');
 
