@@ -5,7 +5,7 @@
   class="hidden"
   #fileInput
   type="file"
-  (change)="fileChangeEvent($event.target.files)"
+  (change)="fileChangeEvent($event.target)"
 />
 <div class="connecting" *ngIf="!connected">
   <ng-lottie [options]="options"></ng-lottie>

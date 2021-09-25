@@ -166,7 +166,8 @@ export class RemotePage implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
-  fileChangeEvent(e: File[]) {
+  fileChangeEvent(event) {
+    const e = event.files;
     const file = e[0];
     const fileID = file.name + file.size;
     this.files[fileID] = file;
