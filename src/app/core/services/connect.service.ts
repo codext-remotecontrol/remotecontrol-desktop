@@ -79,15 +79,19 @@ export class ConnectService {
   }
 
   sendScreenSize() {
+    // TODO fixme
     const scaleFactor =
       process.platform === 'darwin'
         ? 1
-        : this.ngxService.screen.getPrimaryDisplay().scaleFactor;
-    const { width, height } = this.ngxService.screen.getPrimaryDisplay().size;
+        : this.electronService.remote.screen.getPrimaryDisplay().scaleFactor;
+    const { width, height } =
+      this.electronService.remote.screen.getPrimaryDisplay().size;
     this.socketService.sendMessage(
       `screenSize,${width * scaleFactor},${height * scaleFactor}`
     );
     console.log('scaleFactor', scaleFactor, width, height);
+
+    this.socketService.sendMessage(`screenSize,1920,1080`);
   }
 
   askForConnectPermission() {
@@ -128,9 +132,13 @@ export class ConnectService {
       duration: 15000,
     });
 
-    this.ngxService.screen.addListener('display-metrics-changed', () => {
-      this.sendScreenSize();
-    });
+    // TODO fixme
+    this.electronService.remote.screen.addListener(
+      'display-metrics-changed',
+      () => {
+        this.sendScreenSize();
+      }
+    );
 
     this.spf = new SimplePeerFiles();
 
@@ -321,7 +329,7 @@ export class ConnectService {
     await this.socketService?.destroy();
     await this.socketSub?.unsubscribe();
     await this.sub3?.unsubscribe();
-    await this.ngxService.screen.removeAllListeners();
+    await this.electronService.remote.screen.removeAllListeners();
   }
 
   connect(id) {
