@@ -84,6 +84,7 @@ export class ConnectService {
       process.platform === 'darwin'
         ? 1
         : this.electronService.remote.screen.getPrimaryDisplay().scaleFactor;
+
     const { width, height } =
       this.electronService.remote.screen.getPrimaryDisplay().size;
     this.socketService.sendMessage(
@@ -91,7 +92,7 @@ export class ConnectService {
     );
     console.log('scaleFactor', scaleFactor, width, height);
 
-    this.socketService.sendMessage(`screenSize,1920,1080`);
+    //this.socketService.sendMessage(`screenSize,1920,1080`);
   }
 
   askForConnectPermission() {
