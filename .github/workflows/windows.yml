@@ -36,8 +36,8 @@ jobs:
         run: |
           npx replace-in-files-cli --string="##version##" --replacement="${{ steps.tagName.outputs.tag }}" "src/**/*" "scripts/**/*"
       - run: node "./scripts/version.script.js"
-      - name: Check lint
-        run: npm run lint
+      #- name: Check lint
+      #  run: npm run lint
       - name: Build the app
         env:
           CSC_LINK: ${{ secrets.CSC_LINK_WINDOWS_BASE64 }}
