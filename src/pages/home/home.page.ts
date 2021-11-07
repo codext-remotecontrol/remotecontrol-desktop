@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { Component, HostListener, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import Swal from 'sweetalert2';
 import 'webrtc-adapter';
 import { AddressBookService } from '../../app/core/services/address-book.service';
+import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
 import { ConnectService } from './../../app/core/services/connect.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 
@@ -25,12 +27,32 @@ export class HomePage implements OnInit {
   constructor(
     public electronService: ElectronService,
     private addressBookService: AddressBookService,
-    public connectService: ConnectService
+    public connectService: ConnectService,
+    private modalCtrl: ModalController
   ) {}
 
   async ngOnInit() {}
 
-  screenSelect() {}
+  async screenSelect(autoSelect = true, replaceVideo?) {
+    const modal = await this.modalCtrl.create({
+      component: ScreenSelectComponent,
+      backdropDismiss: false,
+      componentProps: {
+        autoSelect,
+      },
+    });
+    modal.onDidDismiss().then((data) => {
+      if (data?.data) {
+        if (replaceVideo) {
+          this.connectService.replaceVideo(data.data.stream);
+        } else {
+          this.connectService.videoSource = data.data;
+          // !this.initDone ? this.init() : null;
+        }
+      }
+    });
+    await modal.present();
+  }
 
   onDigitInput(event) {
     console.log('event', event);

@@ -6,6 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { ScreenSelectModule } from '../../app/shared/components/screen-select/screen-select.module';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NumberDirective } from './number.directive';
@@ -20,6 +21,7 @@ import { NumberDirective } from './number.directive';
     MatDialogModule,
     MatButtonModule,
     TranslateModule,
+    ScreenSelectModule,
   ],
   declarations: [HomePage, NumberDirective],
 })
