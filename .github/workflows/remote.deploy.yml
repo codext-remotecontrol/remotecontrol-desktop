@@ -20,6 +20,6 @@ jobs:
         with:
           server: server01.codext.de
           username: ${{ secrets.FTP_USER_REMOTE }}
-          password: ${{ secrets.FTP_PASSWORD_DEV }}
+          password: ${{ secrets.FTP_PASSWORD_REMOTE }}
           local-dir: ./dist/
           server-dir: ./
