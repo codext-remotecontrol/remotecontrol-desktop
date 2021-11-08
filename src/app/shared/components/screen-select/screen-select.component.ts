@@ -29,7 +29,7 @@ export class ScreenSelectComponent implements OnInit {
             try {
               const stream = await (navigator as any).mediaDevices.getUserMedia(
                 {
-                  audio: false,
+                  audio: process.platform === 'darwin' ? false : true,
                   video: {
                     mandatory: {
                       chromeMediaSource: 'desktop',
