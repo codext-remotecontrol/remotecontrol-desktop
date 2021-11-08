@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import { ConnectService } from './../../app/core/services/connect.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import 'webrtc-adapter';
 import { ElectronService } from '../../app/core/services';
 
@@ -58,6 +64,13 @@ export interface DialogData {
   `,
 })
 export class SetPwDialog {
+  @HostListener('document:keydown.enter', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.save();
+  }
+
   constructor(
     public dialogRef: MatDialogRef<SetPwDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,

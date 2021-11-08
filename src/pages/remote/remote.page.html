@@ -8,12 +8,12 @@
   (change)="fileChangeEvent($event.target)"
 />
 <div class="connecting" *ngIf="!connected">
-  <ng-lottie [options]="options"></ng-lottie>
+  <ion-spinner></ion-spinner>
 </div>
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title class="flex items-center justify-center" *ngIf="!connected"
-      ><ion-spinner class="mr-3"></ion-spinner>Warten auf Bestätigung ...
+    <ion-title class="flex items-center justify-center" *ngIf="!connected"></ion-title>
+      Warten auf Bestätigung ...
     </ion-title>
 
     <ion-buttons slot="end">

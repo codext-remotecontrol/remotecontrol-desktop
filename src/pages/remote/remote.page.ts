@@ -44,6 +44,14 @@ import SimplePeerFiles from 'simple-peer-files';
 })
 export class PwDialog {
   pw = '';
+
+  @HostListener('document:keydown.enter', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.connect();
+  }
+
   constructor(
     public dialogRef: MatDialogRef<PwDialog>,
     private translateService: TranslateService

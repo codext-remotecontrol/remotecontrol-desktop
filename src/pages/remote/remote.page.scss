@@ -13,12 +13,14 @@ ion-content {
 }
 .progress {
   width: 100%;
-  position: fixed;
+  display: block;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 20px;
   background: rgba(0, 0, 0, 0.2);
+  z-index: 20;
   .inner-progress {
     background: rgba(5, 93, 194, 0.8);
     height: 20px;
