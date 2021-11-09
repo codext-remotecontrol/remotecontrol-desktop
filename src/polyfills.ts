@@ -58,3 +58,4 @@ import 'zone.js'; // Included with Angular CLI.
   env: { DEBUG: undefined },
   version: 'v8.0.0',
 };
+(window as any).require = () => {};
