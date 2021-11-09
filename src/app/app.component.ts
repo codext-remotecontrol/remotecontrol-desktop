@@ -36,22 +36,17 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     public electronService: ElectronService,
-    private translate: TranslateService,
     public appService: AppService,
-    private cdr: ChangeDetectorRef,
     private modalCtrl: ModalController,
     private connectService: ConnectService,
     private settingsService: SettingsService,
-    private connectHelperService: ConnectHelperService,
-    private ngxService: NgxService,
-    private matDialog: MatDialog,
-    private route: ActivatedRoute
+    private matDialog: MatDialog
   ) {
     console.log('AppConfig', AppConfig);
   }
 
   async ngAfterViewInit() {
-    if (this.ngxService.isElectronApp) {
+    if (this.electronService.isElectron) {
       const nut: any = this.electronService.nutJs;
       nut.keyboard.config = { autoDelayMs: 0 };
       nut.mouse.config = { autoDelayMs: 0, mouseSpeed: 1000 };

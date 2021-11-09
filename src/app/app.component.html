@@ -1,4 +1,8 @@
-<div id="title-bar" class="action-bar" *ngIf="appService.actionBar">
+<div
+  id="title-bar"
+  class="action-bar"
+  *ngIf="appService.actionBar && electronService.isElectron"
+>
   <div class="app-actions" *ngIf="process && process.platform !== 'darwin'">
     <button
       [matTooltip]="'Bildschirm wählen'"

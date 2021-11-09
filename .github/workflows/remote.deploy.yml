@@ -16,7 +16,7 @@ jobs:
       - name: 🙌 Build
         run: npm run build:prod
       - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
           server: server01.codext.de
           username: ${{ secrets.FTP_USER_REMOTE }}

@@ -11,7 +11,7 @@
   <ion-spinner></ion-spinner>
 </div>
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="primary" *ngIf="electronService.isElectron">
     <ion-title class="flex items-center justify-center" *ngIf="!connected">
       Warten auf Bestätigung ...
     </ion-title>
