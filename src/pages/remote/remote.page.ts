@@ -20,6 +20,7 @@ import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import SimplePeerFiles from 'simple-peer-files';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   template: `
@@ -169,9 +170,10 @@ export class RemotePage implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private appService: AppService,
     private route: ActivatedRoute,
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private alertCtrl: AlertController
   ) {}
 
   fileChangeEvent(event) {
@@ -194,22 +196,55 @@ export class RemotePage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    const clipboard = this.electronService.clipboard;
-    clipboard
-      .on('text-changed', () => {
-        const currentText = clipboard.readText();
-        console.log('currentText', currentText);
-        this.peer2.send('clipboard-' + currentText);
-      })
+  async ngOnInit() {
+    if (this.electronService.isElectron) {
+      const clipboard = this.electronService.clipboard;
+      clipboard
+        .on('text-changed', () => {
+          const currentText = clipboard.readText();
+          console.log('currentText', currentText);
+          this.peer2.send('clipboard-' + currentText);
+        })
 
-      .on('image-changed', () => {
-        const currentIMage = clipboard.readImage();
-        console.log('currentText', currentIMage);
-      })
-      .startWatching();
+        .on('image-changed', () => {
+          const currentIMage = clipboard.readImage();
+          console.log('currentText', currentIMage);
+        })
+        .startWatching();
+    }
 
-    const id = this.route.snapshot.queryParams.id;
+    let id = this.route.snapshot.queryParams.id;
+    if (!id) {
+      const alert = await this.alertCtrl.create({
+        backdropDismiss: false,
+        header: 'Partner ID',
+        message: 'Geben Sie die ID Ihres Partners ein.',
+        inputs: [
+          {
+            name: 'id',
+            type: 'number',
+            placeholder: '555555555',
+          },
+        ],
+        buttons: [
+          {
+            text: 'Verbinden',
+            handler: (event) => {
+              console.log('event', event);
+              id = event.id;
+              this.init(id);
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+    } else {
+      this.init(id);
+    }
+  }
+
+  init(id) {
     this.appService.sideMenu = false;
     this.spf = new SimplePeerFiles();
 
@@ -369,7 +404,19 @@ export class RemotePage implements OnInit, OnDestroy {
             this.fileLoading = false;
             this.cdr.detectChanges();
           });
-          this.transfer.start();
+          this.transfer.on('cancel', (done) => {
+            console.log('cancel', done);
+            this.fileLoading = false;
+            this.cdr.detectChanges();
+          });
+          this.transfer.on('cancelled', (done) => {
+            console.log('cancelled', done);
+            this.fileLoading = false;
+            this.cdr.detectChanges();
+          });
+          try {
+            this.transfer.start();
+          } catch (error) {}
           return;
         }
       }
