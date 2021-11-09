@@ -1,5 +1,3 @@
-import * as buffer from 'buffer';
-import * as process from 'process';
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -53,6 +51,3 @@ import 'zone.js'; // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 (window as any)['global'] = window;
-
-(window as any).Buffer = buffer;
-window['process'] = process;
