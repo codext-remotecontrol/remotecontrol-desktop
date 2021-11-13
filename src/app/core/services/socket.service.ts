@@ -12,7 +12,10 @@ export class SocketService {
   constructor() {}
 
   init() {
-    this.socket = io(AppConfig.api);
+    this.socket = io(AppConfig.api, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+    });
   }
 
   destroy() {
