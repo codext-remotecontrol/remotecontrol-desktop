@@ -28,7 +28,10 @@
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <div class="progress" *ngIf="fileProgress != 0 && fileProgress != 100">
-    <div class="inner-progress" [style.width.%]="fileProgress"></div>
+    <div
+      class="inner-progress transition-all"
+      [style.width.%]="fileProgress"
+    ></div>
   </div>
   <div
     *ngIf="fileLoading"
