@@ -346,7 +346,7 @@
     "@angular-eslint/bundled-angular-compiler" "13.0.1"
     "@typescript-eslint/experimental-utils" "5.3.0"
 
-"@angular/animations@^13.0.0 || ^14.0.0-0", "@angular/animations@^13.1.1", "@angular/animations@13.1.1":
+"@angular/animations@^13.0.0 || ^14.0.0-0", "@angular/animations@^13.1.1", "@angular/animations@>=6.0.0", "@angular/animations@13.1.1":
   "integrity" "sha512-6ECC9Dn5gmV4U1cz1pRJ2p5lo0BET2CjG1RbhTaZR8lOsoMsmlV/JdBAp8eyYTiGii3MLS6Q2P/hN/YG2SRGQQ=="
   "resolved" "https://registry.npmjs.org/@angular/animations/-/animations-13.1.1.tgz"
   "version" "13.1.1"
@@ -3184,6 +3184,13 @@
   "integrity" "sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU="
   "resolved" "https://registry.npmjs.org/amdefine/-/amdefine-1.0.1.tgz"
   "version" "1.0.1"
+
+"angular-animations@0.11.0":
+  "integrity" "sha512-P2RuOe+T97bhgGDLtOYK9V45QA5y+kFUxoJfRAua8Ymo0bI5lWyw8oiVmBoEIZUU+nooYoJvQXgVKuZJA7/z3g=="
+  "resolved" "https://registry.npmjs.org/angular-animations/-/angular-animations-0.11.0.tgz"
+  "version" "0.11.0"
+  dependencies:
+    "tslib" "^2.0.0"
 
 "ansi-align@^3.0.0":
   "integrity" "sha512-ZpClVKqXN3RGBmKibdfWzqCY4lnjEuoNzU5T0oEFpfd/z5qJHVarukridD4juLO2FXMiwUQxr9WqQtaYa8XRYw=="

@@ -21,6 +21,12 @@ import { AppService } from './../../app/core/services/app.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
 import SimplePeerFiles from 'simple-peer-files';
 import { AlertController } from '@ionic/angular';
+import {
+  fadeInDownOnEnterAnimation,
+  fadeInOnEnterAnimation,
+  fadeOutOnLeaveAnimation,
+  fadeOutUpOnLeaveAnimation,
+} from 'angular-animations';
 
 @Component({
   template: `
@@ -71,6 +77,10 @@ export class PwDialog {
   selector: 'app-remote',
   templateUrl: './remote.page.html',
   styleUrls: ['./remote.page.scss'],
+  animations: [
+    fadeInDownOnEnterAnimation({ duration: 150 }),
+    fadeOutUpOnLeaveAnimation({ duration: 150 }),
+  ],
 })
 export class RemotePage implements OnInit, OnDestroy {
   signalData = '';
@@ -82,6 +92,7 @@ export class RemotePage implements OnInit, OnDestroy {
   videoSize;
   hostScreenSize;
 
+  showOptions = false;
   connected = false;
   fileDrop = false;
   fileLoading = false;
@@ -329,8 +340,15 @@ export class RemotePage implements OnInit, OnDestroy {
     });
     this.peer2.on('stream', (stream) => {
       this.connected = true;
+
+      const videoBg: HTMLVideoElement =
+        this.elementRef.nativeElement.querySelector('#videobg');
+
+      videoBg.srcObject = stream;
+      videoBg.play();
+
       const video: HTMLVideoElement =
-        this.elementRef.nativeElement.querySelector('video');
+        this.elementRef.nativeElement.querySelector('#video');
       this.video = video;
       this.stream = stream;
       video.srcObject = stream;

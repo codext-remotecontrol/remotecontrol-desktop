@@ -10,7 +10,16 @@
 <div class="connecting" *ngIf="!connected">
   <ion-spinner></ion-spinner>
 </div>
-<ion-header>
+<ion-button
+  class="option-dropdown"
+  (click)="showOptions = !showOptions"
+  [matTooltip]="'Optionen'"
+>
+  <ion-icon *ngIf="!showOptions" name="chevron-down-outline"></ion-icon>
+  <ion-icon *ngIf="showOptions" name="chevron-up-outline"></ion-icon>
+</ion-button>
+
+<ion-header *ngIf="showOptions" [@fadeInDownOnEnter] [@fadeOutUpOnLeave]>
   <ion-toolbar color="primary" *ngIf="electronService.isElectron">
     <ion-title class="flex items-center justify-center" *ngIf="!connected">
       Warten auf Bestätigung ...
@@ -41,5 +50,6 @@
     <ion-spinner [color]="'light'"></ion-spinner>
   </div>
 
+  <video autoplay id="videobg"></video>
   <video autoplay id="video"></video>
 </ion-content>
