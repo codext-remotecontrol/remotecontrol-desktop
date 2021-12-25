@@ -158,7 +158,7 @@ export class ConnectHelperService {
       t: textArray[0],
       x: textArray[1],
       y: textArray[2],
-      b: textArray[3] || 0,
+      b: +textArray[3] || 0,
     };
 
     switch (data.t) {
@@ -174,18 +174,14 @@ export class ConnectHelperService {
         break;
       }
       case 'md': {
-        //this.robot.mouseToggle('down', data.b == 2 ? 'right' : 'left');
-        this.electronService.nutJs.mouse.pressButton(data.b == 2 ? 2 : 0);
+        this.electronService.nutJs.mouse.pressButton(data.b);
         break;
       }
       case 'mu': {
-        // this.robot.mouseToggle('up', data.b == 2 ? 'right' : 'left');
-        this.electronService.nutJs.mouse.releaseButton(data.b == 2 ? 2 : 0);
+        this.electronService.nutJs.mouse.releaseButton(data.b);
         break;
       }
       case 'mm': {
-        // this.robot.dragMouse(data.x, data.y);
-
         this.electronService.nutJs.mouse.setPosition({
           x: +data.x,
           y: +data.y,

@@ -169,12 +169,11 @@ export class RemotePage implements OnInit, OnDestroy {
     this.calcVideoSize();
   }
 
-  /*
   @HostListener('document:paste', ['$event'])
   onPaste(event: ClipboardEvent) {
     const text: string = event.clipboardData.getData('text');
     this.peer2.send('clipboard-' + text);
-  }*/
+  }
 
   constructor(
     private socketService: SocketService,
@@ -467,6 +466,7 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   removeEventListeners() {
+    // this.video?.removeEventListener('auxclick', this.mouseListener.bind(this));
     this.video?.removeEventListener('mousedown', this.mouseListener.bind(this));
     this.video?.removeEventListener('mouseup', this.mouseListener.bind(this));
     this.video?.removeEventListener('dblclick', this.mouseListener.bind(this));
@@ -477,6 +477,7 @@ export class RemotePage implements OnInit, OnDestroy {
   }
 
   mouseListener(event: MouseEvent) {
+    console.log('event', event);
     if (!this.connected) {
       return;
     }
