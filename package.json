@@ -55,7 +55,7 @@
     "@ionic/core": "^6.0.1",
     "@ionic/storage": "^3.0.6",
     "@ngneat/until-destroy": "9.0.0",
-    "@nut-tree/nut-js": "github:codext-remotecontrol/nut.js",
+    "@nut-tree/nut-js": "2.0.0",
     "@sentry/angular": "6.16.1",
     "@sentry/tracing": "6.16.1",
     "@sweetalert2/ngx-sweetalert2": "10.0.0",
