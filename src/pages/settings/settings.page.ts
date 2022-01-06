@@ -136,10 +136,6 @@ export class SettingsPage implements OnInit {
   }
 
   async checkForUpdates() {
-    console.log(
-      'this.electronService.autoUpdater',
-      this.electronService.autoUpdater.autoUpdater
-    );
     await this.electronService.autoUpdater.autoUpdater.checkForUpdates();
   }
 

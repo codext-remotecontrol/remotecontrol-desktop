@@ -23,7 +23,7 @@ export class SettingsService {
   ) {}
 
   async load() {
-    const settings: any = {}; // await this.electronService.settings.get('settings');
+    const settings: any = await this.electronService.settings.get('settings');
     console.log(settings);
     if (settings?.language) {
       this.language = settings.language;
@@ -34,9 +34,9 @@ export class SettingsService {
     Object.assign(this.settings, settings);
   }
 
-  saveSettings(settings) {
+  async saveSettings(settings) {
     Object.assign(this.settings, settings);
     // TODO Settings Capacitor
-    // await this.electronService.settings.set('settings', this.settings);
+    await this.electronService.settings.set('settings', this.settings);
   }
 }

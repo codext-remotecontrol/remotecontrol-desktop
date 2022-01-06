@@ -53,10 +53,18 @@ ion-content {
   left: 0;
   right: 0;
   height: 20px;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 20;
+  // background: rgba(0, 0, 0, 0.2);
+  z-index: 30;
   .inner-progress {
-    background: rgba(5, 93, 194, 0.8);
+    opacity: .7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    background: rgb(5,93,184);
+    // background: linear-gradient(180deg, rgba(5,93,184,1) 0%, rgba(5,93,184,0) 100%);
+    pointer-events: none;
     height: 20px;
     display: block;
     position: absolute;

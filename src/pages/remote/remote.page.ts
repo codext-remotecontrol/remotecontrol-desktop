@@ -465,6 +465,10 @@ export class RemotePage implements OnInit, OnDestroy {
     this.peer2?.destroy();
   }
 
+  getFileProgress(fileProgress) {
+    return fileProgress ? fileProgress.toFixed() : '';
+  }
+
   removeEventListeners() {
     // this.video?.removeEventListener('auxclick', this.mouseListener.bind(this));
     this.video?.removeEventListener('mousedown', this.mouseListener.bind(this));
