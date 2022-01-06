@@ -10,7 +10,10 @@ export class AddressBookService {
   constructor() {}
 
   async load() {
-    this.addressBook = await get('addressBook');
+    const addressBook = await get('addressBook');
+    if (addressBook) {
+      this.addressBook = addressBook;
+    }
   }
 
   async save() {
@@ -18,7 +21,7 @@ export class AddressBookService {
   }
 
   async add(adItem) {
-    if (this.addressBook.find((item) => adItem.id == item.id)) {
+    if (this.addressBook?.find((item) => adItem.id == item.id)) {
       return;
     }
     if (!this.addressBook) {
@@ -29,7 +32,7 @@ export class AddressBookService {
   }
 
   async remove(adItem) {
-    this.addressBook = this.addressBook.filter(
+    this.addressBook = this.addressBook?.filter(
       (_adItem) => _adItem.id != adItem.id
     );
     await this.save();
