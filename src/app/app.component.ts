@@ -26,7 +26,6 @@ export class AppComponent implements AfterViewInit {
   appPages = [
     { title: 'Home', url: '/home', icon: 'code-working-outline' },
     { title: 'Adressbuch', url: '/address-book', icon: 'book-outline' },
-    { title: 'Einstellungen', url: '/settings', icon: 'cog-outline' },
   ];
 
   initDone: boolean = false;
@@ -47,6 +46,11 @@ export class AppComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     if (this.electronService.isElectron) {
+      this.appPages.push({
+        title: 'Einstellungen',
+        url: '/settings',
+        icon: 'cog-outline',
+      });
       const nut = this.electronService.nutJs;
       nut.keyboard.config = { autoDelayMs: 0 };
       nut.mouse.config = { autoDelayMs: 0, mouseSpeed: 1000 };

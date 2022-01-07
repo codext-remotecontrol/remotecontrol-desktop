@@ -15,7 +15,6 @@ import * as os from 'os';
 // import * as AutoLaunch from 'auto-launch';
 import * as bcryptjs from 'bcryptjs';
 import * as nutJs from '@nut-tree/nut-js';
-import * as Store from 'electron-store';
 import * as autoUpdater from 'electron-updater';
 import * as nodeMachineId from 'node-machine-id';
 import * as clipboard from 'electron-clipboard-extended';
@@ -38,8 +37,7 @@ export class ElectronService {
   path: typeof path;
   window: BrowserWindow;
   // autoLaunch: typeof AutoLaunch;
-  Store: typeof Store;
-  settings;
+
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
   screen: typeof screen;
@@ -72,8 +70,6 @@ export class ElectronService {
       this.nodeMachineId = window.require('node-machine-id');
       this.window = this.remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
-      this.Store = window.require('electron-store');
-      this.settings = new this.Store();
       this.clipboard = window.require('electron-clipboard-extended');
 
       this.childProcess = window.require('child_process');
