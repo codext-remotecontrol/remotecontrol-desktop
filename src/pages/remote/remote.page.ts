@@ -11,22 +11,20 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  fadeInDownOnEnterAnimation,
+  fadeOutUpOnLeaveAnimation,
+} from 'angular-animations';
 import { AnimationOptions } from 'ngx-lottie';
 import SimplePeer from 'simple-peer';
+import SimplePeerFiles from 'simple-peer-files';
 import Swal from 'sweetalert2';
 import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
 import { ElectronService } from './../../app/core/services/electron/electron.service';
-import SimplePeerFiles from 'simple-peer-files';
-import { AlertController } from '@ionic/angular';
-import {
-  fadeInDownOnEnterAnimation,
-  fadeInOnEnterAnimation,
-  fadeOutOnLeaveAnimation,
-  fadeOutUpOnLeaveAnimation,
-} from 'angular-animations';
 
 @Component({
   template: `
@@ -256,7 +254,9 @@ export class RemotePage implements OnInit, OnDestroy {
 
   init(id) {
     this.appService.sideMenu = false;
-    this.spf = new SimplePeerFiles();
+    if (this.electronService.isElectron) {
+      this.spf = new SimplePeerFiles();
+    }
 
     console.log('id', id);
     this.socketService.init();
