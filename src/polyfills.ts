@@ -57,3 +57,4 @@ if (!(window as any).process) {
     version: 'v8.0.0',
   };
 }
+(window as any).require = () => {};
