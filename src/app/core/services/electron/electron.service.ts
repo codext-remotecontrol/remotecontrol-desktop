@@ -1,34 +1,24 @@
 import { Injectable } from '@angular/core';
-import {
-  app,
-  ipcRenderer,
-  webFrame,
-  desktopCapturer,
-  BrowserWindow,
-  screen,
-  dialog,
-} from 'electron';
-import * as childProcess from 'child_process';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
-// import * as AutoLaunch from 'auto-launch';
-import * as bcryptjs from 'bcryptjs';
-import * as nutJs from '@nut-tree/nut-js';
-import * as autoUpdater from 'electron-updater';
-import * as nodeMachineId from 'node-machine-id';
-import * as clipboard from 'electron-clipboard-extended';
 import * as remote from '@electron/remote';
 import * as main from '@electron/remote/main';
+import * as nutJs from '@nut-tree/nut-js';
+// import * as AutoLaunch from 'auto-launch';
+import * as bcryptjs from 'bcryptjs';
+import * as childProcess from 'child_process';
+import { app, BrowserWindow, desktopCapturer } from 'electron';
+import * as clipboard from 'electron-clipboard-extended';
+import * as autoUpdater from 'electron-updater';
+import * as fs from 'fs';
+import * as nodeMachineId from 'node-machine-id';
+import * as os from 'os';
+import * as path from 'path';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ElectronService {
   app: typeof app;
-  ipcRenderer: typeof ipcRenderer;
   desktopCapturer: typeof desktopCapturer;
-  webFrame: typeof webFrame;
   remote: typeof remote;
   main: typeof main;
   childProcess: typeof childProcess;
@@ -40,8 +30,6 @@ export class ElectronService {
 
   bcryptjs: typeof bcryptjs;
   autoUpdater: typeof autoUpdater;
-  screen: typeof screen;
-  dialog: typeof dialog;
   clipboard: typeof clipboard;
   nodeMachineId: typeof nodeMachineId;
 
@@ -55,11 +43,7 @@ export class ElectronService {
     // Conditional imports
     if (this.isElectron) {
       this.nutJs = window.require('@nut-tree/nut-js');
-      this.ipcRenderer = window.require('electron').ipcRenderer;
       this.autoUpdater = window.require('electron-updater');
-      this.webFrame = window.require('electron').webFrame;
-      this.screen = window.require('electron').screen;
-      this.dialog = window.require('electron').dialog;
       this.remote = window.require('@electron/remote');
       this.main = window.require('@electron/remote/main');
 

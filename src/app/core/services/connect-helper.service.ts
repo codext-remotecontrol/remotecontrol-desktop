@@ -250,9 +250,6 @@ export class ConnectHelperService {
       const appPath = this.electronService.remote.app.getAppPath();
       try {
         const BrowserWindow = this.electronService.remote.BrowserWindow;
-        /*const {
-          height,
-        } = this.electronService.screen.getPrimaryDisplay().workAreaSize;*/
         this.infoWindow = new BrowserWindow({
           height: 50,
           width: 50,

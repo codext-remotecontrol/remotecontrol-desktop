@@ -56,5 +56,5 @@ if (!(window as any).process) {
     env: { DEBUG: undefined },
     version: 'v8.0.0',
   };
+  (window as any).require = () => {};
 }
-(window as any).require = () => {};
