@@ -5,7 +5,13 @@ import * as nutJs from '@nut-tree/nut-js';
 // import * as AutoLaunch from 'auto-launch';
 import * as bcryptjs from 'bcryptjs';
 import * as childProcess from 'child_process';
-import { app, BrowserWindow, desktopCapturer } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  desktopCapturer,
+  ipcMain,
+  ipcRenderer,
+} from 'electron';
 import * as clipboard from 'electron-clipboard-extended';
 import * as autoUpdater from 'electron-updater';
 import * as fs from 'fs';
@@ -19,6 +25,8 @@ import * as path from 'path';
 export class ElectronService {
   app: typeof app;
   desktopCapturer: typeof desktopCapturer;
+  ipcMain: typeof ipcMain;
+  ipcRenderer: typeof ipcRenderer;
   remote: typeof remote;
   main: typeof main;
   childProcess: typeof childProcess;
@@ -54,6 +62,7 @@ export class ElectronService {
       this.nodeMachineId = window.require('node-machine-id');
       this.window = this.remote.getCurrentWindow();
       this.desktopCapturer = window.require('electron').desktopCapturer;
+      this.ipcRenderer = window.require('electron').ipcRenderer;
       this.clipboard = window.require('electron-clipboard-extended');
 
       this.childProcess = window.require('child_process');

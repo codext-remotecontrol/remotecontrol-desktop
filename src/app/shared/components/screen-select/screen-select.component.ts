@@ -21,8 +21,16 @@ export class ScreenSelectComponent implements OnInit {
     const loading = await this.loadingCtrl.create();
     loading.present();
 
+    const desktopCapturer = {
+      getSources: (opts) =>
+        this.electronService.ipcRenderer.invoke(
+          'DESKTOP_CAPTURER_GET_SOURCES',
+          opts
+        ),
+    };
+
     try {
-      await this.electronService.desktopCapturer
+      await desktopCapturer
         .getSources({ types: ['screen'] })
         .then(async (sources: Electron.DesktopCapturerSource[]) => {
           for (const source of sources) {

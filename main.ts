@@ -1,13 +1,26 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 
-import { app, dialog, Menu, nativeImage, Tray, BrowserWindow } from 'electron';
+import {
+  app,
+  dialog,
+  Menu,
+  nativeImage,
+  Tray,
+  BrowserWindow,
+  ipcMain,
+  desktopCapturer,
+} from 'electron';
 
 import { autoUpdater } from 'electron-updater';
 
 import * as path from 'path';
 import * as url from 'url';
 require('@electron/remote/main').initialize();
+
+ipcMain.handle('DESKTOP_CAPTURER_GET_SOURCES', (event, opts) =>
+  desktopCapturer.getSources(opts)
+);
 
 let type: string;
 if (process.platform === 'win32') {
