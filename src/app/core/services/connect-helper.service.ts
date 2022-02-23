@@ -220,6 +220,7 @@ export class ConnectHelperService {
     else if (k === '<end>') nut.keyboard.type(nut.Key.End);
     else if (k === 'PageUp') nut.keyboard.type(nut.Key.PageUp);
     else if (k === 'PageDown') nut.keyboard.type(nut.Key.PageDown);
+    else if (k === '?') nut.keyboard.type('?');
     else {
       if (modifiers[0]) {
         const id = [...this.KeyLookupMap.entries()]
