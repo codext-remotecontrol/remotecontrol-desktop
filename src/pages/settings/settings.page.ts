@@ -136,7 +136,12 @@ export class SettingsPage implements OnInit {
   }
 
   async checkForUpdates() {
-    await this.electronService.autoUpdater.autoUpdater.checkForUpdates();
+    try {
+      await this.electronService.autoUpdater.autoUpdater.checkForUpdates();
+    } catch (error) {
+      console.log('error', error);
+
+    }
   }
 
   public async selectLanguage(ev): Promise<any> {
