@@ -94,6 +94,7 @@ export class RemotePage implements OnInit, OnDestroy {
   connected = false;
   fileDrop = false;
   fileLoading = false;
+  cursor = true;
   transfer;
   files = [];
 
