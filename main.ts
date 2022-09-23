@@ -47,12 +47,12 @@ autoUpdater.on('download-progress', (progressObj) => {
     progressObj.total +
     ')';
 });
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+autoUpdater.on('update-downloaded', (event) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Neustart', 'Später'],
     title: 'Anwendungsaktualisierung',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    message: "releaseNotes",
     detail:
       'Eine neue Version wurde heruntergeladen. Starten Sie die Anwendung neu, um die Updates anzuwenden.',
   };
