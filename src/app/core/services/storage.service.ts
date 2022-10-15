@@ -1,15 +1,15 @@
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 import { AppConfig } from '../../../environments/environment';
 
 export async function set(key: string, value: any): Promise<void> {
-  await Storage.set({
+  await Preferences.set({
     key: `${AppConfig.appName}-${key}`,
     value: JSON.stringify(value),
   });
 }
 
 export async function get(key: string): Promise<any> {
-  let item = await Storage.get({ key: `${AppConfig.appName}-${key}` });
+  let item = await Preferences.get({ key: `${AppConfig.appName}-${key}` });
   try {
     item = JSON.parse(item.value);
     return item;
@@ -19,7 +19,7 @@ export async function get(key: string): Promise<any> {
 }
 
 export async function remove(key: string): Promise<void> {
-  await Storage.remove({
+  await Preferences.remove({
     key: `${AppConfig.appName}-${key}`,
   });
 }
