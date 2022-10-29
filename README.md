@@ -39,6 +39,12 @@ This works on Windows, MacOS and Linux.
 - ✅ Clipboard synchronization
 - ✅ Multilingual (English / German)
 
+## Download
+- [Download for Windows](https://codext.link/rcd-windows)
+- [Download for MacOS](https://codext.link/rcd-macos)
+- [Download for Linux](https://codext.link/rcd-linux)
+
+
 ## Demo
 ![image](https://user-images.githubusercontent.com/19570043/198855929-00e2a49e-456b-426c-a63a-e8d4d04fca04.png)
 ![image](https://user-images.githubusercontent.com/19570043/198855935-11a5e9be-e937-4557-a57a-3e1fd7e8365f.png)
