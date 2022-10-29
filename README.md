@@ -14,7 +14,7 @@
 
 # Remotecontrol – Desktop
 
-Remote Control Desktop is a robust, reliable and fast remote desktop system for Windows / MacOS / Linux. It's easy to use and works out of the box, with no further configuration required. Whether you need to give remote assistance to your customers, work on your intranet or access your server rooms, Remote Control Desktop is perfect for you. You can use your own Server or use our free Server. Free remote maintenance without data collection.
+Remote Control Desktop is a robust, reliable and fast remote desktop software for Windows / MacOS / Linux. It's easy to use and works out of the box, with no further configuration required. Whether you need to give remote assistance to your customers. You can use your own Server or use our free Server. Free remote maintenance without data collection.
 
 This works on Windows, MacOS and Linux.
 
