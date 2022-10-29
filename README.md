@@ -40,9 +40,9 @@ This works on Windows, MacOS and Linux.
 - ✅ Multilingual (English / German)
 
 ## Download
-- [Download for Windows](https://codext.link/rcd-windows)
-- [Download for MacOS](https://codext.link/rcd-macos)
-- [Download for Linux](https://codext.link/rcd-linux)
+- [Download for Windows](https://ftp.codext.de/remotecontrol-desktop/win/)
+- [Download for MacOS](https://ftp.codext.de/remotecontrol-desktop/macos/)
+- [Download for Linux](https://ftp.codext.de/remotecontrol-desktop/linux/)
 
 
 ## Demo
