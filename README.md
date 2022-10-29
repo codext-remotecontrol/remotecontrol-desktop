@@ -37,10 +37,11 @@ This works on Windows, MacOS and Linux.
 - ✅ private and commercial
 - ✅ Unattended Access
 - ✅ Clipboard synchronization
+- ✅ Multilingual (English / German)
 
 ## Demo
-
-
+![image](https://user-images.githubusercontent.com/19570043/198855929-00e2a49e-456b-426c-a63a-e8d4d04fca04.png)
+![image](https://user-images.githubusercontent.com/19570043/198855935-11a5e9be-e937-4557-a57a-3e1fd7e8365f.png)
 
 ## Usage
 ```
