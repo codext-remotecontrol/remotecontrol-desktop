@@ -15,8 +15,8 @@
 @import '@ionic/angular/css/text-transformation.css';
 @import '@ionic/angular/css/flex-utils.css';
 
-@import '~@angular/material/theming';
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/material/theming';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 $mdPrimary: (
   50: #e2eaf2,
