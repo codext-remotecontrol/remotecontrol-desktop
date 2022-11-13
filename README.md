@@ -56,11 +56,6 @@ This works on Windows, MacOS and Linux.
   <img height="275"  src="https://user-images.githubusercontent.com/19570043/198856069-7e69b81d-4444-4509-939f-92e971b6365a.png">
 </div>
 
-## Usage
-```
-Download our prebuild binaries from the releases page.
-```
-
 ## Build your own
 ```
 git clone
