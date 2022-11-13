@@ -4,14 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { InfoWindowPage } from './info-window.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: InfoWindowPage
-  }
+    {
+        path: '',
+        component: InfoWindowPage,
+    },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
 export class InfoWindowPageRoutingModule {}

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class AppService {
-  sideMenu = true;
-  actionBar = true;
+    sideMenu = true;
+    actionBar = true;
 }

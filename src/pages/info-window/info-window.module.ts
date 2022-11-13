@@ -9,12 +9,12 @@ import { InfoWindowPageRoutingModule } from './info-window-routing.module';
 import { InfoWindowPage } from './info-window.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    InfoWindowPageRoutingModule
-  ],
-  declarations: [InfoWindowPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        InfoWindowPageRoutingModule,
+    ],
+    declarations: [InfoWindowPage],
 })
 export class InfoWindowPageModule {}

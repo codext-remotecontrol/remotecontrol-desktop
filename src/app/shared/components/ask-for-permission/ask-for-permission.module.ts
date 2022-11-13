@@ -12,15 +12,15 @@ import { AskForPermissionPageRoutingModule } from './ask-for-permission-routing.
 import { AskForPermissionPage } from './ask-for-permission.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    AskForPermissionPageRoutingModule,
-    MatDialogModule,
-    MatButtonModule,
-    TranslateModule,
-  ],
-  declarations: [AskForPermissionPage],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        AskForPermissionPageRoutingModule,
+        MatDialogModule,
+        MatButtonModule,
+        TranslateModule,
+    ],
+    declarations: [AskForPermissionPage],
 })
 export class AskForPermissionPageModule {}

@@ -9,12 +9,12 @@ import { MacosPermissionsPageRoutingModule } from './macos-permissions-routing.m
 import { MacosPermissionsPage } from './macos-permissions.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    MacosPermissionsPageRoutingModule
-  ],
-  declarations: [MacosPermissionsPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        MacosPermissionsPageRoutingModule,
+    ],
+    declarations: [MacosPermissionsPage],
 })
 export class MacosPermissionsPageModule {}

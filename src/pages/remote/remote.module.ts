@@ -14,18 +14,18 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RemotePageRoutingModule,
-    LottieModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatButtonModule,
-    TranslateModule,
-    MatInputModule,
-  ],
-  declarations: [RemotePage, PwDialog],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RemotePageRoutingModule,
+        LottieModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatButtonModule,
+        TranslateModule,
+        MatInputModule,
+    ],
+    declarations: [RemotePage, PwDialog],
 })
 export class RemotePageModule {}

@@ -5,8 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { PasswordCheckComponent } from './password-check.component';
 
 @NgModule({
-  imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
-  declarations: [PasswordCheckComponent],
-  exports: [PasswordCheckComponent]
+    imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
+    declarations: [PasswordCheckComponent],
+    exports: [PasswordCheckComponent],
 })
 export class PasswordCheckModule {}

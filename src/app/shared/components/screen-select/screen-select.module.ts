@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ScreenSelectComponent } from './screen-select.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, TranslateModule],
-  declarations: [ScreenSelectComponent],
+    imports: [CommonModule, FormsModule, IonicModule, TranslateModule],
+    declarations: [ScreenSelectComponent],
 })
 export class ScreenSelectModule {}

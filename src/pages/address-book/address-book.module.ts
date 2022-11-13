@@ -10,13 +10,13 @@ import { AddressBookPageRoutingModule } from './address-book-routing.module';
 import { AddressBookPage } from './address-book.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    AddressBookPageRoutingModule,
-    MatButtonModule,
-  ],
-  declarations: [AddressBookPage],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        AddressBookPageRoutingModule,
+        MatButtonModule,
+    ],
+    declarations: [AddressBookPage],
 })
 export class AddressBookPageModule {}

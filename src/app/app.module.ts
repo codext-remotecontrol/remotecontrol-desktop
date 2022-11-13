@@ -21,59 +21,59 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Sentry from '@sentry/angular';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { AskForPermissionPageModule } from './shared/components/ask-for-permission/ask-for-permission.module';
 
 export function playerFactory() {
-  return player;
+    return player;
 }
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpClientModule,
-    CoreModule,
-    SharedModule,
-    AppRoutingModule,
-    LottieModule.forRoot({ player: playerFactory }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-    IonicModule.forRoot(),
-    NgxElectronModule,
-    AskForPermissionPageModule,
-    MatTooltipModule,
-  ],
-  providers: [
-    {
-      provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
-        showDialog: false,
-      }),
-    },
-    {
-      provide: Sentry.TraceService,
-      deps: [Router],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => () => {},
-      deps: [Sentry.TraceService],
-      multi: true,
-    },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        HttpClientModule,
+        CoreModule,
+        SharedModule,
+        AppRoutingModule,
+        LottieModule.forRoot({ player: playerFactory }),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
+        IonicModule.forRoot(),
+        NgxElectronModule,
+        AskForPermissionPageModule,
+        MatTooltipModule,
+    ],
+    providers: [
+        {
+            provide: ErrorHandler,
+            useValue: Sentry.createErrorHandler({
+                showDialog: false,
+            }),
+        },
+        {
+            provide: Sentry.TraceService,
+            deps: [Router],
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: () => () => {},
+            deps: [Sentry.TraceService],
+            multi: true,
+        },
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -12,17 +12,17 @@ import { HomePage } from './home.page';
 import { NumberDirective } from './number.directive';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    HomePageRoutingModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatButtonModule,
-    TranslateModule,
-    ScreenSelectModule,
-  ],
-  declarations: [HomePage, NumberDirective],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        HomePageRoutingModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatButtonModule,
+        TranslateModule,
+        ScreenSelectModule,
+    ],
+    declarations: [HomePage, NumberDirective],
 })
 export class HomePageModule {}

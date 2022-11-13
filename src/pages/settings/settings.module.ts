@@ -14,18 +14,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PasswordCheckModule } from '../../app/shared/components/password-check/password-check.module';
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    SettingsPageRoutingModule,
-    MatInputModule,
-    MatDialogModule,
-    MatButtonModule,
-    TranslateModule,
-    MatSnackBarModule,
-    PasswordCheckModule,
-  ],
-  declarations: [SettingsPage, SetPwDialog],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        SettingsPageRoutingModule,
+        MatInputModule,
+        MatDialogModule,
+        MatButtonModule,
+        TranslateModule,
+        MatSnackBarModule,
+        PasswordCheckModule,
+    ],
+    declarations: [SettingsPage, SetPwDialog],
 })
 export class SettingsPageModule {}
