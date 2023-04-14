@@ -1,6 +1,7 @@
 <p align="center">
- <img width="100" height="100" src="https://codext.de/wp-content/uploads/2021/04/remotecontrol.jpg">
+    ![image](https://user-images.githubusercontent.com/19570043/232027517-d3cb4aa2-3642-4ab3-810d-0e85961186ee.png)
 </p>
+
 
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
