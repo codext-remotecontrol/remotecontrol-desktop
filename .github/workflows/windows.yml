@@ -45,7 +45,6 @@ jobs:
       - name: Publish Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
             release/*.exe
