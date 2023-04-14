@@ -15,11 +15,3 @@ jobs:
         run: npm install
       - name: 🙌 Build
         run: npm run build:web
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.1.0
-        with:
-          server: server01.codext.de
-          username: ${{ secrets.FTP_USER_REMOTE }}
-          password: ${{ secrets.FTP_PASSWORD_REMOTE }}
-          local-dir: ./dist/
-          server-dir: ./
