@@ -37,15 +37,10 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: npm run electron:mac
       - run: node "./scripts/copy-file-mac.js"
-      - uses: actions/upload-artifact@v2
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: mac-build
-          path: release/*.dmg
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: server01.codext.de
-          username: ${{ secrets.ftp_user }}
-          password: ${{ secrets.ftp_password }}
-          local-dir: released/
-          server-dir: ./macos/
+          prerelease: true
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            release/*.dmg

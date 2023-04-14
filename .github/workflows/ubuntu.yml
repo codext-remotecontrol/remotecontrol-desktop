@@ -34,15 +34,10 @@ jobs:
       - name: Build the app
         run: npm run electron:linux
       - run: node "./scripts/copy-file-linux.js"
-      - uses: actions/upload-artifact@v2
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: linux-build
-          path: release/*.AppImage
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: server01.codext.de
-          username: ${{ secrets.ftp_user }}
-          password: ${{ secrets.ftp_password }}
-          local-dir: released/
-          server-dir: ./linux/
+          prerelease: true
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            release/*.AppImage
