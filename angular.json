@@ -37,7 +37,6 @@
           "configurations": {
             "dev": {
               "optimization": false,
-              "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
               "aot": false,
@@ -53,7 +52,6 @@
             },
             "web": {
               "optimization": false,
-              "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
               "aot": false,
@@ -69,7 +67,6 @@
             },
             "production": {
               "optimization": true,
-              "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,

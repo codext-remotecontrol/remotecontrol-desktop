@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import Swal from 'sweetalert2';
 import 'webrtc-adapter';
 import { AddressBookService } from '../../app/core/services/address-book.service';
 import { ScreenSelectComponent } from '../../app/shared/components/screen-select/screen-select.component';
@@ -28,7 +27,8 @@ export class HomePage implements OnInit {
         public electronService: ElectronService,
         private addressBookService: AddressBookService,
         public connectService: ConnectService,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private alertCtrl: AlertController
     ) {}
 
     async ngOnInit() {}
@@ -78,16 +78,10 @@ export class HomePage implements OnInit {
         });
         const id = ids.join('');
         if (id.length != 9) {
-            Swal.fire({
-                title: 'Info',
-                text: 'Die ID ist nicht vollständig',
-                icon: 'info',
-                showCancelButton: false,
-                showCloseButton: false,
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-            });
+            const alert = await this.alertCtrl.create({
+                header: 'Die ID ist nicht vollständig',
+            })
+            await alert.present();
             return;
         }
 

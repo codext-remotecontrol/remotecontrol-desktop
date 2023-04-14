@@ -20,7 +20,6 @@ import {
 import { AnimationOptions } from 'ngx-lottie';
 import SimplePeer from 'simple-peer';
 import SimplePeerFiles from 'simple-peer-files';
-import Swal from 'sweetalert2';
 import 'webrtc-adapter';
 import { SocketService } from '../../app/core/services/socket.service';
 import { AppService } from './../../app/core/services/app.service';
@@ -291,16 +290,11 @@ export class RemotePage implements OnInit, OnDestroy {
                 this.close();
                 this.cdr.detectChanges();
             } else if (typeof data == 'string' && data?.startsWith('pwWrong')) {
-                await Swal.fire({
-                    title: 'Info',
-                    text: 'Passwort nicht korrekt',
-                    icon: 'info',
-                    showCancelButton: false,
-                    showCloseButton: false,
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true,
-                });
+                const alert = await this.alertCtrl.create({
+                    header: 'Passwort nicht korrekt'
+                })
+                await alert.present();
+
                 this.askForPw();
                 // this.close();
                 this.cdr.detectChanges();

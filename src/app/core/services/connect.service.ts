@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Injectable } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { ElectronService as NgxService } from 'ngx-electron';
 import { Subscription } from 'rxjs';
 import SimplePeer from 'simple-peer';
 import SimplePeerFiles from 'simple-peer-files';
-import Swal from 'sweetalert2';
 import * as url from 'url';
 import { AppConfig } from '../../../environments/environment';
 import { AskForPermissionPage } from './../../shared/components/ask-for-permission/ask-for-permission.page';
@@ -47,7 +46,8 @@ export class ConnectService {
         private socketService: SocketService,
         private connectHelperService: ConnectHelperService,
         private loadingCtrl: LoadingController,
-        private settingsService: SettingsService
+        private settingsService: SettingsService,
+        private alertCtrl: AlertController
     ) {}
 
     clipboardListener() {
@@ -147,17 +147,12 @@ export class ConnectService {
         this.socketService.init();
         this.socketService.joinRoom(this.id);
 
-        this.sub3 = this.socketService.onDisconnected().subscribe(() => {
-            Swal.fire({
-                title: 'Info',
-                text: 'Verbindung wurde beendet',
-                icon: 'info',
-                showCancelButton: false,
-                showCloseButton: false,
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-            });
+        this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
+            const alert = await this.alertCtrl.create({
+                header: 'Verbindung wurde beendet'
+            })
+            await alert.present();
+
             this.reconnect();
         });
         this.socketSub = this.socketService
@@ -202,16 +197,10 @@ export class ConnectService {
                     } else {
                         this.socketService.sendMessage('pwWrong');
                         this.loading.dismiss();
-                        Swal.fire({
-                            title: 'Info',
-                            text: 'Passwort nicht korrekt',
-                            icon: 'info',
-                            showCancelButton: false,
-                            showCloseButton: false,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                        });
+                        const alert = await this.alertCtrl.create({
+                            header: 'Passwort nicht korrekt'
+                        })
+                        await alert.present();
                     }
                 } else if (
                     typeof data == 'string' &&
@@ -395,15 +384,7 @@ export class ConnectService {
                 win.maximize();
                 win.show();
                 win.on('closed', () => {
-                    /*Swal.fire({
-            title: 'Info',
-            text: 'Sitzung geschlossen',
-            icon: 'info',
-            showCancelButton: false,
-            showCloseButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-          });*/
+
                 });
             } catch (error) {
                 console.log('error', error);

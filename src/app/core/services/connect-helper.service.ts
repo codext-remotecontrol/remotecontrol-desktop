@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Key } from '@nut-tree/nut-js/dist/lib/key.enum';
 import { BrowserWindow } from 'electron';
 import { ElectronService as NgxService } from 'ngx-electron';
-import * as url from 'url';
+import url from 'url';
 import { AppConfig } from '../../../environments/environment';
 import { ElectronService } from './electron.service';
 
