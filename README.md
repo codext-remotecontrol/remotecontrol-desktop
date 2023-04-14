@@ -45,9 +45,9 @@ This works on Windows, MacOS and Linux.
 - ✅ Multilingual (English / German)
 
 ## Download
-- [Download for Windows](https://ftp.codext.de/remotecontrol-desktop/win/)
-- [Download for MacOS](https://ftp.codext.de/remotecontrol-desktop/macos/)
-- [Download for Linux](https://ftp.codext.de/remotecontrol-desktop/linux/)
+- [Download for Windows](https://github.com/codext-remotecontrol/remotecontrol-desktop/releases/latest)
+- [Download for MacOS](https://github.com/codext-remotecontrol/remotecontrol-desktop/releases/latest)
+- [Download for Linux](https://github.com/codext-remotecontrol/remotecontrol-desktop/releases/latest)
 
 
 ## Demo
