@@ -28,8 +28,6 @@ jobs:
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
       - name: Install Dependencies
         run: npm install --force
-      - run: npm i electron-rebuild --force
-      #- run: npm run rebuild
       - uses: olegtarasov/get-tag@v2.1
         id: tagName
       - name: Set Version Number
