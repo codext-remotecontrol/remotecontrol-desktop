@@ -102,7 +102,6 @@ export class ElectronService {
         this.window.close();
     }
 
-
     public get isElectronApp(): boolean {
         return !!window.navigator.userAgent.match(/Electron/);
     }

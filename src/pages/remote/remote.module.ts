@@ -9,6 +9,7 @@ import { RemotePageRoutingModule } from './remote-routing.module';
 import { PwDialog, RemotePage } from './remote.page';
 import { LottieModule } from 'ngx-lottie';
 import { TranslateModule } from '@ngx-translate/core';
+import { TippyDirective } from '@ngneat/helipopper';
 @NgModule({
     imports: [
         CommonModule,
@@ -17,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
         RemotePageRoutingModule,
         LottieModule,
         TranslateModule,
+        TippyDirective
     ],
     declarations: [RemotePage, PwDialog],
 })

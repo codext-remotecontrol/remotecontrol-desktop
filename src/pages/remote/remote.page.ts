@@ -6,6 +6,7 @@ import {
     Component,
     ElementRef,
     HostListener,
+    Input,
     OnDestroy,
     OnInit,
 } from '@angular/core';
@@ -25,36 +26,40 @@ import { ElectronService } from '../../app/core/services/electron.service';
 
 @Component({
     template: `
-        <div mat-dialog-title>Passwort eingeben</div>
-        <div mat-dialog-content>
-            <mat-form-field>
-                <mat-label>{{ 'Password' | translate }}</mat-label>
-                <input
-                    matInput
+     <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>Passwort eingeben</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <div class="p-5">
+                <ion-input
+                    [label]="'Password' | translate"
                     [(ngModel)]="pw"
-                    type="password" />
-            </mat-form-field>
-        </div>
-        <div
-            mat-dialog-actions
-            style="
-    flex-wrap: nowrap;">
-            <button
-                mat-button
+                    label-placement="floating"
+                    fill="solid"
+                    placeholder="Enter text"></ion-input>
+
+            </div>
+        </ion-content>
+        <ion-footer>
+            <ion-toolbar>
+            <ion-button
                 (click)="cancel()">
                 {{ 'Cancel' | translate }}
-            </button>
-            <button
-                mat-button
+            </ion-button>
+            <ion-button
                 cdkFocusInitial
                 (click)="connect()">
                 {{ 'Connect' | translate }}
-            </button>
-        </div>
+            </ion-button>
+            </ion-toolbar>
+        </ion-footer>
+
     `,
 })
 export class PwDialog {
-    pw = '';
+    @Input() pw = '';
 
     @HostListener('document:keydown.enter', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
@@ -197,12 +202,11 @@ export class RemotePage implements OnInit, OnDestroy {
     }
 
     pwPrompt() {
-        return new Promise<string>(async (resolve) => {
+        return new Promise<string>(async resolve => {
             const modal = await this.modalCtrl.create({
                 component: PwDialog,
-              });
-              modal.present();
-
+            });
+            modal.present();
 
             const { data, role } = await modal.onWillDismiss();
             resolve(data);
@@ -290,8 +294,8 @@ export class RemotePage implements OnInit, OnDestroy {
                 this.cdr.detectChanges();
             } else if (typeof data == 'string' && data?.startsWith('pwWrong')) {
                 const alert = await this.alertCtrl.create({
-                    header: 'Passwort nicht korrekt'
-                })
+                    header: 'Passwort nicht korrekt',
+                });
                 await alert.present();
 
                 this.askForPw();

@@ -80,7 +80,7 @@ export class HomePage implements OnInit {
         if (id.length != 9) {
             const alert = await this.alertCtrl.create({
                 header: 'Die ID ist nicht vollständig',
-            })
+            });
             await alert.present();
             return;
         }

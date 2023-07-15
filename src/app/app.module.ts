@@ -23,6 +23,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
+import { popperVariation, provideTippyConfig, TippyDirective, tooltipVariation } from '@ngneat/helipopper';
 
 export function playerFactory() {
     return player;
@@ -47,8 +48,16 @@ export function playerFactory() {
             },
         }),
         IonicModule.forRoot(),
+        TippyDirective
     ],
     providers: [
+        provideTippyConfig({
+            defaultVariation: 'tooltip',
+            variations: {
+              tooltip: tooltipVariation,
+              popper: popperVariation,
+            }
+          }),
         {
             provide: ErrorHandler,
             useValue: Sentry.createErrorHandler({

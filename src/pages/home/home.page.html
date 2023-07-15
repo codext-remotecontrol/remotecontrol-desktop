@@ -11,12 +11,12 @@
                 *ngIf="connectService.fileLoading"
                 color="light"></ion-spinner>
             <ion-button
-                [matTooltip]="'Bildschirm wählen'"
+                [tp]="'Bildschirm wählen'"
                 (click)="screenSelect(false, true)">
                 <ion-icon name="browsers-outline"></ion-icon>
             </ion-button>
             <ion-button
-                [matTooltip]="'Verbindung schließen'"
+                [tp]="'Verbindung schließen'"
                 (click)="connectService.reconnect()"
                 *ngIf="connectService.connected">
                 <ion-icon name="close-circle-outline"></ion-icon>
@@ -39,7 +39,7 @@
                 <!--<div class="absolute top-2 right-2">
           <ion-button
             color="light"
-            [matTooltip]="'Quelle auswählen'"
+            [tp]="'Quelle auswählen'"
             fill="clear"
             (click)="screenSelect(false)"
           >

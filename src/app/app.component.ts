@@ -32,7 +32,7 @@ export class AppComponent implements AfterViewInit {
         public appService: AppService,
         private modalCtrl: ModalController,
         private connectService: ConnectService,
-        private settingsService: SettingsService,
+        private settingsService: SettingsService
     ) {
         console.log('AppConfig', AppConfig);
     }

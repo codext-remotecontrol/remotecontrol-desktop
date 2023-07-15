@@ -7,6 +7,7 @@ import { ScreenSelectModule } from '../../app/shared/components/screen-select/sc
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NumberDirective } from './number.directive';
+import { TippyDirective } from '@ngneat/helipopper';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { NumberDirective } from './number.directive';
         HomePageRoutingModule,
         TranslateModule,
         ScreenSelectModule,
+        TippyDirective
     ],
     declarations: [HomePage, NumberDirective],
 })

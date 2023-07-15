@@ -10,9 +10,12 @@
 <ion-content class="ion-padding">
     <div
         class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3">
-
-        <ion-input [label]="'display name' |translate"    [(ngModel)]="compName" label-placement="floating" fill="solid" placeholder="Enter text"></ion-input>
-
+        <ion-input
+            [label]="'display name' |translate"
+            [(ngModel)]="compName"
+            label-placement="floating"
+            fill="solid"
+            placeholder="Enter text"></ion-input>
 
         <ion-item lines="none">
             <ion-checkbox
@@ -60,9 +63,8 @@
         <div
             class="mt-2"
             *ngIf="settingsService.settings.hiddenAccess">
-            <button
-                color="accent"
-                mat-flat-button
+            <ion-button
+                color="primary"
                 (click)="addPw()">
                 <ng-container *ngIf="!settingsService.settings.passwordHash"
                     >{{'Add Password'| translate}}</ng-container
@@ -70,17 +72,16 @@
                 <ng-container *ngIf="settingsService.settings.passwordHash"
                     >{{'Change Password'| translate}}</ng-container
                 >
-            </button>
+            </ion-button>
         </div>
     </div>
 
     <div
         class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3">
-        <button
-            color="accent"
-            mat-flat-button
+        <ion-button
+            color="primary"
             (click)="checkForUpdates()">
             Auf Updates überprüfen
-        </button>
+        </ion-button>
     </div>
 </ion-content>

@@ -128,9 +128,7 @@ export class ConnectHelperService {
     // robot: any;
     infoWindow: BrowserWindow;
 
-    constructor(
-        private electronService: ElectronService
-    ) {
+    constructor(private electronService: ElectronService) {
         window.test = this.KeyLookupMap;
         // this.robot = this.ngxService.remote?.require('robotjs');
         // this.robot?.setMouseDelay(0);

@@ -94,27 +94,30 @@ export class ConnectService {
     }
 
     async askForConnectPermission() {
-        return new Promise(async (resolve) => {
+        return new Promise(async resolve => {
             const alert = await this.alertCtrl.create({
                 header: 'Neue Verbindung',
                 message: 'Möchten Sie die Verbindung annehmen?',
-                buttons: [{
-                    text: 'Ablehnen',
-                    role: 'cancel',
-                    handler: () => {
-                        resolve(false);
-                    }
-                }, {
-                    text: 'Annehmen',
-                    handler: () => {
-                        resolve(true);
-                    }
-                }],
+                buttons: [
+                    {
+                        text: 'Ablehnen',
+                        role: 'cancel',
+                        handler: () => {
+                            resolve(false);
+                        },
+                    },
+                    {
+                        text: 'Annehmen',
+                        handler: () => {
+                            resolve(true);
+                        },
+                    },
+                ],
             });
 
-          await alert.present();
+            await alert.present();
         });
-       /*return new Promise(resolve => {
+        /*return new Promise(resolve => {
             const dialogRef = this.dialog.open(AskForPermissionPage, {
                 width: '250px',
             });
@@ -163,10 +166,10 @@ export class ConnectService {
 
         this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
             const alert = await this.alertCtrl.create({
-                header: "Info",
+                header: 'Info',
                 message: 'Verbindung wurde beendet',
                 buttons: ['OK'],
-            })
+            });
             await alert.present();
 
             this.reconnect();
@@ -213,8 +216,8 @@ export class ConnectService {
                         this.socketService.sendMessage('pwWrong');
                         this.loading.dismiss();
                         const alert = await this.alertCtrl.create({
-                            header: 'Passwort nicht korrekt'
-                        })
+                            header: 'Passwort nicht korrekt',
+                        });
                         await alert.present();
                     }
                 } else if (
@@ -398,9 +401,7 @@ export class ConnectService {
 
                 win.maximize();
                 win.show();
-                win.on('closed', () => {
-
-                });
+                win.on('closed', () => {});
             } catch (error) {
                 console.log('error', error);
             }
