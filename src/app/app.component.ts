@@ -1,5 +1,4 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalController } from '@ionic/angular';
 import { AppConfig } from '../environments/environment';
 import { ElectronService } from './core/services/electron.service';
@@ -34,7 +33,6 @@ export class AppComponent implements AfterViewInit {
         private modalCtrl: ModalController,
         private connectService: ConnectService,
         private settingsService: SettingsService,
-        private matDialog: MatDialog
     ) {
         console.log('AppConfig', AppConfig);
     }
@@ -98,6 +96,6 @@ export class AppComponent implements AfterViewInit {
 
     async init() {
         this.initDone = true;
-        await this.connectService.init(this.matDialog);
+        await this.connectService.init();
     }
 }

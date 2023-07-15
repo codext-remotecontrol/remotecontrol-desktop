@@ -10,12 +10,9 @@
 <ion-content class="ion-padding">
     <div
         class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3">
-        <mat-form-field>
-            <mat-label>{{'display name' |translate}}</mat-label>
-            <input
-                [(ngModel)]="compName"
-                matInput />
-        </mat-form-field>
+
+        <ion-input [label]="'display name' |translate"    [(ngModel)]="compName" label-placement="floating" fill="solid" placeholder="Enter text"></ion-input>
+
 
         <ion-item lines="none">
             <ion-checkbox

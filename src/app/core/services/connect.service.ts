@@ -2,13 +2,11 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Injectable } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { ElectronService as NgxService } from 'ngx-electron';
 import { Subscription } from 'rxjs';
 import SimplePeer from 'simple-peer';
 import SimplePeerFiles from 'simple-peer-files';
 import * as url from 'url';
 import { AppConfig } from '../../../environments/environment';
-import { AskForPermissionPage } from './../../shared/components/ask-for-permission/ask-for-permission.page';
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { ConnectHelperService } from './connect-helper.service';
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
@@ -34,15 +32,14 @@ export class ConnectService {
     dialog;
     connected: boolean = false;
 
-    id = '';
-    idArray = [];
+    id: string = '';
+    idArray: string[] = [];
     remoteIdArray: any = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
-    remoteId = '';
+    remoteId: string = '';
     fileLoading = false;
 
     constructor(
         private electronService: ElectronService,
-        private ngxService: NgxService,
         private socketService: SocketService,
         private connectHelperService: ConnectHelperService,
         private loadingCtrl: LoadingController,
@@ -96,8 +93,28 @@ export class ConnectService {
         //this.socketService.sendMessage(`screenSize,1920,1080`);
     }
 
-    askForConnectPermission() {
-        return new Promise(resolve => {
+    async askForConnectPermission() {
+        return new Promise(async (resolve) => {
+            const alert = await this.alertCtrl.create({
+                header: 'Neue Verbindung',
+                message: 'Möchten Sie die Verbindung annehmen?',
+                buttons: [{
+                    text: 'Ablehnen',
+                    role: 'cancel',
+                    handler: () => {
+                        resolve(false);
+                    }
+                }, {
+                    text: 'Annehmen',
+                    handler: () => {
+                        resolve(true);
+                    }
+                }],
+            });
+
+          await alert.present();
+        });
+       /*return new Promise(resolve => {
             const dialogRef = this.dialog.open(AskForPermissionPage, {
                 width: '250px',
             });
@@ -105,7 +122,7 @@ export class ConnectService {
             dialogRef.afterClosed().subscribe(result => {
                 resolve(result);
             });
-        });
+        });*/
     }
 
     async generateId() {
@@ -120,12 +137,9 @@ export class ConnectService {
         this.idArray = ('' + this.id).split('');
     }
 
-    async init(matDialog?) {
+    async init() {
         if (this.initialized) {
             return;
-        }
-        if (!this.dialog) {
-            this.dialog = matDialog;
         }
         this.initialized = true;
         await this.generateId();
@@ -149,7 +163,9 @@ export class ConnectService {
 
         this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
             const alert = await this.alertCtrl.create({
-                header: 'Verbindung wurde beendet'
+                header: "Info",
+                message: 'Verbindung wurde beendet',
+                buttons: ['OK'],
             })
             await alert.present();
 
@@ -160,7 +176,6 @@ export class ConnectService {
             .subscribe(async (data: any) => {
                 console.log('onNewMessage', data);
                 if (typeof data == 'string' && data == 'hi') {
-                    await this.loading.present();
                     this.sendScreenSize();
 
                     if (this.settingsService.settings?.hiddenAccess) {
@@ -293,7 +308,7 @@ export class ConnectService {
                     if (fileTransfer.substr(0, 10) === 'clipboard-') {
                         const text = fileTransfer.substr(10);
                         console.log('Test', text);
-                        this.ngxService.clipboard.writeText(text);
+                        this.electronService.clipboard.writeText(text);
                         return;
                     }
 
@@ -334,7 +349,7 @@ export class ConnectService {
     }
 
     connect(id) {
-        if (this.ngxService.isElectronApp) {
+        if (this.electronService.isElectronApp) {
             const appPath = this.electronService.remote.app.getAppPath();
             try {
                 const BrowserWindow = this.electronService.remote.BrowserWindow;

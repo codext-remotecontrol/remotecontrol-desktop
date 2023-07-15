@@ -10,6 +10,7 @@ import {
   BrowserWindow,
   ipcMain,
   desktopCapturer,
+  MessageBoxOptions,
 } from 'electron';
 
 import { autoUpdater } from 'electron-updater';
@@ -48,7 +49,7 @@ autoUpdater.on('download-progress', (progressObj) => {
     ')';
 });
 autoUpdater.on('update-downloaded', (event) => {
-  const dialogOpts = {
+  const dialogOpts: MessageBoxOptions = {
     type: 'info',
     buttons: ['Neustart', 'Später'],
     title: 'Anwendungsaktualisierung',

@@ -1,4 +1,3 @@
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +15,6 @@ import { AppComponent } from './app.component';
 import { Router, RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { NgxElectronModule } from 'ngx-electron';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Sentry from '@sentry/angular';
 
@@ -25,7 +23,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
-import { AskForPermissionPageModule } from './shared/components/ask-for-permission/ask-for-permission.module';
 
 export function playerFactory() {
     return player;
@@ -50,9 +47,6 @@ export function playerFactory() {
             },
         }),
         IonicModule.forRoot(),
-        NgxElectronModule,
-        AskForPermissionPageModule,
-        MatTooltipModule,
     ],
     providers: [
         {

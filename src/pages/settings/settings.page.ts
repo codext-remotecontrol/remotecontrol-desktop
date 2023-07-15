@@ -11,13 +11,7 @@ import 'webrtc-adapter';
 import { ElectronService } from '../../app/core/services/electron.service';
 import { ConnectService } from './../../app/core/services/connect.service';
 
-import {
-    MatDialog,
-    MatDialogRef,
-    MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, ModalController, ToastController } from '@ionic/angular';
 import { SettingsService } from '../../app/core/services/settings.service';
 
 export interface DialogData {
@@ -71,6 +65,7 @@ export interface DialogData {
     `,
 })
 export class SetPwDialog {
+    public data: DialogData
     @HostListener('document:keydown.enter', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         event.preventDefault();
@@ -79,28 +74,27 @@ export class SetPwDialog {
     }
 
     constructor(
-        public dialogRef: MatDialogRef<SetPwDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData,
-        private _snackBar: MatSnackBar,
-        private translateService: TranslateService
+        private modalCtrl: ModalController,
+        private translateService: TranslateService,
+        private toastController: ToastController,
     ) {}
 
-    save() {
+   async save() {
         if (this.data.pw == this.data.newPw) {
-            this.dialogRef.close(this.data);
+            this.modalCtrl.dismiss(this.data, 'cancel')
         } else {
-            this._snackBar.open(
-                this.translateService.instant('Password does not match'),
-                null,
-                {
-                    duration: 2000,
-                }
-            );
+            const toast = await this.toastController.create({
+                message: 'Password does not match',
+                duration: 2000,
+              });
+
+              await toast.present();
+
         }
     }
 
     cancel(): void {
-        this.dialogRef.close();
+        this.modalCtrl.dismiss(this.data, 'cancel')
     }
 }
 
@@ -119,7 +113,7 @@ export class SettingsPage implements OnInit {
     constructor(
         private electronService: ElectronService,
         private cdr: ChangeDetectorRef,
-        public dialog: MatDialog,
+        private modalCtrl: ModalController,
         private translate: TranslateService,
         private actionSheetCtrl: ActionSheetController,
         public settingsService: SettingsService,
@@ -194,21 +188,20 @@ export class SettingsPage implements OnInit {
         this.connectService.reconnect();
     }
 
-    addPw() {
-        const dialogRef = this.dialog.open(SetPwDialog, {
-            width: '250px',
-            data: {
+    async addPw() {
+        const modal = await this.modalCtrl.create({
+            component: SetPwDialog,
+            componentProps: {
                 pw: '',
                 newPw: '',
             },
-        });
+          });
+          modal.present();
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed', result);
-            if (result?.pw) {
-                this.setPwHash(result.pw);
-            }
-        });
+          const { data, role } = await modal.onWillDismiss();
+          if (data?.pw) {
+            this.setPwHash(data.pw);
+        }
     }
 
     async setPwHash(pw) {

@@ -101,4 +101,21 @@ export class ElectronService {
     close() {
         this.window.close();
     }
+
+
+    public get isElectronApp(): boolean {
+        return !!window.navigator.userAgent.match(/Electron/);
+    }
+
+    public get isMacOS(): boolean {
+        return this.isElectronApp && process.platform === 'darwin';
+    }
+
+    public get isWindows(): boolean {
+        return this.isElectronApp && process.platform === 'win32';
+    }
+
+    public get isLinux(): boolean {
+        return this.isElectronApp && process.platform === 'linux';
+    }
 }

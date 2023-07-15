@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Key } from '@nut-tree/nut-js/dist/lib/key.enum';
 import { BrowserWindow } from 'electron';
-import { ElectronService as NgxService } from 'ngx-electron';
 import url from 'url';
 import { AppConfig } from '../../../environments/environment';
 import { ElectronService } from './electron.service';
@@ -130,8 +129,7 @@ export class ConnectHelperService {
     infoWindow: BrowserWindow;
 
     constructor(
-        private electronService: ElectronService,
-        private ngxService: NgxService
+        private electronService: ElectronService
     ) {
         window.test = this.KeyLookupMap;
         // this.robot = this.ngxService.remote?.require('robotjs');
@@ -162,7 +160,7 @@ export class ConnectHelperService {
 
         switch (data.t) {
             case 'dc': {
-                if (this.ngxService.isMacOS) {
+                if (this.electronService.isMacOS) {
                     // this.robot.mouseClick(data.b == 2 ? 'right' : 'left', 'double');
 
                     this.electronService.nutJs.mouse.leftClick();
@@ -239,7 +237,7 @@ export class ConnectHelperService {
     }
 
     closeInfoWindow() {
-        if (this.ngxService.isElectronApp) {
+        if (this.electronService.isElectronApp) {
             try {
                 this.infoWindow?.close();
                 // eslint-disable-next-line no-empty
@@ -248,7 +246,7 @@ export class ConnectHelperService {
     }
 
     showInfoWindow() {
-        if (this.ngxService.isElectronApp) {
+        if (this.electronService.isElectronApp) {
             const appPath = this.electronService.remote.app.getAppPath();
             try {
                 const BrowserWindow = this.electronService.remote.BrowserWindow;

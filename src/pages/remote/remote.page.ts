@@ -9,10 +9,8 @@ import {
     OnDestroy,
     OnInit,
 } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
+import { AlertController, ModalController } from '@ionic/angular';
 import {
     fadeInDownOnEnterAnimation,
     fadeOutUpOnLeaveAnimation,
@@ -65,14 +63,14 @@ export class PwDialog {
         this.connect();
     }
 
-    constructor(public dialogRef: MatDialogRef<PwDialog>) {}
+    constructor(private modalCtrl: ModalController) {}
 
     connect() {
-        this.dialogRef.close(this.pw);
+        return this.modalCtrl.dismiss(this.pw);
     }
 
     cancel() {
-        this.dialogRef.close();
+        return this.modalCtrl.dismiss(null);
     }
 }
 
@@ -101,7 +99,7 @@ export class RemotePage implements OnInit, OnDestroy {
     fileLoading = false;
     cursor = true;
     transfer;
-    files = [];
+    files: any = [];
 
     fileProgress = 0;
 
@@ -175,7 +173,7 @@ export class RemotePage implements OnInit, OnDestroy {
 
     @HostListener('document:paste', ['$event'])
     onPaste(event: ClipboardEvent) {
-        const text: string = event.clipboardData.getData('text');
+        const text: string | undefined = event?.clipboardData?.getData('text');
         this.peer2.send('clipboard-' + text);
     }
 
@@ -185,7 +183,7 @@ export class RemotePage implements OnInit, OnDestroy {
         private appService: AppService,
         private route: ActivatedRoute,
         public electronService: ElectronService,
-        private dialog: MatDialog,
+        private modalCtrl: ModalController,
         private cdr: ChangeDetectorRef,
         private alertCtrl: AlertController
     ) {}
@@ -199,14 +197,15 @@ export class RemotePage implements OnInit, OnDestroy {
     }
 
     pwPrompt() {
-        return new Promise<string>(resolve => {
-            const dialogRef = this.dialog.open(PwDialog, {
-                width: '250px',
-            });
+        return new Promise<string>(async (resolve) => {
+            const modal = await this.modalCtrl.create({
+                component: PwDialog,
+              });
+              modal.present();
 
-            dialogRef.afterClosed().subscribe(result => {
-                resolve(result);
-            });
+
+            const { data, role } = await modal.onWillDismiss();
+            resolve(data);
         });
     }
 
