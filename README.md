@@ -11,17 +11,22 @@
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-[![](https://dcbadge.vercel.app/api/server/XpwtYvTu)](https://discord.gg/XpwtYvTu)
-
-
 > WebRTC based remote control for your computer open source
 
 
 # Remotecontrol – Desktop
 
-Remote Control Desktop is a robust, reliable and fast remote desktop software for Windows / MacOS / Linux. It's easy to use and works out of the box, with no further configuration required. Whether you need to give remote assistance to your customers. You can use your own Server or use our free Server. Free remote maintenance without data collection.
+Remote Control Desktop is a powerful, reliable and fast open source remote desktop software that supports multiple platforms including Windows, MacOS, and Linux. The main aim of this project is to provide an efficient and hassle-free way of handling remote desktop operations. It's designed with user-friendly features that make it a perfect choice for both technical and non-technical users. Whether you are an IT professional providing remote assistance to your customers, or a user who needs to access their desktop remotely, this tool is perfect for you.
 
-This works on Windows, MacOS and Linux.
+Best of all, Remote Control Desktop prioritizes your privacy. Use your own server for secure connections, or leverage our free server without worrying about data collection. We're dedicated to ensuring your data remains confidential and secure.
+
+## + Points
+- ✅ Cross-platform support: Windows, MacOS, Linux
+- ✅ User-friendly interface
+- ✅ Efficient and fast remote desktop operations
+- ✅ Use your own server or our free server
+- ✅ Free remote maintenance without data collection
+- ✅ Works out of the box - no configuration required
 
 ## Features
 - ✅ WebRTC based
