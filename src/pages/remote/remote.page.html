@@ -35,13 +35,13 @@
         <ion-title
             class="flex items-center justify-center"
             *ngIf="!connected">
-            Warten auf Bestätigung ...
+            {{'Waiting for confirmation ...'|translate}}
         </ion-title>
 
         <ion-buttons slot="end">
             <ion-button
                 (click)="cursor = !cursor"
-                [tp]="'Mauszeiger anzeigen'">
+                [tp]="'{{'Show mouse pointer'|translate}}'">
                 <svg
                     style="width: 28px; height: 28px"
                     version="1.1"
@@ -73,12 +73,12 @@
 
             <ion-button
                 (click)="fileInput.click()"
-                [tp]="'Datei senden'">
+                [tp]="'{{'Send file'|translate}}'">
                 <ion-icon name="document-outline"></ion-icon>
             </ion-button>
             <ion-button
                 (click)="close()"
-                [tp]="'Verbindung schließen'">
+                [tp]="'{{'Close connection'|translate}}'">
                 <ion-icon name="close"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -100,7 +100,7 @@
     <div
         *ngIf="fileLoading"
         class="fileLoading"
-        [tp]="'Datei wird gesendet ...'">
+        [tp]="{{'File is sent ...'|translate}}">
         <ion-spinner [color]="'light'"></ion-spinner>
     </div>
 
