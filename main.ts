@@ -116,19 +116,19 @@ async function createWindow(): Promise<Electron.BrowserWindow> {
   tray = new Tray(nativeImage.createFromPath(iconPath));
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Öffnen',
+      label: {{'Open'|translate}},
       click: () => {
         win?.show();
       },
     },
     {
-      label: 'Dev Tools',
+      label: {{' Dev Tools '|translate}},
       click: () => {
         win?.webContents.openDevTools();
       },
     },
     {
-      label: 'Schließen',
+      label: {{'Close'|translate}},
       click: () => {
         win?.close();
         app?.quit();
