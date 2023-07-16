@@ -6,6 +6,7 @@ import { AppService } from './core/services/app.service';
 import { ConnectService } from './core/services/connect.service';
 import { SettingsService } from './core/services/settings.service';
 import { ScreenSelectComponent } from './shared/components/screen-select/screen-select.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -19,7 +20,7 @@ export class AppComponent implements AfterViewInit {
 
     appPages = [
         { title: 'Home', url: '/home', icon: 'code-working-outline' },
-        { title: {{' Address book '|translate}}, url: '/address-book', icon: 'book-outline' },
+        { title: "Address book", url: '/address-book', icon: 'book-outline' },
     ];
 
     initDone: boolean = false;
@@ -32,7 +33,8 @@ export class AppComponent implements AfterViewInit {
         public appService: AppService,
         private modalCtrl: ModalController,
         private connectService: ConnectService,
-        private settingsService: SettingsService
+        private settingsService: SettingsService,
+        private translateService: TranslateService,
     ) {
         console.log('AppConfig', AppConfig);
     }
@@ -40,7 +42,7 @@ export class AppComponent implements AfterViewInit {
     async ngAfterViewInit() {
         if (this.electronService.isElectron) {
             this.appPages.push({
-                title: {{' Settings '|translate}},
+                title: this.translateService.instant('Settings'),
                 url: '/settings',
                 icon: 'cog-outline',
             });

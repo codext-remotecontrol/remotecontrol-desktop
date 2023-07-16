@@ -14,6 +14,7 @@ import { ElectronService } from './electron.service';
 import { SettingsService } from './settings.service';
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { SocketService } from './socket.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root',
@@ -44,7 +45,8 @@ export class ConnectService {
         private connectHelperService: ConnectHelperService,
         private loadingCtrl: LoadingController,
         private settingsService: SettingsService,
-        private alertCtrl: AlertController
+        private alertCtrl: AlertController,
+        private translateService: TranslateService
     ) {}
 
     clipboardListener() {
@@ -96,8 +98,8 @@ export class ConnectService {
     async askForConnectPermission() {
         return new Promise(async resolve => {
             const alert = await this.alertCtrl.create({
-                header: '{{'New connection'|translate}}',
-                message: '{{'Do you want to accept the connection?'|translate}}',
+                header:  this.translateService.instant('New connection'),
+                message: this.translateService.instant('Do you want to accept the connection?'),
                 buttons: [
                     {
                         text: 'Ablehnen',
@@ -167,7 +169,7 @@ export class ConnectService {
         this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
             const alert = await this.alertCtrl.create({
                 header: 'Info',
-                message: '{{'Connection was terminated'|translate}}',
+                message: this.translateService.instant('Connection was terminated'),
                 buttons: ['OK'],
             });
             await alert.present();
@@ -216,7 +218,7 @@ export class ConnectService {
                         this.socketService.sendMessage('pwWrong');
                         this.loading.dismiss();
                         const alert = await this.alertCtrl.create({
-                            header: '{{'Password not correct'|translate}}',
+                            header: this.translateService.instant('Password not correct'),
                         });
                         await alert.present();
                     }
