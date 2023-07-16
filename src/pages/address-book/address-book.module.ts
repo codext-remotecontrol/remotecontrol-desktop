@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AddressBookPageRoutingModule } from './address-book-routing.module';
 
 import { AddressBookPage } from './address-book.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { AddressBookPage } from './address-book.page';
         FormsModule,
         IonicModule,
         AddressBookPageRoutingModule,
+        TranslateModule
     ],
     declarations: [AddressBookPage],
 })
