@@ -28,7 +28,7 @@ import { ElectronService } from '../../app/core/services/electron.service';
     template: `
         <ion-header>
             <ion-toolbar color="primary">
-                <ion-title>Passwort eingeben</ion-title>
+                <ion-title>{{ 'Enter Password' | translate }}</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>

@@ -34,7 +34,13 @@ if (process.platform === 'linux') {
   type = 'linux';
 }
 
-autoUpdater.setFeedURL(`https://ftp.codext.de/remotecontrol-desktop/${type}/`);
+autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'codext-remotecontrol',
+    repo: 'remotecontrol-desktop',
+    private: false,
+    releaseType: 'release',
+});
 autoUpdater.autoDownload = true;
 
 autoUpdater.on('download-progress', (progressObj) => {
