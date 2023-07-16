@@ -19,7 +19,7 @@ export class AppComponent implements AfterViewInit {
 
     appPages = [
         { title: 'Home', url: '/home', icon: 'code-working-outline' },
-        { title: 'Adressbuch', url: '/address-book', icon: 'book-outline' },
+        { title: {{' Address book '|translate}}, url: '/address-book', icon: 'book-outline' },
     ];
 
     initDone: boolean = false;
@@ -40,7 +40,7 @@ export class AppComponent implements AfterViewInit {
     async ngAfterViewInit() {
         if (this.electronService.isElectron) {
             this.appPages.push({
-                title: 'Einstellungen',
+                title: {{' Settings '|translate}},
                 url: '/settings',
                 icon: 'cog-outline',
             });
