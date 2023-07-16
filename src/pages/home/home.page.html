@@ -11,12 +11,12 @@
                 *ngIf="connectService.fileLoading"
                 color="light"></ion-spinner>
             <ion-button
-                [tp]="'Bildschirm wählen'"
+                [tp]="{{'Select screen'|translate}}"
                 (click)="screenSelect(false, true)">
                 <ion-icon name="browsers-outline"></ion-icon>
             </ion-button>
             <ion-button
-                [tp]="'Verbindung schließen'"
+                [tp]="'{{'Close connection'|translate}}'"
                 (click)="connectService.reconnect()"
                 *ngIf="connectService.connected">
                 <ion-icon name="close-circle-outline"></ion-icon>
