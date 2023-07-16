@@ -30,7 +30,7 @@ export class SettingsService {
             this.language = settings.language;
             this.translate.setDefaultLang(settings?.language.code);
         } else {
-            this.translate.setDefaultLang('de');
+            this.translate.setDefaultLang('en');
         }
         Object.assign(this.settings, settings);
     }
