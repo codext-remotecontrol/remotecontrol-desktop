@@ -18,7 +18,7 @@ import { TippyDirective } from '@ngneat/helipopper';
         RemotePageRoutingModule,
         LottieModule,
         TranslateModule,
-        TippyDirective
+        TippyDirective,
     ],
     declarations: [RemotePage, PwDialog],
 })

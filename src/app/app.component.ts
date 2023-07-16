@@ -20,7 +20,7 @@ export class AppComponent implements AfterViewInit {
 
     appPages = [
         { title: 'Home', url: '/home', icon: 'code-working-outline' },
-        { title: "Address book", url: '/address-book', icon: 'book-outline' },
+        { title: 'Address book', url: '/address-book', icon: 'book-outline' },
     ];
 
     initDone: boolean = false;
@@ -34,7 +34,7 @@ export class AppComponent implements AfterViewInit {
         private modalCtrl: ModalController,
         private connectService: ConnectService,
         private settingsService: SettingsService,
-        private translateService: TranslateService,
+        private translateService: TranslateService
     ) {
         console.log('AppConfig', AppConfig);
     }

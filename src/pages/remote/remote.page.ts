@@ -26,7 +26,7 @@ import { ElectronService } from '../../app/core/services/electron.service';
 
 @Component({
     template: `
-     <ion-header>
+        <ion-header>
             <ion-toolbar color="primary">
                 <ion-title>Passwort eingeben</ion-title>
             </ion-toolbar>
@@ -39,23 +39,20 @@ import { ElectronService } from '../../app/core/services/electron.service';
                     label-placement="floating"
                     fill="solid"
                     placeholder="Enter text"></ion-input>
-
             </div>
         </ion-content>
         <ion-footer>
             <ion-toolbar>
-            <ion-button
-                (click)="cancel()">
-                {{ 'Cancel' | translate }}
-            </ion-button>
-            <ion-button
-                cdkFocusInitial
-                (click)="connect()">
-                {{ 'Connect' | translate }}
-            </ion-button>
+                <ion-button (click)="cancel()">
+                    {{ 'Cancel' | translate }}
+                </ion-button>
+                <ion-button
+                    cdkFocusInitial
+                    (click)="connect()">
+                    {{ 'Connect' | translate }}
+                </ion-button>
             </ion-toolbar>
         </ion-footer>
-
     `,
 })
 export class PwDialog {

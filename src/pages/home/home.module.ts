@@ -17,7 +17,7 @@ import { TippyDirective } from '@ngneat/helipopper';
         HomePageRoutingModule,
         TranslateModule,
         ScreenSelectModule,
-        TippyDirective
+        TippyDirective,
     ],
     declarations: [HomePage, NumberDirective],
 })

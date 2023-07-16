@@ -98,8 +98,10 @@ export class ConnectService {
     async askForConnectPermission() {
         return new Promise(async resolve => {
             const alert = await this.alertCtrl.create({
-                header:  this.translateService.instant('New connection'),
-                message: this.translateService.instant('Do you want to accept the connection?'),
+                header: this.translateService.instant('New connection'),
+                message: this.translateService.instant(
+                    'Do you want to accept the connection?'
+                ),
                 buttons: [
                     {
                         text: 'Ablehnen',
@@ -169,7 +171,9 @@ export class ConnectService {
         this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
             const alert = await this.alertCtrl.create({
                 header: 'Info',
-                message: this.translateService.instant('Connection was terminated'),
+                message: this.translateService.instant(
+                    'Connection was terminated'
+                ),
                 buttons: ['OK'],
             });
             await alert.present();
@@ -218,7 +222,9 @@ export class ConnectService {
                         this.socketService.sendMessage('pwWrong');
                         this.loading.dismiss();
                         const alert = await this.alertCtrl.create({
-                            header: this.translateService.instant('Password not correct'),
+                            header: this.translateService.instant(
+                                'Password not correct'
+                            ),
                         });
                         await alert.present();
                     }

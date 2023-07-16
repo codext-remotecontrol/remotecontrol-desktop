@@ -33,7 +33,6 @@ export interface DialogData {
         </ion-header>
         <ion-content>
             <div class="p-5">
-
                 <ion-input
                     [class.is-invalid]="!newPasswordCheck.correct"
                     [class.is-valid]="newPasswordCheck.correct"
@@ -202,7 +201,7 @@ export class SettingsPage implements OnInit {
                 data: {
                     pw: '',
                     newPw: '',
-                }
+                },
             },
         });
         modal.present();
