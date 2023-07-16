@@ -96,8 +96,8 @@ export class ConnectService {
     async askForConnectPermission() {
         return new Promise(async resolve => {
             const alert = await this.alertCtrl.create({
-                header: 'Neue Verbindung',
-                message: 'Möchten Sie die Verbindung annehmen?',
+                header: '{{'New connection'|translate}}',
+                message: '{{'Do you want to accept the connection?'|translate}}',
                 buttons: [
                     {
                         text: 'Ablehnen',
@@ -167,7 +167,7 @@ export class ConnectService {
         this.sub3 = this.socketService.onDisconnected().subscribe(async () => {
             const alert = await this.alertCtrl.create({
                 header: 'Info',
-                message: 'Verbindung wurde beendet',
+                message: '{{'Connection was terminated'|translate}}',
                 buttons: ['OK'],
             });
             await alert.present();
@@ -216,7 +216,7 @@ export class ConnectService {
                         this.socketService.sendMessage('pwWrong');
                         this.loading.dismiss();
                         const alert = await this.alertCtrl.create({
-                            header: 'Passwort nicht korrekt',
+                            header: '{{'Password not correct'|translate}}',
                         });
                         await alert.present();
                     }
