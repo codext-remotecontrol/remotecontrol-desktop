@@ -67,10 +67,10 @@
                 color="primary"
                 (click)="addPw()">
                 <ng-container *ngIf="!settingsService.settings.passwordHash"
-                    >{{'Add Password'| translate}}</ng-container
+                    >{{'Add Password' |translate}}</ng-container
                 >
                 <ng-container *ngIf="settingsService.settings.passwordHash"
-                    >{{'Change Password'| translate}}</ng-container
+                    >{{'Change Password' |translate}}</ng-container
                 >
             </ion-button>
         </div>
@@ -81,7 +81,7 @@
         <ion-button
             color="primary"
             (click)="checkForUpdates()">
-            Auf Updates überprüfen
+           {{'Check for updates'|translate}}
         </ion-button>
     </div>
 </ion-content>
