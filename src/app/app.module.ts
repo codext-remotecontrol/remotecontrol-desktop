@@ -41,6 +41,7 @@ export function playerFactory() {
         AppRoutingModule,
         LottieModule.forRoot({ player: playerFactory }),
         TranslateModule.forRoot({
+            defaultLanguage: 'en',
             loader: {
                 provide: TranslateLoader,
                 useFactory: HttpLoaderFactory,
