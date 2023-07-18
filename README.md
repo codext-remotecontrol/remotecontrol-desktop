@@ -69,3 +69,13 @@ git clone
 npm install
 npm run start
 ```
+## selfhost your own server
+You can use [coturn](https://github.com/coturn/coturn) to set up your own server. Right now, there is no user accessible way to change the server config, once you have set up your server, you need to rebuild the clients. We are currently working on a client-side GUI option to change the backend servers. That should make the whole thing much better.
+
+## Current Known issues
+- Keyboard is not being transmitted 100% of the time, it has bugs.
+- Sound is not being transmitted.
+- Currently we only support one way file transmisstion, from local to remote.
+- Clipboard also is supported one way, from local to remote.
+
+
