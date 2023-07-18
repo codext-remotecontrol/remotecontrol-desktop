@@ -6,7 +6,7 @@
         class="app-actions"
         *ngIf="process && process.platform !== 'darwin'">
         <button
-            [tp]="'Bildschirm wählen'"
+            [tp]="{{'Select screen'|translate}}"
             *ngIf="!isRemote"
             (click)="screenSelect(false, true)">
             <ion-icon name="browsers-outline"></ion-icon>
