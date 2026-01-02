@@ -15,8 +15,15 @@
     mouseScroll,
     keyPress,
     typeText,
+    isTauriApp,
     type UnlistenFn
   } from '$lib/services/tauri';
+  import { Buffer } from 'buffer';
+  
+  if (typeof window !== 'undefined') {
+    window.Buffer = Buffer;
+  }
+  
   import Peer from 'simple-peer';
 
   let peerId: string;

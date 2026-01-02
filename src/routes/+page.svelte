@@ -155,6 +155,20 @@
           </div>
         </div>
 
+        {#if screens.length > 1}
+          <div>
+            <label class="block text-sm text-dark-400 mb-1">Screen to Share (when hosting)</label>
+            <select bind:value={selectedScreen} class="input">
+              {#each screens as screen}
+                <option value={screen.id}>
+                  {screen.name} ({screen.width}x{screen.height})
+                  {screen.is_primary ? '(Primary)' : ''}
+                </option>
+              {/each}
+            </select>
+          </div>
+        {/if}
+
         <div class="flex items-center gap-2 pt-2">
           <span class="w-2 h-2 rounded-full {$connected ? 'bg-green-500' : 'bg-red-500'}"></span>
           <span class="text-sm text-dark-300">
@@ -178,20 +192,6 @@
             class="input font-mono text-lg tracking-wider"
           />
         </div>
-
-        {#if screens.length > 1}
-          <div>
-            <label class="block text-sm text-dark-400 mb-1">Screen to Share</label>
-            <select bind:value={selectedScreen} class="input">
-              {#each screens as screen}
-                <option value={screen.id}>
-                  {screen.name} ({screen.width}x{screen.height})
-                  {screen.is_primary ? '(Primary)' : ''}
-                </option>
-              {/each}
-            </select>
-          </div>
-        {/if}
 
         <button
           class="btn-primary w-full"

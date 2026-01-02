@@ -8,7 +8,8 @@
     <title>Remotecontrol Desktop</title>
     <script>
       window.global = window;
-      window.process = { env: {} };
+      window.process = window.process || { env: {} };
+      window.Buffer = window.Buffer || { isBuffer: () => false };
     </script>
     %sveltekit.head%
   </head>
