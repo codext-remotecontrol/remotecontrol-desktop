@@ -6,7 +6,7 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "frontendDist": "../dist/remotecontrol-desktop/browser",
+    "frontendDist": "../dist",
     "devUrl": "http://localhost:4201"
   },
   "app": {
@@ -15,10 +15,10 @@
       {
         "label": "main",
         "title": "Remotecontrol Desktop",
-        "width": 420,
-        "height": 620,
-        "minWidth": 300,
-        "minHeight": 400,
+        "width": 900,
+        "height": 600,
+        "minWidth": 700,
+        "minHeight": 500,
         "center": true,
         "resizable": true,
         "decorations": true,

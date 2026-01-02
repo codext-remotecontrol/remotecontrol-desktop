@@ -1,11 +1,22 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-  ],
+export default {
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {
       colors: {
+        dark: {
+          50: '#f7f7f8',
+          100: '#ececf1',
+          200: '#d9d9e3',
+          300: '#c5c5d2',
+          400: '#acacbe',
+          500: '#8e8ea0',
+          600: '#565869',
+          700: '#40414f',
+          800: '#343541',
+          900: '#202123',
+          950: '#050509',
+        },
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -17,29 +28,9 @@ module.exports = {
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',
-          950: '#172554',
-        },
-        dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
         }
-      },
-      animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'spin-slow': 'spin 3s linear infinite',
       }
-    },
+    }
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-}
+  plugins: []
+};

@@ -45,3 +45,4 @@ coverage/
 .cache/
 
 nul
+.svelte-kit
