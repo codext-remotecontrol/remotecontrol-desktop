@@ -4,9 +4,8 @@ use image::ImageEncoder;
 use serde::{Deserialize, Serialize};
 use std::io::Cursor;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
-use std::sync::Arc;
+use std::time::Duration;
 use tauri::{AppHandle, Emitter};
-use tokio::time::{interval, Duration};
 use xcap::Monitor;
 
 static IS_CAPTURING: AtomicBool = AtomicBool::new(false);
@@ -101,7 +100,8 @@ pub async fn start_screen_capture(
     let frame_duration = Duration::from_millis(1000 / fps.max(1).min(60) as u64);
     let jpeg_quality = quality.unwrap_or(75);
 
-    tokio::spawn(async move {
+    // Use std::thread instead of tokio::spawn because Monitor is not Send
+    std::thread::spawn(move || {
         let monitors = match Monitor::all() {
             Ok(m) => m,
             Err(e) => {
@@ -118,7 +118,6 @@ pub async fn start_screen_capture(
             }
         };
 
-        let mut ticker = interval(frame_duration);
         let mut frame_count: u64 = 0;
         let mut last_error_time = std::time::Instant::now();
         let error_cooldown = Duration::from_secs(5);
@@ -126,7 +125,7 @@ pub async fn start_screen_capture(
         while IS_CAPTURING.load(Ordering::SeqCst)
             && CURRENT_SCREEN_ID.load(Ordering::SeqCst) == screen_id
         {
-            ticker.tick().await;
+            let frame_start = std::time::Instant::now();
 
             match monitor.capture_image() {
                 Ok(image) => {
@@ -154,6 +153,12 @@ pub async fn start_screen_capture(
                         last_error_time = std::time::Instant::now();
                     }
                 }
+            }
+
+            // Sleep for remaining frame time
+            let elapsed = frame_start.elapsed();
+            if elapsed < frame_duration {
+                std::thread::sleep(frame_duration - elapsed);
             }
         }
 

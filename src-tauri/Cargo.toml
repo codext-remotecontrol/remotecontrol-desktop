@@ -57,7 +57,7 @@ windows = { version = "0.58", features = [
     "Win32_Graphics_Gdi",
     "Win32_UI_WindowsAndMessaging",
     "Win32_Foundation"
-]}
+] }
 
 [features]
 default = ["custom-protocol"]

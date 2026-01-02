@@ -31,7 +31,6 @@
     "dialog:default",
     "notification:default",
     "os:default",
-    "process:default",
-    "single-instance:default"
+    "process:default"
   ]
 }

@@ -11,7 +11,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "dev": "ng serve",
+    "dev": "ng serve --port 4201",
     "build": "ng build --configuration production",
     "build:dev": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -42,9 +42,6 @@
     "@tauri-apps/plugin-process": "^2.0.0",
     "@tauri-apps/plugin-shell": "^2.0.0",
     "@tauri-apps/plugin-store": "^2.0.0",
-    "angular-animations": "^0.12.0",
-    "lottie-web": "^5.12.2",
-    "ngx-lottie": "^11.0.0",
     "rxjs": "^7.8.1",
     "simple-peer": "^9.11.1",
     "simple-peer-files": "^1.2.3",

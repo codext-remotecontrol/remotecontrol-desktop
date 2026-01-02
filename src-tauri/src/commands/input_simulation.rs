@@ -3,7 +3,6 @@ use enigo::{
 };
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 static ENIGO: once_cell::sync::Lazy<Mutex<Enigo>> = once_cell::sync::Lazy::new(|| {
     Mutex::new(Enigo::new(&Settings::default()).expect("Failed to create Enigo instance"))
@@ -278,9 +277,9 @@ fn string_to_key(key: &str) -> Key {
         "numpaddecimal" | "numpadperiod" => Key::Unicode('.'),
         "numpadenter" => Key::Return,
 
-        // Print screen, scroll lock, pause
+        // Print screen, pause (ScrollLock not supported by enigo)
         "printscreen" | "print" => Key::Print,
-        "scrolllock" => Key::ScrollLock,
+        "scrolllock" => Key::Unicode('\u{0}'), // ScrollLock not directly supported
         "pause" => Key::Pause,
 
         // Default: try to use first character
