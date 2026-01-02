@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Remotecontrol Desktop",
+  "version": "2.0.0",
+  "identifier": "de.codext.remotecontrol-desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist/remotecontrol-desktop/browser",
+    "devUrl": "http://localhost:4200"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Remotecontrol Desktop",
+        "width": 420,
+        "height": 620,
+        "minWidth": 300,
+        "minHeight": 400,
+        "center": true,
+        "resizable": true,
+        "decorations": true,
+        "transparent": false,
+        "visible": true,
+        "focus": true
+      }
+    ],
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' https://node.remote-control.codext.de wss://node.remote-control.codext.de https://*.codext.de wss://*.codext.de; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "targets": "all",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "nsis": {
+        "installMode": "perMachine"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.13"
+    },
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    }
+  },
+  "plugins": {
+    "autostart": {
+      "macOSLaunchAgent": true,
+      "args": ["--minimized"]
+    }
+  }
+}

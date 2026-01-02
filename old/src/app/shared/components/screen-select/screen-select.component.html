@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title> {{ ' Select source ' | translate }} </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="close()">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+        <div
+            *ngFor="let video of sources"
+            (click)="selectStream(video)"
+            class="transition-all hover:shadow-xl cursor-pointer rounded-xl bg-white video-container overflow-hidden">
+            <div class="title">{{ video.source.name | translate }}</div>
+            <video
+                muted
+                autoplay
+                [srcObject]="video.stream"
+                onloadedmetadata="this.muted = true"></video>
+        </div>
+    </div>
+</ion-content>

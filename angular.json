@@ -3,158 +3,92 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "remotecontrol-desktop": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
-      "projectType": "application",
+      "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/remotecontrol-desktop",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
-              {
-                "glob": "**/*.svg",
-                "input": "node_modules/ionicons/dist/ionicons/svg",
-                "output": "./svg"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
-            "styles": ["src/styles.scss"],
-            "scripts": [],
-            "customWebpackConfig": {
-              "path": "./angular.webpack.js"
-            }
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
           },
           "configurations": {
-            "dev": {
-              "optimization": false,
-              "sourceMap": true,
-              "namedChunks": false,
-              "aot": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ]
-            },
-            "web": {
-              "optimization": false,
-              "sourceMap": true,
-              "namedChunks": false,
-              "aot": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.web.ts"
-                }
-              ]
-            },
             "production": {
-              "optimization": true,
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
+              "budgets": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
-              ]
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
-          "options": {
-            "browserTarget": "angular-electron:build"
-          },
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "dev": {
-              "browserTarget": "angular-electron:build:dev"
-            },
-            "web": {
-              "browserTarget": "angular-electron:build:web"
-            },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "buildTarget": "remotecontrol-desktop:build:production"
+            },
+            "development": {
+              "buildTarget": "remotecontrol-desktop:build:development"
             }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "angular-electron:build"
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular-builders/custom-webpack:karma",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills-test.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "scripts": [],
-            "styles": ["src/styles.scss"],
-            "assets": ["src/assets"],
-            "customWebpackConfig": {
-              "path": "./angular.webpack.js"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "eslintConfig": ".eslintrc.json",
-            "lintFilePatterns": ["src/**.ts", "main.ts"]
-          }
-        }
-      }
-    },
-    "angular-electron-e2e": {
-      "root": "e2e",
-      "projectType": "application",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "eslintConfig": ".eslintrc.json",
-            "lintFilePatterns": ["e2e/**.ts"]
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
           }
         }
       }
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ],
     "analytics": false
-  },
-  "schematics": {
-    "@ionic/angular-toolkit:component": {
-      "styleext": "scss"
-    },
-    "@ionic/angular-toolkit:page": {
-      "styleext": "scss"
-    }
   }
 }

@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{'Address book' |translate}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <!--<div class="max-w-md py-4 px-4 bg-white shadow-lg rounded-lg my-3">
+    <div>
+      <h2 class="text-gray-800 text-2xl font-semibold">Daniel's Macbook Pro</h2>
+      <p class="mt-2 text-sm text-gray-600">551 132 123</p>
+    </div>
+    <div class="flex justify-end mt-1">
+      <button class="text-xl font-medium text-green-500">Verbinden</button>
+    </div>
+  </div>-->
+
+    <div
+        class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden mb-5 bg-white p-3"
+        *ngFor="let addressBook of addressBookService.addressBook; let i = index">
+        <div class="z-10 flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
+            <div class="flex items-center justify-center flex-row">
+                <span
+                    class="h-10 mr-1 rounded px-3 flex items-center text-center font-bold text-3xl bg-gray-200 justify-center border-0"
+                    [class.mr-4]="i == 2 || i == 5"
+                    >{{addressBook.id}}</span
+                >
+
+                <ion-button
+                    class="ml-3"
+                    (click)="connect(addressBook.id)">
+                    {{'Connect' |translate}}
+                </ion-button>
+            </div>
+        </div>
+    </div>
+</ion-content>

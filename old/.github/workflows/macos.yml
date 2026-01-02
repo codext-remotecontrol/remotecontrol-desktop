@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+name: 'MacOS Build'
+
+on:
+  create:
+    tags:
+      - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Install Dependencies
+        run: npm install --force
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+      - name: Set Version Number
+        run: |
+          npx replace-in-files-cli --string="##version##" --replacement="${{ steps.tagName.outputs.tag }}" "src/**/*" "scripts/**/*"
+      - run: node "./scripts/version.script.js"
+      #- name: Check lint
+      #  run: npm run lint
+      - name: Build the app
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: npm run electron:mac
+      - run: node "./scripts/copy-file-mac.js"
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            release/*.dmg

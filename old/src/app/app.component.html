@@ -1,0 +1,83 @@
+<div
+    id="title-bar"
+    class="action-bar"
+    *ngIf="appService.actionBar && electronService.isElectron">
+    <div
+        class="app-actions"
+        *ngIf="process && process.platform !== 'darwin'">
+        <button
+            [tp]="'Select screen' | translate"
+            *ngIf="!isRemote"
+            (click)="screenSelect(false, true)">
+            <ion-icon name="browsers-outline"></ion-icon>
+        </button>
+        <button (click)="electronService.minimize()">
+            <ion-icon name="remove-outline"></ion-icon>
+        </button>
+
+        <button (click)="electronService.maximize()">
+            <ion-icon name="resize-outline"></ion-icon>
+        </button>
+
+        <button
+            *ngIf="isRemote"
+            class="close"
+            (click)="electronService.close()">
+            <ion-icon name="close-outline"></ion-icon>
+        </button>
+
+        <button
+            *ngIf="!isRemote"
+            class="close"
+            (click)="electronService.hide()">
+            <ion-icon name="close-outline"></ion-icon>
+        </button>
+    </div>
+</div>
+<ion-app [class.main-area]="!isInfoWindow">
+    <ion-split-pane contentId="main-content">
+        <ion-menu
+            *ngIf="appService.sideMenu"
+            swipeGesture="false"
+            class="main-menu"
+            contentId="main-content"
+            type="overlay">
+            <ion-content>
+                <ion-list>
+                    <ion-menu-toggle
+                        auto-hide="false"
+                        *ngFor="let p of appPages; let i = index">
+                        <ion-item
+                            routerDirection="root"
+                            [routerLink]="[p.url]"
+                            lines="none"
+                            detail="false"
+                            routerLinkActive="active">
+                            <ion-icon
+                                slot="start"
+                                [icon]="p.icon"></ion-icon>
+                            <ion-label>{{ p.title }}</ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                </ion-list>
+            </ion-content>
+            <ion-footer>
+                <div class="version">
+                    Version<small class="pl-2">{{ version }}</small>
+                </div>
+                <!--<ion-list *ngIf="appPages">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" *ngIf="p.footer"
+              [routerLinkActive]="['active']">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
+                {{ p.title }}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>-->
+            </ion-footer>
+        </ion-menu>
+        <ion-router-outlet id="main-content"></ion-router-outlet>
+    </ion-split-pane>
+</ion-app>

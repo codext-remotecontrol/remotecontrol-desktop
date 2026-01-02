@@ -1,174 +1,134 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@import '@ionic/angular/css/core.css';
-
-@import '@ionic/angular/css/normalize.css';
-@import '@ionic/angular/css/structure.css';
-@import '@ionic/angular/css/typography.css';
-@import '@ionic/angular/css/display.css';
-
-@import '@ionic/angular/css/padding.css';
-@import '@ionic/angular/css/float-elements.css';
-@import '@ionic/angular/css/text-alignment.css';
-@import '@ionic/angular/css/text-transformation.css';
-@import '@ionic/angular/css/flex-utils.css';
-
-@import '~tippy.js/dist/tippy.css';
-@import '~tippy.js/themes/light.css';
-@import '~tippy.js/animations/scale.css';
-
-[type='text']:focus,
-[type='email']:focus,
-[type='url']:focus,
-[type='password']:focus,
-[type='number']:focus,
-[type='date']:focus,
-[type='datetime-local']:focus,
-[type='month']:focus,
-[type='search']:focus,
-[type='tel']:focus,
-[type='time']:focus,
-[type='week']:focus,
-[multiple]:focus,
-textarea:focus,
-select:focus {
-    --tw-ring-color: transparent;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-input:focus {
-    outline: none;
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  user-select: none;
 }
 
-button {
-    outline: none;
-    &:focus {
-        outline: none;
-    }
-}
-ion-item {
-    ion-label {
-        white-space: pre-wrap !important;
-    }
-}
-ion-button {
-    text-transform: none !important;
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-ion-item {
-    border-radius: 10px;
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
-ion-content {
-    & {
-        ::-webkit-scrollbar {
-            width: 12px;
-            display: block !important;
-        }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
 
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            display: block !important;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            display: block !important;
-        }
-    }
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
 }
 
-.main-area {
-    top: 30px;
-    max-height: calc(100% - 30px);
+// Button styles
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-dark-700 text-white hover:bg-dark-600 focus:ring-dark-500;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-white hover:bg-dark-700 focus:ring-dark-500;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  // Input styles
+  .input {
+    @apply w-full px-4 py-2.5 bg-dark-800 border border-dark-600 rounded-lg text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+  }
+
+  .input-lg {
+    @apply input py-3 text-lg;
+  }
+
+  // Card styles
+  .card {
+    @apply bg-dark-800 rounded-xl border border-dark-700 p-4;
+  }
+
+  // Badge styles
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-green-500/20 text-green-400;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-500/20 text-yellow-400;
+  }
+
+  .badge-error {
+    @apply badge bg-red-500/20 text-red-400;
+  }
 }
 
-/** Ionic CSS Variables **/
-:root {
-    --card-border-radius: 3px;
-    --card-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
-    /** primary **/
-    --ion-color-primary: #252a33;
-    --ion-color-primary-rgb: 37, 42, 51;
-    --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #21252d;
-    --ion-color-primary-tint: #3b3f47;
-    /** secondary **/
-
-    /** primary **/
-    --ion-color-secondary: #252a33;
-    --ion-color-secondary-rgb: 37, 42, 51;
-    --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-contrast-rgb: 255, 255, 255;
-    --ion-color-secondary-shade: #21252d;
-    --ion-color-secondary-tint: #3b3f47;
-
-    /** tertiary **/
-    --ion-color-tertiary: #f4a942;
-    --ion-color-tertiary-rgb: 244, 169, 66;
-    --ion-color-tertiary-contrast: #fff;
-    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-    --ion-color-tertiary-shade: #d7953a;
-    --ion-color-tertiary-tint: #f5b255;
-
-    --ion-color-success: #252a33;
-    --ion-color-success-rgb: 37, 42, 51;
-    --ion-color-success-contrast: #ffffff;
-    --ion-color-success-contrast-rgb: 255, 255, 255;
-    --ion-color-success-shade: #21252d;
-    --ion-color-success-tint: #3b3f47;
-
-    /** warning **/
-    --ion-color-warning: #ffce00;
-    --ion-color-warning-rgb: 255, 206, 0;
-    --ion-color-warning-contrast: #000;
-    --ion-color-warning-contrast-rgb: 0, 0, 0;
-    --ion-color-warning-shade: #e0b500;
-    --ion-color-warning-tint: #ffd31a;
-
-    /** danger **/
-    --ion-color-danger: #f53d3d;
-    --ion-color-danger-rgb: 245, 61, 61;
-    --ion-color-danger-contrast: #fff;
-    --ion-color-danger-contrast-rgb: 255, 255, 255;
-    --ion-color-danger-shade: #d83636;
-    --ion-color-danger-tint: #f65050;
-
-    /** light **/
-    --ion-color-light: #f4f4f4;
-    --ion-color-light-rgb: 244, 244, 244;
-    --ion-color-light-contrast: #000;
-    --ion-color-light-contrast-rgb: 0, 0, 0;
-    --ion-color-light-shade: #d7d7d7;
-    --ion-color-light-tint: #f5f5f5;
-
-    /** medium **/
-    --ion-color-medium: #989aa2;
-    --ion-color-medium-rgb: 152, 154, 162;
-    --ion-color-medium-contrast: #000;
-    --ion-color-medium-contrast-rgb: 0, 0, 0;
-    --ion-color-medium-shade: #86888f;
-    --ion-color-medium-tint: #a2a4ab;
-
-    /** dark **/
-    --ion-color-dark: #455a64;
-    --ion-color-dark-rgb: 34, 34, 34;
-    --ion-color-dark-contrast: #fff;
-    --ion-color-dark-contrast-rgb: 255, 255, 255;
-    --ion-color-dark-shade: #455a64;
-    --ion-color-dark-tint: #455a64;
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-body {
-    ion-content {
-        --background: #f4f6f9;
-    }
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-button,
-button.alert-button.sc-ion-alert-md {
-    text-transform: none;
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+// Titlebar drag area (for custom titlebars)
+.titlebar-drag {
+  -webkit-app-region: drag;
+}
+
+.titlebar-no-drag {
+  -webkit-app-region: no-drag;
 }
