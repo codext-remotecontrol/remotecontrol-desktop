@@ -3,11 +3,11 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { connection } from '$lib/stores';
-  import { on, off, sendSignal, sendPasswordResponse } from '$lib/services/socket';
   import {
     startScreenCapture,
     stopScreenCapture,
     onScreenFrame,
+    getScreenSize,
     mouseMove,
     mouseClick,
     mouseDown,
@@ -15,7 +15,6 @@
     mouseScroll,
     keyPress,
     typeText,
-    isTauriApp,
     type UnlistenFn
   } from '$lib/services/tauri';
   import { Buffer } from 'buffer';
@@ -25,11 +24,28 @@
   }
   
   import Peer from 'simple-peer';
+  import { io, type Socket } from 'socket.io-client';
+
+  const SOCKET_URL = 'https://node.remote-control.codext.de';
+  const ICE_SERVERS = [
+    { urls: ['stun:turn.codext.de', 'stun:stun.nextcloud.com:443'] },
+    {
+      username: 'Z1VCyC6DDDrwtgeipeplGmJ0',
+      credential: '8a630ce342e1ec3fb2b8dbc8eaa395f837038ddcc5',
+      urls: [
+        'turn:turn.codext.de:80?transport=udp',
+        'turn:turn.codext.de:80?transport=tcp',
+        'turns:turn.codext.de:443?transport=tcp'
+      ]
+    }
+  ];
 
   let peerId: string;
   let isHost: boolean;
   let screenId: number;
+  let myId: string;
 
+  let socket: Socket | null = null;
   let peer: Peer.Instance | null = null;
   let canvasElement: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D | null = null;
@@ -42,16 +58,15 @@
 
   let remoteWidth = 1920;
   let remoteHeight = 1080;
+  let hostScreenSize = { width: 1920, height: 1080 };
 
   let showPasswordModal = false;
   let passwordInput = '';
   let passwordError = '';
 
-  // Frame handling for client - reuse Image object to avoid GC churn
   let frameImage: HTMLImageElement | null = null;
   let pendingFrame: string | null = null;
   let isRenderingFrame = false;
-  let canvasReady = false;
   let showDisconnectModal = false;
   let disconnectReason = '';
 
@@ -64,19 +79,14 @@
     peerId = params.get('peer') || '';
     isHost = params.get('mode') === 'host';
     screenId = parseInt(params.get('screen') || '0');
+    myId = params.get('myId') || peerId;
 
-    console.log('[Remote] Mounted:', { peerId, isHost, screenId });
+    console.log('[Remote] Mounted:', { peerId, isHost, screenId, myId });
 
     if (!peerId) {
       goto('/');
       return;
     }
-
-    on('signal', handleSignal);
-    on('password-request', handlePasswordRequest);
-    on('peer-disconnected', handlePeerDisconnected);
-    on('peer-ready', handlePeerReady);
-    console.log('[Remote] Signal handler registered');
 
     lastFpsTime = performance.now();
 
@@ -87,25 +97,22 @@
     }
   });
 
-  function handlePeerReady(data: { fromId: string }) {
-    if (!isHost || data.fromId !== peerId) return;
-    
-    console.log('[Remote] Peer is ready, creating WebRTC connection');
-    statusMessage = 'Peer ready, connecting...';
-    createPeer(true);
-  }
+  onDestroy(() => {
+    cleanup();
+  });
 
-  function handlePasswordRequest(data: { fromId: string }) {
-    console.log('[Remote] Password requested from:', data.fromId);
-    if (data.fromId === peerId) {
-      showPasswordModal = true;
-      statusMessage = 'Password required...';
+  function cleanup() {
+    peer?.destroy();
+    peer = null;
+    socket?.disconnect();
+    socket = null;
+
+    if (isHost) {
+      stopScreenCapture();
+      frameUnlisten?.();
     }
-  }
 
-  function handlePeerDisconnected() {
-    console.log('[Remote] Peer disconnected via signaling server');
-    handleConnectionLost('Remote peer disconnected');
+    connection.disconnect();
   }
 
   function handleConnectionLost(reason: string) {
@@ -123,52 +130,116 @@
     }
   }
 
-  function submitPassword() {
-    if (passwordInput) {
-      sendPasswordResponse(peerId, passwordInput);
-      showPasswordModal = false;
-      statusMessage = 'Verifying password...';
-      passwordInput = '';
-    }
-  }
-
-  onDestroy(() => {
-    cleanup();
-  });
-
-  function cleanup() {
-    off('signal');
-    off('password-request');
-    off('peer-disconnected');
-    off('peer-ready');
-    peer?.destroy();
-    peer = null;
-
-    if (isHost) {
-      stopScreenCapture();
-      frameUnlisten?.();
-    }
-
-    connection.disconnect();
-  }
-
   async function initHostMode() {
-    statusMessage = 'Setting up screen capture...';
+    statusMessage = 'Waiting for connection...';
+    
+    console.log('[Host] Joining own room:', myId);
+    
+    socket = io(SOCKET_URL, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      timeout: 10000
+    });
 
-    await startScreenCapture(screenId, 30, 70);
-    isStreaming = true;
-    statusMessage = 'Waiting for peer to connect...';
+    socket.on('connect', () => {
+      console.log('[Host] Socket connected, joining room:', myId);
+      socket?.emit('join', myId);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[Host] Socket disconnected');
+      handleConnectionLost('Socket disconnected');
+    });
+
+    socket.on('disconnected', () => {
+      console.log('[Host] Peer left the room');
+      handleConnectionLost('Remote peer disconnected');
+    });
+
+    socket.on('remoteData', async (data: any) => {
+      console.log('[Host] Received:', typeof data === 'string' ? data : JSON.stringify(data).substring(0, 100));
+      
+      if (typeof data === 'string') {
+        if (data === 'hi') {
+          console.log('[Host] Client said hi, starting connection');
+          statusMessage = 'Client connected, starting stream...';
+          
+          const screenSize = await getScreenSize(screenId);
+          hostScreenSize = { width: screenSize.width, height: screenSize.height };
+          socket?.emit('remoteData', `screenSize,${screenSize.width},${screenSize.height}`);
+          
+          await startScreenCapture(screenId, 30, 70);
+          isStreaming = true;
+          
+          createHostPeer();
+        }
+      } else if (data && peer) {
+        console.log('[Host] Signaling data received, type:', data.type);
+        peer.signal(data);
+      }
+    });
+  }
+
+  function createHostPeer() {
+    console.log('[Host] Creating peer as initiator');
+    
+    peer = new Peer({
+      initiator: true,
+      trickle: true,
+      config: { iceServers: ICE_SERVERS }
+    });
+
+    peer.on('signal', (data) => {
+      console.log('[Host] Sending signal:', data.type);
+      socket?.emit('remoteData', data);
+    });
+
+    peer.on('connect', () => {
+      console.log('[Host] Peer connected!');
+      isConnected = true;
+      statusMessage = 'Connected - Streaming';
+      
+      startFrameStreaming();
+    });
+
+    peer.on('data', (data) => {
+      handleRemoteInput(data);
+    });
+
+    peer.on('close', () => {
+      handleConnectionLost('Connection closed');
+    });
+
+    peer.on('error', (err) => {
+      console.error('[Host] Peer error:', err);
+      handleConnectionLost(`Error: ${err.message}`);
+    });
+  }
+
+  function startFrameStreaming() {
+    console.log('[Host] Starting frame streaming');
+    
+    onScreenFrame((base64) => {
+      if (!peer || !isConnected) return;
+      
+      try {
+        peer.send(JSON.stringify({ type: 'frame', data: base64 }));
+      } catch (e) {
+        // Channel full, drop frame
+      }
+    }).then(unlisten => {
+      frameUnlisten = unlisten;
+    });
   }
 
   async function initClientMode() {
-    console.log('[Remote] Initializing client mode');
-    statusMessage = 'Waiting for host connection...';
+    console.log('[Client] Initializing, will connect to host room:', peerId);
+    statusMessage = 'Connecting to host...';
     
     await tick();
     
     if (canvasElement) {
       ctx = canvasElement.getContext('2d', { desynchronized: true });
-      canvasReady = true;
     }
     
     frameImage = new Image();
@@ -200,13 +271,112 @@
       }
     };
     
-    createPeer(false);
-    console.log('[Remote] Client peer created, waiting for signals');
+    socket = io(SOCKET_URL, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      timeout: 10000
+    });
+
+    socket.on('connect', () => {
+      console.log('[Client] Socket connected, joining HOST room:', peerId);
+      socket?.emit('join', peerId);
+      
+      setTimeout(() => {
+        console.log('[Client] Sending hi to host');
+        socket?.emit('remoteData', 'hi');
+        statusMessage = 'Waiting for host...';
+      }, 100);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[Client] Socket disconnected');
+      handleConnectionLost('Socket disconnected');
+    });
+
+    socket.on('disconnected', () => {
+      console.log('[Client] Host left the room');
+      handleConnectionLost('Host disconnected');
+    });
+
+    socket.on('remoteData', (data: any) => {
+      console.log('[Client] Received:', typeof data === 'string' ? data.substring(0, 50) : (data?.type || 'object'));
+      
+      if (typeof data === 'string') {
+        if (data.startsWith('screenSize')) {
+          const parts = data.split(',');
+          hostScreenSize = {
+            width: parseInt(parts[1]),
+            height: parseInt(parts[2])
+          };
+          console.log('[Client] Host screen size:', hostScreenSize);
+        } else if (data === 'pwRequest') {
+          showPasswordModal = true;
+          statusMessage = 'Password required...';
+        } else if (data === 'pwWrong') {
+          passwordError = 'Incorrect password';
+          showPasswordModal = true;
+        } else if (data === 'decline') {
+          handleConnectionLost('Connection declined by host');
+        }
+      } else if (data && typeof data === 'object') {
+        if (!peer) {
+          console.log('[Client] Received first signal, creating peer');
+          createClientPeer();
+        }
+        console.log('[Client] Passing signal to peer, type:', data.type);
+        peer?.signal(data);
+      }
+    });
+  }
+
+  function createClientPeer() {
+    console.log('[Client] Creating peer (non-initiator)');
+    
+    peer = new Peer({
+      initiator: false,
+      trickle: true,
+      config: { iceServers: ICE_SERVERS }
+    });
+
+    peer.on('signal', (data) => {
+      console.log('[Client] Sending signal:', data.type);
+      socket?.emit('remoteData', data);
+    });
+
+    peer.on('connect', () => {
+      console.log('[Client] Peer connected!');
+      isConnected = true;
+      statusMessage = 'Connected';
+      connection.setConnected({
+        id: peerId,
+        hostname: 'Remote',
+        platform: 'unknown'
+      });
+    });
+
+    peer.on('data', (data) => {
+      try {
+        const message = JSON.parse(data.toString());
+        if (message.type === 'frame') {
+          renderFrame(message.data);
+        }
+      } catch (e) {
+        console.error('[Client] Failed to parse data:', e);
+      }
+    });
+
+    peer.on('close', () => {
+      handleConnectionLost('Connection closed');
+    });
+
+    peer.on('error', (err) => {
+      console.error('[Client] Peer error:', err);
+      handleConnectionLost(`Error: ${err.message}`);
+    });
   }
 
   function renderFrame(base64: string) {
     if (!frameImage || isRenderingFrame) {
-      // Drop frame if still rendering previous one (prevents queue buildup)
       pendingFrame = base64;
       return;
     }
@@ -215,131 +385,53 @@
     frameImage.src = `data:image/jpeg;base64,${base64}`;
   }
 
-  function createPeer(initiator: boolean) {
-    console.log('[Remote] Creating peer:', { initiator });
-    
-    peer = new Peer({
-      initiator,
-      trickle: true,
-      channelConfig: {
-        ordered: false,  // Unordered for lower latency
-        maxRetransmits: 0  // No retransmits - drop stale frames
-      },
-      config: {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' }
-        ]
-      }
-    });
-
-    peer.on('signal', (data) => {
-      console.log('[Remote] Sending signal to:', peerId, data.type);
-      sendSignal(peerId, data);
-    });
-
-    peer.on('connect', () => {
-      console.log('[Remote] Peer connected!');
-      isConnected = true;
-      statusMessage = 'Connected';
-      connection.setConnected({
-        id: peerId,
-        hostname: 'Remote',
-        platform: 'unknown'
-      });
-
-      if (isHost) {
-        startFrameStreaming();
-      }
-    });
-
-    peer.on('data', (data) => {
-      handleDataChannelMessage(data);
-    });
-
-    peer.on('close', () => {
-      handleConnectionLost('Connection closed by remote peer');
-    });
-
-    peer.on('error', (err) => {
-      console.error('Peer error:', err);
-      handleConnectionLost(`Connection error: ${err.message}`);
-    });
-  }
-
-  function startFrameStreaming() {
-    if (!isHost) return;
-    
-    console.log('[Remote] Starting frame streaming via data channel');
-    
-    onScreenFrame((base64) => {
-      if (!peer || !isConnected) return;
-      
-      try {
-        peer.send(JSON.stringify({ type: 'frame', data: base64 }));
-      } catch (e) {
-        console.warn('Failed to send frame:', e);
-      }
-    }).then(unlisten => {
-      frameUnlisten = unlisten;
-    });
-  }
-
-  function handleDataChannelMessage(data: Uint8Array | string) {
-    try {
-      const message = JSON.parse(data.toString());
-      
-      if (message.type === 'frame' && !isHost) {
-        renderFrame(message.data);
-      } else if (message.type !== 'frame') {
-        handleRemoteInput(message);
-      }
-    } catch (e) {
-      console.error('Failed to parse data channel message:', e);
+  function submitPassword() {
+    if (passwordInput) {
+      socket?.emit('remoteData', `pwAnswer:${passwordInput}`);
+      showPasswordModal = false;
+      statusMessage = 'Verifying password...';
+      passwordInput = '';
+      passwordError = '';
     }
   }
 
-  function handleSignal(data: { fromId: string; signal: any }) {
-    console.log('[Remote] Received signal from:', data.fromId, 'expected:', peerId, 'signal type:', data.signal?.type);
-    if (data.fromId === peerId && peer) {
-      console.log('[Remote] Processing signal');
-      peer.signal(data.signal);
-    } else {
-      console.log('[Remote] Ignoring signal - fromId mismatch or no peer');
-    }
-  }
-
-  async function handleRemoteInput(input: any) {
+  async function handleRemoteInput(data: Uint8Array | string) {
     if (!isHost) return;
 
     try {
-      switch (input.type) {
-        case 'mousemove':
-          await mouseMove(input.x, input.y);
-          break;
-        case 'mousedown':
-          await mouseDown(input.button);
-          break;
-        case 'mouseup':
-          await mouseUp(input.button);
-          break;
-        case 'click':
-          await mouseClick(input.button);
-          break;
-        case 'scroll':
-          await mouseScroll(input.direction, input.amount);
-          break;
-        case 'keypress':
-          await keyPress(input.key, input.modifiers);
-          break;
-        case 'type':
-          await typeText(input.text);
-          break;
+      const text = data.toString();
+      
+      if (text.startsWith('{')) {
+        const input = JSON.parse(text);
+        
+        if (input.type === 'frame') return;
+        
+        switch (input.type) {
+          case 'mousemove':
+            await mouseMove(input.x, input.y);
+            break;
+          case 'mousedown':
+            await mouseDown(input.button);
+            break;
+          case 'mouseup':
+            await mouseUp(input.button);
+            break;
+          case 'click':
+            await mouseClick(input.button);
+            break;
+          case 'scroll':
+            await mouseScroll(input.direction, input.amount);
+            break;
+          case 'keypress':
+            await keyPress(input.key, input.modifiers);
+            break;
+          case 'type':
+            await typeText(input.text);
+            break;
+        }
       }
     } catch (e) {
-      console.error('Input error:', e);
+      console.error('[Host] Input error:', e);
     }
   }
 
@@ -350,30 +442,34 @@
   }
 
   function handleMouseMove(e: MouseEvent) {
-    if (!canvasElement) return;
+    if (!canvasElement || !isConnected) return;
     const rect = canvasElement.getBoundingClientRect();
-    const x = Math.round((e.clientX - rect.left) / rect.width * remoteWidth);
-    const y = Math.round((e.clientY - rect.top) / rect.height * remoteHeight);
+    const x = Math.round((e.clientX - rect.left) / rect.width * hostScreenSize.width);
+    const y = Math.round((e.clientY - rect.top) / rect.height * hostScreenSize.height);
     sendInput({ type: 'mousemove', x, y });
   }
 
   function handleMouseDown(e: MouseEvent) {
+    if (!isConnected) return;
     const button = e.button === 0 ? 'left' : e.button === 2 ? 'right' : 'middle';
     sendInput({ type: 'mousedown', button });
   }
 
   function handleMouseUp(e: MouseEvent) {
+    if (!isConnected) return;
     const button = e.button === 0 ? 'left' : e.button === 2 ? 'right' : 'middle';
     sendInput({ type: 'mouseup', button });
   }
 
   function handleWheel(e: WheelEvent) {
+    if (!isConnected) return;
     e.preventDefault();
     const direction = e.deltaY > 0 ? 'down' : 'up';
     sendInput({ type: 'scroll', direction, amount: 3 });
   }
 
   function handleKeyDown(e: KeyboardEvent) {
+    if (!isConnected) return;
     e.preventDefault();
     sendInput({
       type: 'keypress',
@@ -396,7 +492,6 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="h-full flex flex-col bg-dark-900">
-  <!-- Toolbar -->
   <div class="flex items-center justify-between px-4 py-2 bg-dark-800 border-b border-dark-700">
     <div class="flex items-center gap-4">
       <button class="btn-secondary text-sm" on:click={disconnect}>
@@ -413,7 +508,6 @@
     </div>
   </div>
 
-  <!-- Video Container -->
   <div class="flex-1 flex items-center justify-center bg-black overflow-hidden relative">
     {#if !isHost}
       <canvas
@@ -434,6 +528,9 @@
       <div class="text-center text-dark-400">
         <p class="text-lg mb-2">Screen sharing active</p>
         <p class="text-sm">Your screen is being shared with the remote peer</p>
+        {#if isConnected}
+          <p class="text-green-400 mt-2">Streaming...</p>
+        {/if}
       </div>
     {/if}
   </div>

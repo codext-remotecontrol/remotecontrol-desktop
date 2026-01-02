@@ -45,6 +45,13 @@ export async function getScreens(): Promise<ScreenInfo[]> {
   return invokeCommand('get_screens');
 }
 
+export async function getScreenSize(screenId: number): Promise<{ width: number; height: number }> {
+  if (!isTauri) {
+    return { width: 1920, height: 1080 };
+  }
+  return invokeCommand('get_screen_size', { screenId });
+}
+
 export async function captureScreenThumbnail(screenId: number, maxWidth: number): Promise<string> {
   return invokeCommand('capture_screen_thumbnail', { screenId, maxWidth });
 }

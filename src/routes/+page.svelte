@@ -59,7 +59,7 @@
       const isValid = await verifyPassword(data.password, $settings.passwordHash);
       if (isValid) {
         connection.setConnecting('host', data.fromId);
-        goto(`/remote?peer=${data.fromId}&mode=host&screen=${selectedScreen}`);
+        goto(`/remote?peer=${data.fromId}&mode=host&screen=${selectedScreen}&myId=${$connectionId}`);
       }
     });
   });
@@ -94,7 +94,7 @@
       } else {
         connection.setConnecting('host', peerId);
         pendingRequest = null;
-        goto(`/remote?peer=${peerId}&mode=host&screen=${selectedScreen}`);
+        goto(`/remote?peer=${peerId}&mode=host&screen=${selectedScreen}&myId=${$connectionId}`);
       }
     }
   }
