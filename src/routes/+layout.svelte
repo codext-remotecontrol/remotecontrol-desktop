@@ -3,31 +3,56 @@
   import { onMount } from 'svelte';
   import { settings } from '$lib/stores';
   import { connect as socketConnect, connected, connectionId } from '$lib/services/socket';
-  import { generateConnectionId, hashPassword, getHostname, getPlatform } from '$lib/services/tauri';
+  import { generateConnectionId, getHostname, getPlatform } from '$lib/services/tauri';
   import '../app.css';
 
   let hostname = '';
   let platform = '';
+  let initError = '';
+
+  // Generate a random ID as fallback
+  function generateFallbackId(): string {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
 
   onMount(async () => {
-    await settings.load();
+    try {
+      await settings.load();
+    } catch (e) {
+      console.warn('Failed to load settings:', e);
+    }
 
+    let id = $settings.connectionId;
+
+    // Try to get hostname and platform from Tauri
     try {
       hostname = await getHostname();
       platform = await getPlatform();
+    } catch (e) {
+      console.warn('Failed to get system info:', e);
+      hostname = 'Unknown';
+      platform = 'unknown';
+    }
 
-      // Generate connection ID if not set
-      let id = $settings.connectionId;
-      if (!id) {
+    // Generate connection ID if not set
+    if (!id) {
+      try {
         id = await generateConnectionId(false);
         settings.updateSetting('connectionId', id);
         await settings.save();
+      } catch (e) {
+        console.warn('Failed to generate connection ID via Tauri, using fallback:', e);
+        id = generateFallbackId();
+        settings.updateSetting('connectionId', id);
       }
+    }
 
-      // Connect to signaling server
+    // Connect to signaling server
+    try {
       await socketConnect(id);
     } catch (e) {
-      console.error('Initialization error:', e);
+      console.error('Failed to connect to signaling server:', e);
+      initError = `Connection failed: ${e}`;
     }
   });
 
@@ -75,6 +100,9 @@
       </div>
       {#if $connectionId}
         <p class="text-xs text-dark-400 mt-1 font-mono">{$connectionId}</p>
+      {/if}
+      {#if initError}
+        <p class="text-xs text-red-400 mt-1">{initError}</p>
       {/if}
     </div>
   </nav>

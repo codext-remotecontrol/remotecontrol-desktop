@@ -13,6 +13,7 @@ export const connected: Writable<boolean> = writable(false);
 export const connectionId: Writable<string> = writable('');
 
 let socket: Socket | null = null;
+let currentRoom: string = '';
 let messageHandlers: Map<string, (data: any) => void> = new Map();
 
 export function connect(id: string): Promise<void> {
@@ -21,66 +22,52 @@ export function connect(id: string): Promise<void> {
       socket.disconnect();
     }
 
+    console.log('Connecting to signaling server:', SOCKET_URL, 'with ID:', id);
+
     socket = io(SOCKET_URL, {
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
-      reconnectionDelay: 1000
+      reconnectionDelay: 1000,
+      timeout: 10000
     });
 
+    // Set connection ID immediately so UI shows it
+    connectionId.set(id);
+    currentRoom = id;
+
     socket.on('connect', () => {
-      console.log('Socket connected');
-      socket?.emit('register', { id });
+      console.log('Socket connected successfully, joining room:', id);
+      socket?.emit('join', id);
       connected.set(true);
-      connectionId.set(id);
       resolve();
     });
 
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected');
+    socket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason);
       connected.set(false);
     });
 
     socket.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
+      console.error('Socket connection error:', error.message);
       connected.set(false);
-      reject(error);
+      reject(new Error(`Connection error: ${error.message}`));
     });
 
-    // Handle incoming messages
-    socket.on('signal', (data) => {
-      const handler = messageHandlers.get('signal');
-      if (handler) handler(data);
+    // Handle incoming remote data (all signaling goes through this)
+    socket.on('remoteData', (data) => {
+      console.log('Received remoteData:', data);
+      if (data && data.type) {
+        const handler = messageHandlers.get(data.type);
+        if (handler) handler(data);
+      }
     });
 
-    socket.on('peer-connected', (data) => {
-      const handler = messageHandlers.get('peer-connected');
-      if (handler) handler(data);
-    });
-
-    socket.on('peer-disconnected', (data) => {
+    // Handle peer disconnection
+    socket.on('disconnected', () => {
+      console.log('Peer disconnected');
       const handler = messageHandlers.get('peer-disconnected');
-      if (handler) handler(data);
-    });
-
-    socket.on('connection-request', (data) => {
-      const handler = messageHandlers.get('connection-request');
-      if (handler) handler(data);
-    });
-
-    socket.on('connection-response', (data) => {
-      const handler = messageHandlers.get('connection-response');
-      if (handler) handler(data);
-    });
-
-    socket.on('password-request', (data) => {
-      const handler = messageHandlers.get('password-request');
-      if (handler) handler(data);
-    });
-
-    socket.on('password-response', (data) => {
-      const handler = messageHandlers.get('password-response');
-      if (handler) handler(data);
+      if (handler) handler({});
     });
   });
 }
@@ -93,9 +80,17 @@ export function disconnect(): void {
   connected.set(false);
 }
 
-export function emit(event: string, data: any): void {
+// Send data to the current room
+export function emit(type: string, data: any): void {
   if (socket?.connected) {
-    socket.emit(event, data);
+    socket.emit('remoteData', { data: { type, ...data } });
+  }
+}
+
+// Send data to a specific room/peer
+export function emitToRoom(room: string, type: string, data: any): void {
+  if (socket?.connected) {
+    socket.emit('remoteData', { room, data: { type, ...data } });
   }
 }
 
@@ -107,18 +102,26 @@ export function off(event: string): void {
   messageHandlers.delete(event);
 }
 
+// WebRTC signaling
 export function sendSignal(targetId: string, signal: any): void {
-  emit('signal', { targetId, signal });
+  emitToRoom(targetId, 'signal', { fromId: currentRoom, signal });
 }
 
+// Connection request
 export function requestConnection(targetId: string, info: PeerInfo): void {
-  emit('connection-request', { targetId, info });
+  emitToRoom(targetId, 'connection-request', { fromId: currentRoom, info });
 }
 
+// Connection response
 export function respondToConnection(targetId: string, accepted: boolean): void {
-  emit('connection-response', { targetId, accepted });
+  emitToRoom(targetId, 'connection-response', { fromId: currentRoom, accepted });
+}
+
+// Password handling
+export function requestPassword(targetId: string): void {
+  emitToRoom(targetId, 'password-request', { fromId: currentRoom });
 }
 
 export function sendPasswordResponse(targetId: string, password: string): void {
-  emit('password-response', { targetId, password });
+  emitToRoom(targetId, 'password-response', { fromId: currentRoom, password });
 }
