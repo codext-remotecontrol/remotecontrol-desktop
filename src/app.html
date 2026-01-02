@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
     <title>Remotecontrol Desktop</title>
+    <script>
+      window.global = window;
+      window.process = { env: {} };
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover" class="bg-dark-900 text-white">

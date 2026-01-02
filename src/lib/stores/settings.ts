@@ -20,6 +20,9 @@ const defaultSettings: Settings = {
   fps: 30
 };
 
+const isTauri = typeof window !== 'undefined' && !!(window as any).__TAURI__;
+const STORAGE_KEY = 'remotecontrol-settings';
+
 function createSettingsStore() {
   const { subscribe, set, update } = writable<Settings>(defaultSettings);
 
@@ -29,11 +32,18 @@ function createSettingsStore() {
     update,
     load: async () => {
       try {
-        const { Store } = await import('@tauri-apps/plugin-store');
-        const store = await Store.load('settings.json');
-        const saved = await store.get<Settings>('settings');
-        if (saved) {
-          set({ ...defaultSettings, ...saved });
+        if (isTauri) {
+          const { Store } = await import('@tauri-apps/plugin-store');
+          const store = await Store.load('settings.json');
+          const saved = await store.get<Settings>('settings');
+          if (saved) {
+            set({ ...defaultSettings, ...saved });
+          }
+        } else {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            set({ ...defaultSettings, ...JSON.parse(saved) });
+          }
         }
       } catch (e) {
         console.error('Failed to load settings:', e);
@@ -41,10 +51,15 @@ function createSettingsStore() {
     },
     save: async () => {
       try {
-        const { Store } = await import('@tauri-apps/plugin-store');
-        const store = await Store.load('settings.json');
-        await store.set('settings', get(settings));
-        await store.save();
+        const currentSettings = get(settings);
+        if (isTauri) {
+          const { Store } = await import('@tauri-apps/plugin-store');
+          const store = await Store.load('settings.json');
+          await store.set('settings', currentSettings);
+          await store.save();
+        } else {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSettings));
+        }
       } catch (e) {
         console.error('Failed to save settings:', e);
       }

@@ -1,11 +1,53 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { settings } from '$lib/stores';
-  import { hashPassword, generateConnectionId } from '$lib/services/tauri';
+  import { 
+    hashPassword, 
+    generateConnectionId,
+    checkPermissions,
+    requestScreenRecordingPermission,
+    openScreenRecordingSettings,
+    openAccessibilitySettings,
+    getPlatformName,
+    type PermissionStatus
+  } from '$lib/services/tauri';
 
   let password = '';
   let confirmPassword = '';
   let passwordError = '';
   let saveMessage = '';
+
+  let platform = '';
+  let permissions: PermissionStatus = { screen_recording: true, accessibility: true };
+  let checkingPermissions = false;
+
+  onMount(async () => {
+    platform = await getPlatformName();
+    await refreshPermissions();
+  });
+
+  async function refreshPermissions() {
+    checkingPermissions = true;
+    try {
+      permissions = await checkPermissions();
+    } finally {
+      checkingPermissions = false;
+    }
+  }
+
+  async function handleRequestScreenRecording() {
+    await requestScreenRecordingPermission();
+    await new Promise(r => setTimeout(r, 500));
+    await refreshPermissions();
+  }
+
+  async function handleOpenScreenRecordingSettings() {
+    await openScreenRecordingSettings();
+  }
+
+  async function handleOpenAccessibilitySettings() {
+    await openAccessibilitySettings();
+  }
 
   async function savePassword() {
     passwordError = '';
@@ -173,7 +215,7 @@
   </section>
 
   <!-- Startup Settings -->
-  <section class="card">
+  <section class="card mb-6">
     <h2 class="text-lg font-semibold mb-4 text-dark-200">Startup</h2>
 
     <div class="space-y-4">
@@ -198,4 +240,67 @@
       </label>
     </div>
   </section>
+
+  {#if platform === 'macos'}
+    <section class="card">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-dark-200">System Permissions</h2>
+        <button 
+          class="text-sm text-primary-400 hover:text-primary-300"
+          on:click={refreshPermissions}
+          disabled={checkingPermissions}
+        >
+          {checkingPermissions ? 'Checking...' : 'Refresh'}
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-3 rounded-lg bg-dark-700/50">
+          <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full {permissions.screen_recording ? 'bg-green-500' : 'bg-red-500'}"></span>
+            <div>
+              <p class="text-sm font-medium">Screen Recording</p>
+              <p class="text-xs text-dark-400">Required to share your screen</p>
+            </div>
+          </div>
+          {#if !permissions.screen_recording}
+            <button 
+              class="btn-secondary text-sm"
+              on:click={handleOpenScreenRecordingSettings}
+            >
+              Open Settings
+            </button>
+          {:else}
+            <span class="text-xs text-green-400">Granted</span>
+          {/if}
+        </div>
+
+        <div class="flex items-center justify-between p-3 rounded-lg bg-dark-700/50">
+          <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full {permissions.accessibility ? 'bg-green-500' : 'bg-red-500'}"></span>
+            <div>
+              <p class="text-sm font-medium">Accessibility</p>
+              <p class="text-xs text-dark-400">Required for mouse and keyboard control</p>
+            </div>
+          </div>
+          {#if !permissions.accessibility}
+            <button 
+              class="btn-secondary text-sm"
+              on:click={handleOpenAccessibilitySettings}
+            >
+              Open Settings
+            </button>
+          {:else}
+            <span class="text-xs text-green-400">Granted</span>
+          {/if}
+        </div>
+
+        {#if !permissions.screen_recording || !permissions.accessibility}
+          <p class="text-xs text-dark-400">
+            After enabling permissions in System Settings, click "Refresh" or restart the app.
+          </p>
+        {/if}
+      </div>
+    </section>
+  {/if}
 </div>

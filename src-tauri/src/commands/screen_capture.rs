@@ -33,22 +33,19 @@ pub struct ScreenSize {
 pub fn get_screens() -> Result<Vec<ScreenInfo>, String> {
     let monitors = Monitor::all().map_err(|e| e.to_string())?;
 
-    let screens: Vec<ScreenInfo> = monitors
-        .into_iter()
-        .enumerate()
-        .map(|(idx, monitor)| {
-            ScreenInfo {
-                id: idx as u32,
-                name: monitor.name().to_string(),
-                width: monitor.width(),
-                height: monitor.height(),
-                x: monitor.x(),
-                y: monitor.y(),
-                is_primary: monitor.is_primary(),
-                scale_factor: monitor.scale_factor(),
-            }
-        })
-        .collect();
+    let mut screens = Vec::new();
+    for (idx, monitor) in monitors.into_iter().enumerate() {
+        screens.push(ScreenInfo {
+            id: idx as u32,
+            name: monitor.name().map_err(|e| e.to_string())?,
+            width: monitor.width().map_err(|e| e.to_string())?,
+            height: monitor.height().map_err(|e| e.to_string())?,
+            x: monitor.x().map_err(|e| e.to_string())?,
+            y: monitor.y().map_err(|e| e.to_string())?,
+            is_primary: monitor.is_primary().map_err(|e| e.to_string())?,
+            scale_factor: monitor.scale_factor().map_err(|e| e.to_string())?,
+        });
+    }
 
     Ok(screens)
 }
@@ -62,8 +59,8 @@ pub fn get_screen_size(screen_id: u32) -> Result<ScreenSize, String> {
         .ok_or_else(|| format!("Screen {} not found", screen_id))?;
 
     Ok(ScreenSize {
-        width: monitor.width(),
-        height: monitor.height(),
+        width: monitor.width().map_err(|e| e.to_string())?,
+        height: monitor.height().map_err(|e| e.to_string())?,
     })
 }
 

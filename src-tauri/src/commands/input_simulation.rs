@@ -1,12 +1,12 @@
-use enigo::{
-    Button, Coordinate, Direction, Enigo, Key, Keyboard, Mouse, Settings,
-};
-use parking_lot::Mutex;
+use enigo::{Button, Coordinate, Direction, Enigo, Key, Keyboard, Mouse, Settings};
 use serde::{Deserialize, Serialize};
+use std::cell::RefCell;
 
-static ENIGO: once_cell::sync::Lazy<Mutex<Enigo>> = once_cell::sync::Lazy::new(|| {
-    Mutex::new(Enigo::new(&Settings::default()).expect("Failed to create Enigo instance"))
-});
+thread_local! {
+    static ENIGO: RefCell<Enigo> = RefCell::new(
+        Enigo::new(&Settings::default()).expect("Failed to create Enigo instance")
+    );
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KeyModifiers {
@@ -29,10 +29,20 @@ impl Default for KeyModifiers {
 
 #[tauri::command]
 pub fn mouse_move(x: i32, y: i32) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
-    enigo
-        .move_mouse(x, y, Coordinate::Abs)
-        .map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .move_mouse(x, y, Coordinate::Abs)
+            .map_err(|e| e.to_string())
+    })
+}
+
+#[tauri::command]
+pub fn mouse_move_relative(dx: i32, dy: i32) -> Result<(), String> {
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .move_mouse(dx, dy, Coordinate::Rel)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
@@ -44,8 +54,11 @@ pub fn mouse_click(button: u8) -> Result<(), String> {
         _ => Button::Left,
     };
 
-    let mut enigo = ENIGO.lock();
-    enigo.button(btn, Direction::Click).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .button(btn, Direction::Click)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
@@ -57,9 +70,15 @@ pub fn mouse_double_click(button: u8) -> Result<(), String> {
         _ => Button::Left,
     };
 
-    let mut enigo = ENIGO.lock();
-    enigo.button(btn, Direction::Click).map_err(|e| e.to_string())?;
-    enigo.button(btn, Direction::Click).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        let mut enigo = e.borrow_mut();
+        enigo
+            .button(btn, Direction::Click)
+            .map_err(|e| e.to_string())?;
+        enigo
+            .button(btn, Direction::Click)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
@@ -71,8 +90,11 @@ pub fn mouse_down(button: u8) -> Result<(), String> {
         _ => Button::Left,
     };
 
-    let mut enigo = ENIGO.lock();
-    enigo.button(btn, Direction::Press).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .button(btn, Direction::Press)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
@@ -84,89 +106,115 @@ pub fn mouse_up(button: u8) -> Result<(), String> {
         _ => Button::Left,
     };
 
-    let mut enigo = ENIGO.lock();
-    enigo.button(btn, Direction::Release).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .button(btn, Direction::Release)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
 pub fn mouse_scroll(direction: String, amount: i32) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
-
     let scroll_amount = amount.abs();
 
-    match direction.as_str() {
-        "up" => enigo.scroll(scroll_amount, enigo::Axis::Vertical),
-        "down" => enigo.scroll(-scroll_amount, enigo::Axis::Vertical),
-        "left" => enigo.scroll(-scroll_amount, enigo::Axis::Horizontal),
-        "right" => enigo.scroll(scroll_amount, enigo::Axis::Horizontal),
-        _ => enigo.scroll(scroll_amount, enigo::Axis::Vertical),
-    }
-    .map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        let mut enigo = e.borrow_mut();
+        match direction.as_str() {
+            "up" => enigo.scroll(scroll_amount, enigo::Axis::Vertical),
+            "down" => enigo.scroll(-scroll_amount, enigo::Axis::Vertical),
+            "left" => enigo.scroll(-scroll_amount, enigo::Axis::Horizontal),
+            "right" => enigo.scroll(scroll_amount, enigo::Axis::Horizontal),
+            _ => enigo.scroll(scroll_amount, enigo::Axis::Vertical),
+        }
+        .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
 pub fn key_press(key: String, modifiers: Option<KeyModifiers>) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
     let mods = modifiers.unwrap_or_default();
-
-    // Press modifiers
-    if mods.control {
-        enigo.key(Key::Control, Direction::Press).map_err(|e| e.to_string())?;
-    }
-    if mods.shift {
-        enigo.key(Key::Shift, Direction::Press).map_err(|e| e.to_string())?;
-    }
-    if mods.alt {
-        enigo.key(Key::Alt, Direction::Press).map_err(|e| e.to_string())?;
-    }
-    if mods.meta {
-        enigo.key(Key::Meta, Direction::Press).map_err(|e| e.to_string())?;
-    }
-
-    // Press the key
     let key_enum = string_to_key(&key);
-    enigo.key(key_enum, Direction::Click).map_err(|e| e.to_string())?;
 
-    // Release modifiers in reverse order
-    if mods.meta {
-        enigo.key(Key::Meta, Direction::Release).map_err(|e| e.to_string())?;
-    }
-    if mods.alt {
-        enigo.key(Key::Alt, Direction::Release).map_err(|e| e.to_string())?;
-    }
-    if mods.shift {
-        enigo.key(Key::Shift, Direction::Release).map_err(|e| e.to_string())?;
-    }
-    if mods.control {
-        enigo.key(Key::Control, Direction::Release).map_err(|e| e.to_string())?;
-    }
+    ENIGO.with(|e| {
+        let mut enigo = e.borrow_mut();
 
-    Ok(())
+        if mods.control {
+            enigo
+                .key(Key::Control, Direction::Press)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.shift {
+            enigo
+                .key(Key::Shift, Direction::Press)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.alt {
+            enigo
+                .key(Key::Alt, Direction::Press)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.meta {
+            enigo
+                .key(Key::Meta, Direction::Press)
+                .map_err(|e| e.to_string())?;
+        }
+
+        enigo
+            .key(key_enum, Direction::Click)
+            .map_err(|e| e.to_string())?;
+
+        if mods.meta {
+            enigo
+                .key(Key::Meta, Direction::Release)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.alt {
+            enigo
+                .key(Key::Alt, Direction::Release)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.shift {
+            enigo
+                .key(Key::Shift, Direction::Release)
+                .map_err(|e| e.to_string())?;
+        }
+        if mods.control {
+            enigo
+                .key(Key::Control, Direction::Release)
+                .map_err(|e| e.to_string())?;
+        }
+
+        Ok(())
+    })
 }
 
 #[tauri::command]
 pub fn key_down(key: String) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
     let key_enum = string_to_key(&key);
-    enigo.key(key_enum, Direction::Press).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .key(key_enum, Direction::Press)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
 pub fn key_up(key: String) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
     let key_enum = string_to_key(&key);
-    enigo.key(key_enum, Direction::Release).map_err(|e| e.to_string())
+    ENIGO.with(|e| {
+        e.borrow_mut()
+            .key(key_enum, Direction::Release)
+            .map_err(|e| e.to_string())
+    })
 }
 
 #[tauri::command]
 pub fn type_text(text: String) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
-    enigo.text(&text).map_err(|e| e.to_string())
+    ENIGO.with(|e| e.borrow_mut().text(&text).map_err(|e| e.to_string()))
 }
 
 fn string_to_key(key: &str) -> Key {
     match key.to_lowercase().as_str() {
-        // Letters
         "a" => Key::Unicode('a'),
         "b" => Key::Unicode('b'),
         "c" => Key::Unicode('c'),
@@ -193,8 +241,6 @@ fn string_to_key(key: &str) -> Key {
         "x" => Key::Unicode('x'),
         "y" => Key::Unicode('y'),
         "z" => Key::Unicode('z'),
-
-        // Numbers
         "0" | "digit0" => Key::Unicode('0'),
         "1" | "digit1" => Key::Unicode('1'),
         "2" | "digit2" => Key::Unicode('2'),
@@ -205,8 +251,6 @@ fn string_to_key(key: &str) -> Key {
         "7" | "digit7" => Key::Unicode('7'),
         "8" | "digit8" => Key::Unicode('8'),
         "9" | "digit9" => Key::Unicode('9'),
-
-        // Function keys
         "f1" => Key::F1,
         "f2" => Key::F2,
         "f3" => Key::F3,
@@ -219,34 +263,26 @@ fn string_to_key(key: &str) -> Key {
         "f10" => Key::F10,
         "f11" => Key::F11,
         "f12" => Key::F12,
-
-        // Special keys
         "enter" | "return" => Key::Return,
         "escape" | "esc" => Key::Escape,
         "backspace" => Key::Backspace,
         "tab" => Key::Tab,
         "space" | " " => Key::Space,
         "delete" | "del" => Key::Delete,
-        "insert" | "ins" => Key::Insert,
+        "insert" | "ins" => Key::Other(0x2D),
         "home" => Key::Home,
         "end" => Key::End,
         "pageup" | "page_up" => Key::PageUp,
         "pagedown" | "page_down" => Key::PageDown,
-
-        // Arrow keys
         "arrowup" | "up" => Key::UpArrow,
         "arrowdown" | "down" => Key::DownArrow,
         "arrowleft" | "left" => Key::LeftArrow,
         "arrowright" | "right" => Key::RightArrow,
-
-        // Modifier keys
         "shift" | "shiftleft" | "shiftright" => Key::Shift,
         "control" | "ctrl" | "controlleft" | "controlright" => Key::Control,
         "alt" | "altleft" | "altright" => Key::Alt,
         "meta" | "metaleft" | "metaright" | "command" | "cmd" | "win" | "windows" => Key::Meta,
         "capslock" | "caps" => Key::CapsLock,
-
-        // Punctuation and symbols
         "minus" | "-" => Key::Unicode('-'),
         "equal" | "=" => Key::Unicode('='),
         "bracketleft" | "[" => Key::Unicode('['),
@@ -258,8 +294,6 @@ fn string_to_key(key: &str) -> Key {
         "comma" | "," => Key::Unicode(','),
         "period" | "." => Key::Unicode('.'),
         "slash" | "/" => Key::Unicode('/'),
-
-        // Numpad
         "numpad0" => Key::Unicode('0'),
         "numpad1" => Key::Unicode('1'),
         "numpad2" => Key::Unicode('2'),
@@ -276,13 +310,9 @@ fn string_to_key(key: &str) -> Key {
         "numpaddivide" | "numpadslash" => Key::Unicode('/'),
         "numpaddecimal" | "numpadperiod" => Key::Unicode('.'),
         "numpadenter" => Key::Return,
-
-        // Print screen, pause (ScrollLock not supported by enigo)
-        "printscreen" | "print" => Key::Print,
-        "scrolllock" => Key::Unicode('\u{0}'), // ScrollLock not directly supported
-        "pause" => Key::Pause,
-
-        // Default: try to use first character
+        "printscreen" | "print" => Key::Other(0x2C),
+        "scrolllock" => Key::Other(0x91),
+        "pause" => Key::Other(0x13),
         _ => {
             if let Some(c) = key.chars().next() {
                 Key::Unicode(c)
@@ -291,12 +321,4 @@ fn string_to_key(key: &str) -> Key {
             }
         }
     }
-}
-
-#[tauri::command]
-pub fn mouse_move_relative(dx: i32, dy: i32) -> Result<(), String> {
-    let mut enigo = ENIGO.lock();
-    enigo
-        .move_mouse(dx, dy, Coordinate::Rel)
-        .map_err(|e| e.to_string())
 }

@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import { settings, connection } from '$lib/stores';
-  import { connected, connectionId, on, off, requestConnection, respondToConnection, sendPasswordResponse } from '$lib/services/socket';
+  import { connected, connectionId, on, off, requestConnection, respondToConnection, requestPassword, sendPasswordResponse } from '$lib/services/socket';
   import { getHostname, getPlatform, verifyPassword, getScreens, type ScreenInfo } from '$lib/services/tauri';
   import type { PeerInfo } from '$lib/services/socket';
 
@@ -55,16 +55,11 @@
       passwordInput = '';
     });
 
-    // Handle password response (when we're the host)
     on('password-response', async (data: { fromId: string; password: string }) => {
       const isValid = await verifyPassword(data.password, $settings.passwordHash);
       if (isValid) {
-        // Password correct, accept connection
         connection.setConnecting('host', data.fromId);
-        goto(`/remote?peer=${data.fromId}&mode=host`);
-      } else {
-        // Invalid password
-        // Could emit an error back
+        goto(`/remote?peer=${data.fromId}&mode=host&screen=${selectedScreen}`);
       }
     });
   });
@@ -90,9 +85,17 @@
 
   function acceptConnection() {
     if (pendingRequest) {
-      respondToConnection(pendingRequest.peerId, true);
+      const peerId = pendingRequest.peerId;
+      respondToConnection(peerId, true);
       showConnectionRequest = false;
-      // Will wait for password or start hosting
+      
+      if ($settings.passwordHash) {
+        requestPassword(peerId);
+      } else {
+        connection.setConnecting('host', peerId);
+        pendingRequest = null;
+        goto(`/remote?peer=${peerId}&mode=host&screen=${selectedScreen}`);
+      }
     }
   }
 

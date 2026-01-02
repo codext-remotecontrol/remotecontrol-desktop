@@ -39,7 +39,7 @@ pub fn run() {
             let _tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
-                .menu_on_left_click(false)
+                .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => {
                         if let Some(window) = app.get_webview_window("main") {
@@ -80,13 +80,13 @@ pub fn run() {
         })
         .on_window_event(|window, event| {
             if let WindowEvent::CloseRequested { api, .. } = event {
-                // Hide window instead of closing on Windows/Linux
-                // On macOS this is the expected behavior
                 #[cfg(not(target_os = "macos"))]
                 {
-                    window.hide().unwrap();
+                    let _ = window.hide();
                     api.prevent_close();
                 }
+                #[cfg(target_os = "macos")]
+                let _ = (&window, &api);
             }
         })
         .invoke_handler(tauri::generate_handler![
@@ -128,6 +128,14 @@ pub fn run() {
             commands::system_info::hash_password,
             commands::system_info::verify_password,
             commands::system_info::generate_connection_id,
+            // Permission commands
+            commands::permissions::check_permissions,
+            commands::permissions::check_screen_recording_permission,
+            commands::permissions::check_accessibility_permission,
+            commands::permissions::request_screen_recording_permission,
+            commands::permissions::open_screen_recording_settings,
+            commands::permissions::open_accessibility_settings,
+            commands::permissions::get_platform_name,
             // Window management commands
             create_remote_window,
             create_info_window,
@@ -144,7 +152,7 @@ async fn create_remote_window(
 ) -> Result<(), String> {
     let label = format!("remote-{}", partner_id);
 
-    let window = tauri::WebviewWindowBuilder::new(
+    let _window = tauri::WebviewWindowBuilder::new(
         &app,
         &label,
         tauri::WebviewUrl::App(format!("/remote/{}", partner_id).into()),
@@ -162,7 +170,7 @@ async fn create_remote_window(
 
 #[tauri::command]
 async fn create_info_window(app: tauri::AppHandle) -> Result<(), String> {
-    let window = tauri::WebviewWindowBuilder::new(
+    let _window = tauri::WebviewWindowBuilder::new(
         &app,
         "info",
         tauri::WebviewUrl::App("/info".into()),
@@ -173,7 +181,6 @@ async fn create_info_window(app: tauri::AppHandle) -> Result<(), String> {
     .decorations(false)
     .always_on_top(true)
     .skip_taskbar(true)
-    .transparent(true)
     .build()
     .map_err(|e| e.to_string())?;
 
