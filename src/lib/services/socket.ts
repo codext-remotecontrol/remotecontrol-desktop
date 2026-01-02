@@ -54,12 +54,16 @@ export function connect(id: string): Promise<void> {
       reject(new Error(`Connection error: ${error.message}`));
     });
 
-    // Handle incoming remote data (all signaling goes through this)
     socket.on('remoteData', (data) => {
-      console.log('Received remoteData:', data);
+      console.log('[Socket] Received remoteData:', data?.type, data);
       if (data && data.type) {
         const handler = messageHandlers.get(data.type);
-        if (handler) handler(data);
+        if (handler) {
+          console.log('[Socket] Found handler for:', data.type);
+          handler(data);
+        } else {
+          console.log('[Socket] No handler for:', data.type);
+        }
       }
     });
 
@@ -104,6 +108,7 @@ export function off(event: string): void {
 
 // WebRTC signaling
 export function sendSignal(targetId: string, signal: any): void {
+  console.log('[Socket] Sending signal to room:', targetId, 'from:', currentRoom, 'type:', signal?.type);
   emitToRoom(targetId, 'signal', { fromId: currentRoom, signal });
 }
 

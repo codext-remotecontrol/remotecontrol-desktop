@@ -77,6 +77,13 @@
     showSaveMessage('Password updated');
   }
 
+  async function clearPassword() {
+    settings.updateSetting('password', '');
+    settings.updateSetting('passwordHash', '');
+    await settings.save();
+    showSaveMessage('Password cleared');
+  }
+
   async function regenerateId() {
     const newId = await generateConnectionId(true);
     settings.updateSetting('connectionId', newId);
@@ -159,12 +166,19 @@
         <p class="text-red-400 text-sm">{passwordError}</p>
       {/if}
 
-      <button class="btn-primary" on:click={savePassword}>
-        Update Password
-      </button>
+      <div class="flex gap-2">
+        <button class="btn-primary flex-1" on:click={savePassword}>
+          Update Password
+        </button>
+        {#if $settings.passwordHash}
+          <button class="btn-danger" on:click={clearPassword}>
+            Clear
+          </button>
+        {/if}
+      </div>
 
       <p class="text-xs text-dark-500">
-        {$settings.passwordHash ? 'Password is set' : 'No password set - connections will require manual approval'}
+        {$settings.passwordHash ? 'Password is set - remote users must enter this password' : 'No password set - connections will require manual approval'}
       </p>
     </div>
   </section>
