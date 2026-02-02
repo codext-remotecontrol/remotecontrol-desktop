@@ -1,48 +1,50 @@
-# Dependencies
-node_modules/
-.npm
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Build output
-dist/
-target/
-*.rs.bk
+# compiled output
+/dist
+/tmp
+/out-tsc
+/app-builds
+/release
+main.js
+src/**/*.js
+!src/karma.conf.js
+*.js.map
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# dependencies
+/node_modules
 
-# Angular
-.angular/
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-# Tauri
-src-tauri/target/
-src-tauri/Cargo.lock
+# IDE - VSCode
+.vscode/*
+.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
-# OS files
+# misc
+/.angular/cache
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+!/e2e/protractor.conf.js
+/e2e/*.map
+
+# System Files
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Test
-coverage/
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Temp files
-*.tmp
-*.temp
-.cache/
-
-nul
-.svelte-kit

@@ -1,36 +1,14 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
+module.exports = {
+  content: ['./src/**/*.{html,ts}'],
   theme: {
-    extend: {
-      colors: {
-        dark: {
-          50: '#f7f7f8',
-          100: '#ececf1',
-          200: '#d9d9e3',
-          300: '#c5c5d2',
-          400: '#acacbe',
-          500: '#8e8ea0',
-          600: '#565869',
-          700: '#40414f',
-          800: '#343541',
-          900: '#202123',
-          950: '#050509',
-        },
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-        }
-      }
-    }
+    extend: {},
   },
-  plugins: []
+  variants: {
+    extend: {},
+  },
+  corePlugins: {
+    outline: false,
+    accessibility: false,
+  },
+  plugins: [],
 };

@@ -1,0 +1,95 @@
+<ion-header>
+    <ion-toolbar [color]="connectService.connected ? 'secondary' : 'primary'">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title> </ion-title>
+        <ion-buttons
+            class="mr-3"
+            slot="end">
+            <ion-spinner
+                *ngIf="connectService.fileLoading"
+                color="light"></ion-spinner>
+            <ion-button
+                [tp]="'Select screen' | translate"
+                (click)="screenSelect(false, true)">
+                <ion-icon name="browsers-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+                [tp]="'Close connection' | translate"
+                (click)="connectService.reconnect()"
+                *ngIf="connectService.connected">
+                <ion-icon name="close-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
+        <div
+            *ngIf="electronService.isElectron"
+            class="box flex flex-col shadow-xl mt-3 rounded-xl overflow-hidden bg-white">
+            <div
+                class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11 relative">
+                <h2 class="text-white text-xs">{{'Share ID'|translate}}</h2>
+                <h4 class="text-white text-center font-bold text-xl mt-2">
+                    {{'My computer'|translate}}
+                </h4>
+                <!--<div class="absolute top-2 right-2">
+          <ion-button
+            color="light"
+            [tp]="'Quelle auswählen'"
+            fill="clear"
+            (click)="screenSelect(false)"
+          >
+            <ion-icon name="tablet-landscape-outline"></ion-icon>
+          </ion-button>
+        </div>-->
+            </div>
+            <div
+                class="z-10 flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
+                <div class="flex items-center justify-center">
+                    <span
+                        *ngFor="let number of connectService.idArray;let  i = index"
+                        class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0"
+                        [class.mr-4]="i == 2 || i == 5"
+                        >{{number}}</span
+                    >
+                </div>
+            </div>
+        </div>
+        <div
+            class="box flex flex-col shadow-xl rounded-xl mt-3 overflow-hidden bg-white">
+            <div
+                class="py-6 px-14 bg-gradient-to-tr from-gray-900 to-gray-700 text-center -mb-5 pb-11">
+                <h2 class="text-white text-xs">
+                    {{'Enter Partner ID'|translate}}
+                </h2>
+                <h4 class="text-white text-center font-bold text-xl mt-2">
+                    {{' Remote Computer'|translate}}
+                </h4>
+            </div>
+            <div class="flex flex-col py-6 px-8 space-y-5 bg-white rounded-xl">
+                <div class="flex items-center justify-center">
+                    <input
+                        #digitSix
+                        *ngFor="let number of connectService.remoteIdArray; let  i = index"
+                        (keydown)="onDigitInput($event)"
+                        class="h-10 mr-1 rounded w-7 min-w-7 flex items-center text-center font-thin text-3xl bg-gray-200 justify-center border-0 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent"
+                        [class.mr-4]="i == 2 || i == 5"
+                        [(ngModel)]="number.number"
+                        maxlength="1"
+                        max="9"
+                        min="0"
+                        (keydown.enter)="connect()" />
+                </div>
+                <ion-button
+                    size="small"
+                    (click)="connect()">
+                    {{'Connect'|translate}}
+                </ion-button>
+            </div>
+        </div>
+    </div>
+</ion-content>

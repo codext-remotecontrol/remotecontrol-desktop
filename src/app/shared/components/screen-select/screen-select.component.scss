@@ -1,0 +1,32 @@
+ion-content {
+    --background: #18181b;
+}
+video {
+    object-fit: cover;
+    height: 150px;
+    width: 100%;
+}
+.video-container {
+    border: 1px solid #4b5563;
+    background: #1f1f23;
+    color: #a8a8b3;
+
+    height: 190px;
+    &:hover {
+        --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 58%),
+            0 10px 10px -5px rgb(0 0 0 / 42%);
+        box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+            var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        transform: translate(0, -5px);
+    }
+}
+.title {
+    padding: 10px;
+    overflow: hidden;
+    padding-bottom: 10px;
+    font-weight: bold;
+    line-height: 1.5em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
