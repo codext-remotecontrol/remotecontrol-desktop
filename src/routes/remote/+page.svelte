@@ -281,11 +281,20 @@
       console.log('[Client] Socket connected, joining HOST room:', peerId);
       socket?.emit('join', peerId);
       
-      setTimeout(() => {
-        console.log('[Client] Sending hi to host');
+      let hiRetries = 0;
+      const maxRetries = 10;
+      const sendHi = () => {
+        if (hiRetries >= maxRetries || isConnected || peer) {
+          return;
+        }
+        hiRetries++;
+        console.log(`[Client] Sending hi to host (attempt ${hiRetries}/${maxRetries})`);
         socket?.emit('remoteData', 'hi');
-        statusMessage = 'Waiting for host...';
-      }, 100);
+        statusMessage = `Waiting for host... (${hiRetries})`;
+        setTimeout(sendHi, 1000);
+      };
+      
+      setTimeout(sendHi, 200);
     });
 
     socket.on('disconnect', () => {
